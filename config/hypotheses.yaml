@@ -1,0 +1,39 @@
+# Constrained hypothesis space. Every item MUST have a why.
+# Cursor / this lab must refuse any hypothesis with an empty why.
+
+hypotheses:
+  - id: H1_event_reversal
+    enabled: true
+    name: News overreaction then retrace
+    why: >
+      High-impact news often produces a liquidity vacuum and an overshoot of
+      short-term fair value. The first large candle is the overshoot; the
+      next few candles are inventory being unwound — so a partial retrace
+      should be more common after news spikes than after equally large
+      candles with no news.
+    params:
+      timeframe: H1
+      event_window_minutes: 30
+      large_atr_mult: 2.5
+      retrace_pct: 0.40
+      horizon_bars: 3
+      min_impact: high
+
+  - id: H2_tap_breakout
+    enabled: true
+    name: Third tap breakout after hold then fail
+    why: >
+      Defending orders at a level are consumed with each test. A strong first
+      hold shows the level is real. A weak second test shows defenders are
+      thinning. By the third tap, remaining liquidity is often insufficient,
+      so a confirmed breakout should be more frequent than on tap 1 or 2.
+    params:
+      timeframe: H1
+      swing_n: 5
+      level_tolerance_atr: 0.15
+      tap_window_bars: 40
+      hold_retrace: 0.50
+      fail_retrace: 0.30
+      breakout_atr: 0.50
+      sustain_bars: 5
+      min_taps: 3
