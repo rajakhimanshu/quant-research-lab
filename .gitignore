@@ -19,6 +19,8 @@ htmlcov/
 data/raw/*
 data/processed/*
 data/calendar/*
+!data/calendar/.gitkeep
+!data/calendar/README.md
 data/results/*
 !data/**/.gitkeep
 !data/calendar/README.md

@@ -35,6 +35,7 @@ def _events_for(hyp: dict, frames: dict[str, pd.DataFrame], settings: dict) -> p
         spread = float(costs["spread_pips"].get(symbol, 1.5))
         slip = float(costs["slippage_pips"])
         hid = hyp["id"]
+        print(f"  scoring {hid} on {symbol} ({len(df)} bars)")
         if hid.startswith("H1"):
             ev = event_reversal_events(df, symbol, merged_params, calendar, spread, slip)
         elif hid.startswith("H2"):

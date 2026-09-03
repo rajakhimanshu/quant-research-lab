@@ -5,8 +5,10 @@ from pathlib import Path
 
 import pandas as pd
 
+from datetime import datetime, timezone
+
 from ats.config import DATA_DIR, load_settings
-from ats.timeutil import years_ago
+from ats.timeutil import TIMEFRAME_MINUTES, years_ago
 
 
 KNOWN_TERMINALS = [
@@ -127,8 +129,17 @@ def account_snapshot() -> dict:
 def copy_ohlc(symbol: str, timeframe: str, years: int) -> pd.DataFrame:
     mt5 = _mt5()
     resolved = resolve_symbol(symbol)
-    utc_from = years_ago(years)
-    rates = mt5.copy_rates_from(resolved, mt5_timeframe(timeframe), utc_from, 100_000)
+    tf = mt5_timeframe(timeframe)
+    # MT5 Python bindings often reject tz-aware datetimes.
+    utc_from = years_ago(years).astimezone(timezone.utc).replace(tzinfo=None)
+    utc_to = datetime.now(timezone.utc).replace(tzinfo=None)
+    minutes = TIMEFRAME_MINUTES[timeframe]
+    count = int(years * 365 * 24 * 60 / minutes) + 2000
+    rates = mt5.copy_rates_from_pos(resolved, tf, 0, count)
+    if rates is None or len(rates) == 0:
+        rates = mt5.copy_rates_range(resolved, tf, utc_from, utc_to)
+    if rates is None or len(rates) == 0:
+        rates = mt5.copy_rates_from(resolved, tf, utc_from, count)
     if rates is None or len(rates) == 0:
         raise RuntimeError(f"No bars for {resolved} {timeframe}: {mt5.last_error()}")
     df = pd.DataFrame(rates)

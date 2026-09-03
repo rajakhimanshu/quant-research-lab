@@ -62,6 +62,17 @@ def cmd_pull(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_calendar(args: argparse.Namespace) -> int:
+    from ats.data.calendar import import_public_calendar, load_calendar
+
+    path = import_public_calendar(years=args.years or 4)
+    df = load_calendar(path)
+    print(f"High-impact events: {len(df)} -> {path}")
+    if not df.empty:
+        print(f"Range: {df['datetime_utc'].min()} .. {df['datetime_utc'].max()}")
+    return 0
+
+
 def cmd_test(args: argparse.Namespace) -> int:
     from ats.research.pipeline import run_hypotheses
 
@@ -85,6 +96,10 @@ def build_parser() -> argparse.ArgumentParser:
     pull.add_argument("--timeframe")
     pull.add_argument("--years", type=int)
     pull.set_defaults(func=cmd_pull)
+
+    cal = sub.add_parser("calendar", help="Download public high-impact news calendar")
+    cal.add_argument("--years", type=int, default=4)
+    cal.set_defaults(func=cmd_calendar)
 
     t = sub.add_parser("test", help="Run enabled hypotheses on pulled data")
     t.add_argument("--id", help="Single hypothesis id, e.g. H1_event_reversal")
