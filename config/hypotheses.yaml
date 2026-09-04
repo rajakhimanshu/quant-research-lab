@@ -1,16 +1,12 @@
 # Constrained hypothesis space. Every item MUST have a why.
-# Cursor / this lab must refuse any hypothesis with an empty why.
 
 hypotheses:
   - id: H1_event_reversal
-    enabled: true
+    enabled: false
     name: News overreaction then retrace
     why: >
       High-impact news often produces a liquidity vacuum and an overshoot of
-      short-term fair value. The first large candle is the overshoot; the
-      next few candles are inventory being unwound — so a partial retrace
-      should be more common after news spikes than after equally large
-      candles with no news.
+      short-term fair value. Already rejected on this lab's first run.
     params:
       timeframe: H1
       event_window_minutes: 30
@@ -20,13 +16,10 @@ hypotheses:
       min_impact: high
 
   - id: H2_tap_breakout
-    enabled: true
+    enabled: false
     name: Third tap breakout after hold then fail
     why: >
-      Defending orders at a level are consumed with each test. A strong first
-      hold shows the level is real. A weak second test shows defenders are
-      thinning. By the third tap, remaining liquidity is often insufficient,
-      so a confirmed breakout should be more frequent than on tap 1 or 2.
+      Order absorption at a level. Already rejected (p ~ 0.12, 3pp lift).
     params:
       timeframe: H1
       swing_n: 5
@@ -37,3 +30,848 @@ hypotheses:
       breakout_atr: 0.50
       sustain_bars: 5
       min_taps: 3
+
+  - id: H3_ny_open_sweep
+    enabled: false
+    name: NY 9-10am gold stop-sweep then reclaim
+    why: >
+      K-A04 / PCA: into the NY cash open, resting stops sit beyond the overnight
+      range. Rejected once scored as a trade (0.5 ATR before sweep extreme is
+      taken back): train 62% vs 55%, p=0.059. MFE-without-stop was volatility,
+      not an edge. Do not retune the stop/target.
+    params:
+      symbols: [XAUUSD]
+      timeframe: M15
+      sweep_atr: 0.10
+      target_atr: 0.50
+      horizon_bars: 8
+      ny_start: 9
+      ny_end: 10
+      control_start: 11
+      control_end: 16
+
+  - id: H4_asia_vs_ny_orb
+    enabled: false
+    name: Asia opening-range breakout vs NY
+    why: >
+      Live book showed Asia +$3.03/trade and NY -$1.48. Rejected: mechanical
+      Asia ORB lost to NY ORB (train 33% vs 46%). The book was not this pattern.
+    params:
+      symbols: [XAUUSD]
+      timeframe: M15
+      asia_start_hour_utc: 0
+      asia_end_hour_utc: 7
+      ny_start_hour_utc: 13
+      ny_end_hour_utc: 17
+
+  - id: H5_equity_rsi2
+    enabled: false
+    name: Equity RSI(2) dip-buy above SMA200
+    why: >
+      Liquid US ETFs have structural dip-buying and long-run drift. RSI(2)<10
+      while price is above SMA200 should beat the same RSI(2) dip occurring
+      below SMA200, after 3bp round-trip costs. Frozen Connors-style rules.
+      Lab: OOS_PASS then frozen paper book. PAPER_CANDIDATE on equities only.
+      Out of this book's working universe (FX + gold, 2026-09-04). Do not
+      port to XAUUSD or FX. Do not treat as a forex candidate.
+    params:
+      tickers: [SPY, QQQ, IWM, DIA, EEM, XLK, XLF, GLD, EFA, XLE]
+      rsi_entry: 10
+      rsi_exit: 65
+      trend_sma: 200
+      exit_sma: 5
+      max_hold: 10
+      atr_stop: 2.0
+      cost_one_way: 0.00015
+
+  - id: H6_london_sweep
+    enabled: false
+    name: NY 9-10am raid of London range then reclaim
+    why: >
+      Distinct from H3: London high/low as the stop pool, not full overnight.
+      Hit-rate passed train (63% vs 52%, p=0.006) but the raid wick stop is
+      ~1.2 ATR while the target is 0.5 ATR, so train mean R is -0.08 and val
+      -0.13. Hit rate without payoff is not an edge. Do not retune RR.
+    params:
+      symbols: [XAUUSD]
+      timeframe: M15
+      sweep_atr: 0.10
+      target_atr: 0.50
+      horizon_bars: 8
+      ny_start: 9
+      ny_end: 10
+      control_start: 11
+      control_end: 16
+      pool_ny_start: 3
+      pool_ny_end: 8
+
+  - id: H7_asia_fade
+    enabled: false
+    name: Fade Asia opening-range break vs fade NY
+    why: >
+      Complementary to rejected H4. Rejected: Asia fade 13% vs NY fade 16%
+      on train. Live Asia PnL is not a mechanical fade of the opening range.
+    params:
+      symbols: [XAUUSD]
+      timeframe: M15
+      mode: fade
+      asia_start_hour_utc: 0
+      asia_end_hour_utc: 7
+      ny_start_hour_utc: 13
+      ny_end_hour_utc: 17
+
+  - id: H8_atr_momentum
+    enabled: false
+    name: ATR expansion candle close-near-extreme continuation
+    why: >
+      A bar whose range expands beyond recent ATR and that finishes in the outer
+      20% of its range is unfinished aggressive flow: one-sided orders ate
+      through the book and still controlled the close. Continuation in that
+      direction should beat equally large directional candles that close
+      mid-range (two-way auction / rejection). Frozen from ATR_Momentum_EA
+      v1.11 defaults. Distinct from rejected H1 (that faded large candles).
+      Daily-loss latch and trailing are overlays, not part of this test.
+    params:
+      symbols: [GBPUSD, USDJPY, AUDUSD, USDCAD, USDCHF, NZDUSD]
+      timeframe: H1
+      atr_multiplier: 1.5
+      close_percent: 20.0
+      sltp_mode: percent
+      stop_loss_pct: 1.0
+      take_profit_pct: 2.0
+      atr_sl_multiplier: 1.5
+      atr_tp_multiplier: 3.0
+      max_spread_atr_pct: 15.0
+
+  - id: H9_cot_spec_fade
+    enabled: false
+    name: Fade crowded CFTC spec gold vs mid-percentile fade
+    why: >
+      Non-commercials are the late leveraged side in COMEX gold. When their net
+      as a share of open interest is in the outer 20% of the trailing year,
+      fading that crowding should beat the same fade when specs sit in the
+      middle of the distribution. The CFTC print is as-of Tuesday and released
+      Friday; the test waits six calendar days so it cannot trade on unreleased
+      books. Distinct from rejected H1–H4/H6–H7 (those were candle/session
+      patterns, not positioning).
+    params:
+      symbols: [XAUUSD]
+      timeframe: M15
+      percentile_window: 52
+      extreme_hi: 0.80
+      extreme_lo: 0.20
+      mid_lo: 0.40
+      mid_hi: 0.60
+      publish_lag_days: 6
+      horizon_days: 5
+      stop_atr: 1.0
+      target_atr: 1.0
+
+  - id: H10_rapid_bullet
+    enabled: false
+    name: Buy-stop at last untested 5-bar swing, 20-pip 1:1
+    why: >
+      One rule: after a 5-bar swing high is confirmed and later bars have not
+      traded through it, place a buy-stop there (mirror for lows). Distance
+      at least 10 pips; SL=TP=20 pips; expire in 100 M5 bars. Stops cluster
+      beyond an untested pivot, so that fill should beat the same stop at a
+      20-bar Donchian high with no pause. Trailing and session filters are
+      not part of the rule. Distinct from rejected H2 (tap-count, not a pending stop).
+    params:
+      symbols: [GBPUSD, USDJPY, AUDUSD, USDCAD, USDCHF, NZDUSD]
+      timeframe: M5
+      bars_n: 5
+      lookback_bars: 200
+      order_distance_pips: 10.0
+      sl_pips: 20.0
+      tp_pips: 20.0
+      expiration_bars: 100
+      donchian_n: 20
+
+  - id: H11_gold_dxy_relink
+    enabled: false
+    name: Restore gold–dollar inverse beta after a correlation break
+    why: >
+      Gold is priced in dollars and usually moves opposite DXY. A 60-day
+      return correlation that is a full standard deviation above its own
+      1-year mean is a temporary decoupling (risk-off co-move or a dollar
+      liquidity shock), not a new pricing identity. After that break, gold
+      should resume fading the dollar: short gold after a 5-day DXY rise,
+      long gold after a 5-day DXY fall. The same dollar-implied trade when
+      correlation is near its recent mean is the baseline — if the mechanism
+      is the break, the mid-band should not win. Distinct from rejected
+      H1–H10 (candles, sessions, COT percentiles, pending stops). Signal on
+      day t close, fill next daily open. Do not retune z or lag after seeing
+      results.
+    params:
+      symbols: [XAUUSD]
+      timeframe: M15
+      corr_window: 60
+      z_window: 252
+      extreme_z: 1.0
+      mid_z: 0.35
+      dxy_lookback_days: 5
+      horizon_days: 5
+      stop_atr: 1.0
+      target_atr: 1.0
+
+  - id: H12_london_close_fade
+    enabled: false
+    name: Fade the H1 run into London close vs London open
+    why: >
+      European FX desks accumulate inventory through the London morning and
+      cut it into the London close because of end-of-day risk limits. Fading
+      the prior 7 H1 bars at 15:00 London should beat the same fade at 08:00
+      London, when those desks are still taking risk, not flattening. This is
+      hourly session inventory, not a news retrace (H1), not a tap count (H2),
+      not gold Asia/NY ORB (H4/H7), and not candle-close momentum (H8). Frozen
+      1:1 ATR, 2-bar hold, no EURUSD (broker history too short). Do not move
+      the hours after seeing results.
+    params:
+      symbols: [GBPUSD, USDJPY, AUDUSD, USDCAD, USDCHF, NZDUSD]
+      timeframe: H1
+      lookback_bars: 7
+      horizon_bars: 2
+      flatten_hour_london: 15
+      open_hour_london: 8
+      min_prior_atr: 0.25
+      stop_atr: 1.0
+      target_atr: 1.0
+
+  - id: H13_gold_ema200_expand
+    enabled: false
+    name: Gold M30 expansion off EMA200 vs same expansion far from the mean
+    why: >
+      The M30 200-EMA is a multi-day consensus price where slower gold flow
+      (trend systems, dealer hedges) sits. When the prior bar is on that mean
+      and the next M30 range expands beyond 1.5 ATR away from it, mean-reverters
+      at the average are trapped and cover in the displacement direction.
+      That continuation should beat an equally large M30 bar that prints far
+      from the EMA, where there is no trapped fade mass. Distinct from rejected
+      H8 (FX H1 close-location, no EMA) and H1 (news fade). Signal on the
+      expansion close, fill next M30 open, 1:1 ATR, 4 bars. Resampled from
+      existing gold M15. Do not retune EMA length or expand multiple.
+    params:
+      symbols: [XAUUSD]
+      timeframe: M15
+      ema_period: 200
+      near_atr: 0.35
+      far_atr: 1.50
+      expand_atr: 1.50
+      horizon_bars: 4
+      stop_atr: 1.0
+      target_atr: 1.0
+
+  - id: H14_ny_ema_drd
+    enabled: false
+    name: M5 EMA 4-9-18 plus Dr.D follow in NY vs London
+    why: >
+      Dr.D is not a custom oscillator. It is Wilder +DI/-DI/ADX (14) painted
+      on a 34-WMA: lime = ADX>18 and +DI>-DI, red = ADX>18 and +DI<-DI,
+      black = no trend. EMA 4>9>18 (and the 4<9<18 opposite) is a short
+      M5 impulse stack. US cash gold hours concentrate one-sided flow, so a
+      new stack that agrees with an active Dr.D color should continue more
+      in NY 9-12 than the same new stack during London (03-08 NY). Both
+      bull and bear stacks are the rule, not extra combos. Distinct from
+      rejected H3 (sweep-reclaim) and H13 (M30 EMA200 expansion). Fill next
+      M5 open, 1:1 ATR, 6 bars. Broker M5 gold starts 2025-04-07; splits are
+      frozen gold_m5 60/20/20 on that window. Do not retune EMA lengths, ADX
+      cutoff, or session hours. Do not scan other EMA sets.
+    params:
+      symbols: [XAUUSD]
+      timeframe: M5
+      ema_fast: 4
+      ema_mid: 9
+      ema_slow: 18
+      di_length: 14
+      dx_smooth: 14
+      adx_active: 18
+      ny_start: 9
+      ny_end: 12
+      london_start_ny: 3
+      london_end_ny: 8
+      horizon_bars: 6
+      stop_atr: 1.0
+      target_atr: 1.0
+
+  - id: H15_ema200_drd_entry
+    enabled: false
+    name: EMA200 trend, Dr.D color as entry vs same Dr.D against the 200
+    why: >
+      EMA200 on gold M5 is the slower consensus trend. Dr.D lime/red is when
+      M5 directional flow is actually on (ADX>18 and DI sign), not chop
+      (black). Taking a new Dr.D turn only with that 200 should beat the
+      same Dr.D turn against the 200 — if the 200 is a real filter, not
+      decoration. Distinct from rejected H13 (expansion off the 200, no
+      Dr.D) and H14 (4-9-18 stack plus NY clock). Fill next M5 open, 1:1
+      ATR, 12 bars. Frozen gold_m5 splits. Do not retune 200 or ADX 18.
+    params:
+      symbols: [XAUUSD]
+      timeframe: M5
+      ema_period: 200
+      di_length: 14
+      dx_smooth: 14
+      adx_active: 18
+      horizon_bars: 12
+      stop_atr: 1.0
+      target_atr: 1.0
+
+  - id: H16_ema_13_50_200
+    enabled: false
+    name: M15 EMA 13/50/200 agreement vs 13/50 fighting the 200
+    why: >
+      On gold M15, EMA13 is the short impulse, EMA50 the session mean, EMA200
+      the multi-day consensus. When 13>50>200 (or the opposite stack) first
+      agrees, faster and slower gold flow are on the same side, so follow-through
+      should beat a new 13/50 that is fighting the 200. Distinct from rejected
+      H13 (expansion off 200 only), H14 (M5 4-9-18 plus Dr.D/NY), and H15
+      (Dr.D entry vs 200). No Dr.D. Fill next M15 open, 1:1 ATR, 8 bars.
+      Frozen gold_m15 splits. Do not retune 13/50/200 after seeing results.
+    params:
+      symbols: [XAUUSD]
+      timeframe: M15
+      ema_fast: 13
+      ema_mid: 50
+      ema_slow: 200
+      horizon_bars: 8
+      stop_atr: 1.0
+      target_atr: 1.0
+
+  - id: H17_pdh_pdl_fade
+    enabled: false
+    name: First touch of prior-day high/low fades vs first touch of prior-day mid
+    why: >
+      Stops cluster just beyond yesterday's high and low. The first M15 tag of
+      those prints is a liquidity grab, so fading it should beat fading the
+      first tag of yesterday's mid — a price with no stop pool. Distinct from
+      rejected H2 (3rd tap of a swing cluster) and H3 (overnight sweep then
+      reclaim). Fill next M15 open, 1:1 ATR, 8 bars. Frozen gold_m15 splits.
+      Do not retune to 2nd touch or to a breakout.
+    params:
+      symbols: [XAUUSD]
+      timeframe: M15
+      horizon_bars: 8
+      stop_atr: 1.0
+      target_atr: 1.0
+
+  - id: H18_large_bar_fade
+    enabled: false
+    name: Fade a 2.5+ ATR M15 bar vs fade a 1.0-1.5 ATR bar
+    why: >
+      A bar larger than 2.5 prior ATR is exhaustion of the initiating side,
+      so fading it should beat fading an ordinary 1.0-1.5 ATR bar of the same
+      direction. No news filter. Distinct from rejected H1 (news-tagged large
+      bar retrace) and H8 (H1 continuation of a large close-in-range bar).
+      Fill next M15 open, 1:1 ATR, 4 bars. Frozen gold_m15 splits. Do not
+      retune the 2.5 cutoff or flip to follow-through.
+    params:
+      symbols: [XAUUSD]
+      timeframe: M15
+      large_atr: 2.5
+      mid_atr_lo: 1.0
+      mid_atr_hi: 1.5
+      horizon_bars: 4
+      stop_atr: 1.0
+      target_atr: 1.0
+
+  - id: H19_session_vwap_extreme
+    enabled: false
+    name: Fade NY-day VWAP stretch vs fade when price is glued to VWAP
+    why: >
+      NY-session VWAP is the day's volume-weighted inventory price. When gold
+      is more than 1.5 ATR from that VWAP, late flow is stretched vs the
+      session book, so a fade toward VWAP should beat the same fade when
+      |close-VWAP| is under 0.35 ATR (no stretch). Distinct from H13
+      (EMA200 expansion, follow) and H18 (bar size, no VWAP). Fill next M15
+      open, 1:1 ATR, 8 bars. Frozen gold_m15 splits. Do not retune 1.5/0.35.
+    params:
+      symbols: [XAUUSD]
+      timeframe: M15
+      far_atr: 1.5
+      near_atr: 0.35
+      horizon_bars: 8
+      stop_atr: 1.0
+      target_atr: 1.0
+
+  - id: H20_volume_spike_cont
+    enabled: false
+    name: Follow a 2x tick-volume spike vs fade the same spike
+    why: >
+      A 2x 20-bar tick-volume spike is aggressive participation. If that flow
+      is unfinished, following the close of the spike bar should beat fading
+      it (the exhaustion reading of the same print). Same bars, opposite
+      sides — not a new indicator. Distinct from H18 (range, not volume).
+      Fill next M15 open, 1:1 ATR, 6 bars. Frozen gold_m15 splits. Do not
+      retune 2x or the 20-bar average.
+    params:
+      symbols: [XAUUSD]
+      timeframe: M15
+      vol_mult: 2.0
+      horizon_bars: 6
+      stop_atr: 1.0
+      target_atr: 1.0
+
+  - id: H21_round_number_bounce
+    enabled: false
+    name: First tag of a $5 gold round fades vs first tag of yesterday's open
+    why: >
+      Options and resting orders stack on round $5 gold prints, so the first
+      M15 tag of the nearest $5 should bounce more than the first tag of
+      yesterday's open — a level with no round magnet. Distinct from H17
+      (prior-day high/low, not rounds). Fill next M15 open, 1:1 ATR, 8 bars.
+      Frozen gold_m15 splits. Do not retune to $10/$50 after seeing results.
+    params:
+      symbols: [XAUUSD]
+      timeframe: M15
+      round_step: 5.0
+      near_atr: 0.40
+      horizon_bars: 8
+      stop_atr: 1.0
+      target_atr: 1.0
+
+  - id: H22_ny_box_fade_vs_break
+    enabled: false
+    name: Fade first break of NY 9:00-9:30 box vs trade that break
+    why: >
+      The first 30 minutes of NY cash gold (9:00-9:30 NY, six M5 bars) is
+      the opening auction range. Stops sit just outside that box, so the
+      first close through it should fail more than it continues — fade vs
+      trade the break, same print. Distinct from rejected H4/H7 (Asia range
+      vs NY, not fade-vs-break of the NY box itself). Fill next M5 open,
+      1:1 ATR, 12 bars. Frozen gold_m5 splits. Do not retune box length
+      or add a retest rule.
+    params:
+      symbols: [XAUUSD]
+      timeframe: M5
+      box_bars: 6
+      horizon_bars: 12
+      stop_atr: 1.0
+      target_atr: 1.0
+
+  - id: H23_lbma_pm_run
+    enabled: false
+    name: Follow 30 min into LBMA PM gold auction vs same 30 min at 11:30 London
+    why: >
+      The LBMA Gold Price PM is an electronic auction at 15:00 London. Banks
+      and GLD-linked hedges concentrate flow into that print, so following the
+      signed 30-minute run that ends at 14:30 London should beat following the
+      same 30-minute run at 11:30 (after the AM auction, no PM). Distinct from
+      rejected H12 (FX H1 fade of prior 7 bars at 15:00, not gold auction
+      follow). Fill next M15 open, 1:1 ATR, 8 bars. Frozen gold_m15 splits.
+      Do not retune to AM 10:30 or flip to a fade.
+    params:
+      symbols: [XAUUSD]
+      timeframe: M15
+      treat_hour: 14
+      treat_minute: 30
+      base_hour: 11
+      base_minute: 30
+      min_prior_atr: 0.25
+      horizon_bars: 8
+      stop_atr: 1.0
+      target_atr: 1.0
+
+  - id: H24_month_end_rebalance
+    enabled: false
+    name: Follow month-to-date gold on last 5 NY sessions vs mid-month sessions
+    why: >
+      Month-end rebalancing (Melvin-Prins / WM hedge catch-up) forces funds
+      to trade remaining gold/USD exposure on the last sessions of the
+      calendar month, so following month-to-date direction then should beat
+      the same follow on NY sessions with day-of-month 10-14 (no month-end).
+      Distinct from H12 (clock, not calendar) and H23 (daily auction). Fill
+      9:00 NY open, 1:1 ATR, 8 M15 bars. Frozen gold_m15 splits. Do not
+      retune to quarter-end only after seeing results.
+    params:
+      symbols: [XAUUSD]
+      timeframe: M15
+      last_n_sessions: 5
+      mid_dom_lo: 10
+      mid_dom_hi: 14
+      entry_hour_ny: 9
+      horizon_bars: 8
+      stop_atr: 1.0
+      target_atr: 1.0
+
+  - id: H25_streak_inventory_fade
+    enabled: false
+    name: Fade a 5-bar same-direction streak vs fade a 2-bar streak
+    why: >
+      Multi-dealer inventory models (Stoll / Romeu) say quotes only skew
+      enough to fade after a one-way run that actually binds inventory.
+      Fading the first completed 5-bar M15 same-direction streak should beat
+      fading a 2-bar streak (too short to bind). Distinct from rejected H18
+      (bar size, not count). Fill next M15 open, 1:1 ATR, 6 bars. Frozen
+      gold_m15 splits. Do not retune 5 vs 2 or flip to follow-through.
+    params:
+      symbols: [XAUUSD]
+      timeframe: M15
+      long_streak: 5
+      short_streak: 2
+      horizon_bars: 6
+      stop_atr: 1.0
+      target_atr: 1.0
+
+  - id: H26_weekend_gap_fade
+    enabled: false
+    name: Fade the weekend gold gap vs fade a London-open jump of similar size
+    why: >
+      The Friday-to-Sunday halt dumps news into a thin Sunday book, so the
+      opening gap should mean-revert more than a same-size jump at 08:00
+      London on a weekday (continuous book). Distinct from rejected H1
+      (news calendar large-bar retrace, not the weekend halt). Fill the
+      gapped open, 1:1 ATR, 8 bars. Frozen gold_m15 splits. Do not retune
+      the 24h gap cutoff.
+    params:
+      symbols: [XAUUSD]
+      timeframe: M15
+      min_gap_atr: 0.30
+      weekend_gap_hours: 24
+      london_open_hour: 8
+      horizon_bars: 8
+      stop_atr: 1.0
+      target_atr: 1.0
+
+  - id: H27_wm_fix_follow
+    enabled: false
+    name: Follow the 14:00 London H1 bar into WM 4pm vs follow the 10:00 bar
+    why: >
+      The WM/Reuters 16:00 London FX fix is a documented rebalancing
+      benchmark (FCA occasional paper 46). Dealers pre-hedge in the hour
+      before the window, so following the 14:00 London H1 bar into 15:00-16:00
+      should beat following the 10:00 London bar (no fix). Distinct from
+      rejected H12 (fade of prior 7 bars at 15:00, not follow of the 14:00
+      bar). EURUSD omitted (short history). Fill next H1 open, 1:1 ATR,
+      2 bars. Frozen fx_h1 splits. Do not retune hours or flip to a fade.
+    params:
+      symbols: [GBPUSD, USDJPY, AUDUSD, USDCAD, USDCHF, NZDUSD]
+      timeframe: H1
+      treat_hour_london: 14
+      base_hour_london: 10
+      min_prior_atr: 0.25
+      horizon_bars: 2
+      stop_atr: 1.0
+      target_atr: 1.0
+
+  - id: H28_postfix_usd_fade
+    enabled: false
+    name: After London 16:00 buy the non-USD vs the same hold from 08:00
+    why: >
+      Krohn, JofF 2024: the dollar peaks at the WM 16:00 London fix then
+      reverses, so foreign currencies (EUR first) appreciate after the fix.
+      An unconditional long-EURUSD from the 16:00 London H1 open should beat
+      the same long from 08:00 (no postfix). Distinct from rejected H12
+      (fade a 7-bar run at 15:00) and H27 (follow the 14:00 bar into the
+      fix). EURUSD only. Fill 16:00/08:00 open, 1:1 ATR, 6 H1 bars. Frozen
+      fx_h1 splits. Do not retune hours or add a momentum filter.
+    params:
+      symbols: [EURUSD]
+      timeframe: H1
+      treat_hour_london: 16
+      base_hour_london: 8
+      horizon_bars: 6
+      stop_atr: 1.0
+      target_atr: 1.0
+
+  - id: H29_pre_ecb_usd
+    enabled: false
+    name: Into the ECB window sell the non-USD vs the same hold at 00:00 London
+    why: >
+      Krohn, JofF 2024: the dollar appreciates into the 14:15 Frankfurt ECB
+      reference, so EURUSD should drift down from the London 07:00 open
+      (European morning into that window) more than from 00:00 London (Asia,
+      no ECB). Unconditional short EURUSD. Distinct from H12/H27 (those
+      condition on a prior run or the WM hour) and H28 (postfix, opposite
+      side). Fill 07:00/00:00 open, 1:1 ATR, 6 H1 bars. Frozen fx_h1 splits.
+      Do not retune to 14:15 exactly after seeing results.
+    params:
+      symbols: [EURUSD]
+      timeframe: H1
+      treat_hour_london: 7
+      base_hour_london: 0
+      horizon_bars: 6
+      stop_atr: 1.0
+      target_atr: 1.0
+
+  - id: H30_london_asia_break
+    enabled: false
+    name: Follow first London break of Asia range vs fade that break
+    why: >
+      Asia is the thin EURUSD book. London banks open into that range, so
+      the first M5 close through Asia high/low is either real flow (follow)
+      or a stop run (fade). Same print, opposite sides. Distinct from
+      rejected H4/H7 (gold Asia vs NY ORB, not EURUSD fade-vs-follow of
+      London vs Asia) and H22 (gold NY box). EURUSD M5. Fill next M5 open,
+      1:1 ATR, 12 bars. Frozen fx_m5 splits. Do not retune Asia hours.
+    params:
+      symbols: [EURUSD]
+      timeframe: M5
+      asia_start_london: 0
+      asia_end_london: 7
+      london_start: 8
+      london_end: 11
+      horizon_bars: 12
+      stop_atr: 1.0
+      target_atr: 1.0
+
+  - id: H31_h1_tsmom
+    enabled: false
+    name: Follow EURUSD 5-day return at 16:00 London vs fade that return
+    why: >
+      Time-series momentum (Moskowitz, Ooi, Pedersen): a 5-day EURUSD
+      imbalance is unfinished institutional flow, so following it for the
+      next 24 H1 bars should beat fading it. One decision per day at 16:00
+      London (after the European day). Distinct from rejected H8 (one large
+      H1 candle continuation) and H27 (one-hour pre-fix follow). EURUSD
+      only. Fill next H1 open, 1:1 ATR, 24 bars. Frozen fx_h1 splits. Do
+      not retune 5 days or the clock.
+    params:
+      symbols: [EURUSD]
+      timeframe: H1
+      lookback_bars: 120
+      signal_hour_london: 16
+      horizon_bars: 24
+      stop_atr: 1.0
+      target_atr: 1.0
+
+  - id: H32_ranaldo_local_hours
+    enabled: false
+    name: Short EURUSD in London hours vs the same short in US hours
+    why: >
+      Ranaldo (2009) and Cornett: the domestic currency depreciates in its
+      own trading hours because local customers and dealers sell it into
+      local liquidity. EUR should weaken 08:00-16:00 London, so an
+      unconditional short EURUSD from 08:00 should beat the same short from
+      16:00 (US hours, when EUR is the foreign currency). Distinct from
+      rejected H28 (Krohn postfix long) and H29 (pre-ECB short vs Asia).
+      EURUSD H1, 1:1 ATR, 8 bars. Frozen fx_h1 splits. Do not retune hours.
+    params:
+      symbols: [EURUSD]
+      timeframe: H1
+      treat_hour_london: 8
+      base_hour_london: 16
+      horizon_bars: 8
+      stop_atr: 1.0
+      target_atr: 1.0
+
+  - id: H33_inside_bar_break
+    enabled: false
+    name: Follow H1 inside-bar break of the mother vs fade that break
+    why: >
+      An inside H1 is a pause while dealers wait. The first close beyond the
+      mother bar is when they take a side, so following it should beat fading
+      the same close (stop-run reading). Distinct from rejected H30 (Asia
+      session range, not a mother/inside pair) and H2 (swing taps). EURUSD
+      H1. Fill next open, 1:1 ATR, 4 bars. Frozen fx_h1 splits. Do not add
+      a trend filter after seeing results.
+    params:
+      symbols: [EURUSD]
+      timeframe: H1
+      horizon_bars: 4
+      stop_atr: 1.0
+      target_atr: 1.0
+
+  - id: H34_compression_expand
+    enabled: false
+    name: Follow ATR expansion after compression vs expansion with no compression
+    why: >
+      Range contraction is inventory waiting. The first expansion bar after
+      compression is when that inventory is released, so following it should
+      beat following an expansion that had no prior squeeze. Distinct from
+      rejected H8 (large-bar location, no compression) and H13 (gold EMA200).
+      EURUSD H1. Fill next open, 1:1 ATR, 6 bars. Frozen fx_h1. Do not
+      retune 0.7/1.3 ATR ratios.
+    params:
+      symbols: [EURUSD]
+      timeframe: H1
+      compression_atr_ratio: 0.7
+      expansion_atr_ratio: 1.3
+      comp_lookback: 6
+      horizon_bars: 6
+      stop_atr: 1.0
+      target_atr: 1.0
+
+  - id: H35_friday_flatten
+    enabled: false
+    name: Fade Friday 15:00 London run vs the same fade on Wednesday
+    why: >
+      Dealers flatten inventory before the weekend, so fading the prior 4 H1
+      bars at Friday 15:00 London should beat the same fade on Wednesday
+      (mid-week, no weekend). Distinct from rejected H12 (every-day 15:00 vs
+      08:00, 7 bars) and H26 (gold weekend gap). EURUSD H1. Fill Friday/Wed
+      15:00 open, 1:1 ATR, 4 bars. Frozen fx_h1. Do not move the weekday.
+    params:
+      symbols: [EURUSD]
+      timeframe: H1
+      lookback_bars: 4
+      flatten_hour_london: 15
+      min_prior_atr: 0.25
+      horizon_bars: 4
+      stop_atr: 1.0
+      target_atr: 1.0
+
+  - id: H36_overlap_continuation
+    enabled: false
+    name: Follow EURUSD London morning into NY overlap vs after London close
+    why: >
+      Berger, Chaboud: FX volume peaks in the London-NY overlap, so dealers
+      can pass London-morning inventory through a deep book. Following the
+      08:00-12:00 London EURUSD return from 13:00 should beat following the
+      same morning return after 16:00, when London has left and the book
+      thins. Distinct from rejected H28 (unconditional long 16 vs 08), H32
+      (unconditional short 08 vs 16), and H31 (5-day TSMOM). EURUSD H1.
+      Fill the 13:00/16:00 open, 1:1 ATR, 3 bars. Frozen fx_h1. Do not
+      retune the overlap clock.
+    params:
+      symbols: [EURUSD]
+      timeframe: H1
+      morning_start_london: 8
+      morning_end_london: 12
+      treat_hour_london: 13
+      base_hour_london: 16
+      horizon_bars: 3
+      stop_atr: 1.0
+      target_atr: 1.0
+
+  - id: H37_weekend_gap_fx
+    enabled: false
+    name: Fade EURUSD weekend halt gap vs Wednesday London-open overnight
+    why: >
+      The weekend halt parks stop and roll inventory that hits the first
+      print when the book reopens, so fading that gap should beat fading
+      Wednesday's London-open overnight (no halt). Distinct from rejected
+      H26 (gold weekend vs London jump) and H35 (Friday flatten, not the
+      reopen). EURUSD H1. Fill the gapped open, 1:1 ATR, 8 bars. Frozen
+      fx_h1. Do not loosen the 36-hour gap.
+    params:
+      symbols: [EURUSD]
+      timeframe: H1
+      min_gap_hours: 36
+      min_gap_atr: 0.15
+      base_hour_london: 8
+      prior_hour_london: 16
+      horizon_bars: 8
+      stop_atr: 1.0
+      target_atr: 1.0
+
+  - id: H38_xs_momentum
+    enabled: false
+    name: Long the 5-day winner FX major and short the loser vs the reverse
+    why: >
+      Menkhoff, Sarno, Schmeling, Schrimpf: cross-sectional FX momentum is
+      flow chasing the relative winner, not a single-pair autocorrelation.
+      At 16:00 London, long the major with the best prior 5-day return and
+      short the worst should beat the reverse. Distinct from rejected H31
+      (EURUSD time-series follow vs fade, no ranking). Seven majors, H1.
+      Fill next open, 1:1 ATR, 24 bars. Frozen fx_h1. Do not retune to
+      1-month after seeing results.
+    params:
+      symbols: [EURUSD, GBPUSD, USDJPY, AUDUSD, USDCAD, USDCHF, NZDUSD]
+      timeframe: H1
+      lookback_bars: 120
+      signal_hour_london: 16
+      horizon_bars: 24
+      stop_atr: 1.0
+      target_atr: 1.0
+
+  - id: H39_tokyo_lunch_jpy
+    enabled: false
+    name: Fade USDJPY Tokyo morning at lunch vs follow that morning
+    why: >
+      Ito and Lyons: Tokyo dealers leave for lunch, so the 09:00-12:00 JST
+      USDJPY inventory is faded in the thin lunch book rather than continued.
+      Fading the prior 3 H1 bars at 12:00 JST should beat following them.
+      Distinct from rejected H12 (London 15:00, not Tokyo), H25 (gold M15
+      streak), and H32 (EUR local hours). USDJPY H1. Fill 12:00 JST open,
+      1:1 ATR, 3 bars. Frozen fx_h1. Do not move the lunch hour.
+    params:
+      symbols: [USDJPY]
+      timeframe: H1
+      lookback_bars: 3
+      lunch_hour_tokyo: 12
+      horizon_bars: 3
+      stop_atr: 1.0
+      target_atr: 1.0
+
+  - id: H40_ny_close_asia_fade
+    enabled: false
+    name: Fade EURUSD NY-day run at NY close vs fade London morning at noon
+    why: >
+      After NY cash close, USD books are done for the day. Leftover EURUSD
+      inventory is faded into the thin Asia book, so fading the 13:00-20:00
+      London return at 21:00 should beat fading the 08:00-12:00 London
+      morning (still a two-way session). Distinct from rejected H12 (15:00
+      London, 7 bars), H28 (unconditional long 16:00), and H32 (unconditional
+      short). One symbol, clock rule, EA-shaped. EURUSD H1, 1:1 ATR, 8 bars.
+      Frozen fx_h1. Do not retune 21:00.
+    params:
+      symbols: [EURUSD]
+      timeframe: H1
+      ny_start_london: 13
+      ny_end_london: 20
+      treat_hour_london: 21
+      london_start: 8
+      london_end: 12
+      base_hour_london: 12
+      min_prior_atr: 0.25
+      horizon_bars: 8
+      stop_atr: 1.0
+      target_atr: 1.0
+
+  - id: H41_prior_day_range_fade
+    enabled: false
+    name: Fade first EURUSD H1 close through yesterday's range vs follow
+    why: >
+      Osler: stops cluster beyond the prior day's high and low. The first H1
+      close through that range is a stop run, so fading it should beat
+      following it. Distinct from rejected H17 (gold M15 first tag vs mid)
+      and H30 (same-day Asia range, follow-vs-fade). One symbol, OHLC rule,
+      EA-shaped. EURUSD H1. Fill next open, 1:1 ATR, 8 bars. Frozen fx_h1.
+      Do not flip to follow after the score.
+    params:
+      symbols: [EURUSD]
+      timeframe: H1
+      horizon_bars: 8
+      stop_atr: 1.0
+      target_atr: 1.0
+
+  - id: H42_tokyo_close_flatten
+    enabled: false
+    name: Fade USDJPY into Tokyo cash close vs the same fade at Tokyo lunch
+    why: >
+      Tokyo cash equities close near 15:00 JST. Exporters and dealers flatten
+      JPY books then, so fading the prior 3 H1 bars at 15:00 JST should beat
+      the same fade at 12:00 JST lunch (H39's clock, but that test was fade
+      vs follow, not close vs lunch). Distinct from rejected H39 and H12.
+      One symbol, clock rule, EA-shaped. USDJPY H1, 1:1 ATR, 3 bars. Frozen
+      fx_h1. Do not move the close hour.
+    params:
+      symbols: [USDJPY]
+      timeframe: H1
+      lookback_bars: 3
+      close_hour_tokyo: 15
+      lunch_hour_tokyo: 12
+      horizon_bars: 3
+      stop_atr: 1.0
+      target_atr: 1.0
+
+  - id: H43_month_end_usd
+    enabled: false
+    name: Short EURUSD on the last 2 London sessions of the month vs days 10-12
+    why: >
+      Month-end equity rebalance buys US assets and bids USD, so an
+      unconditional short EURUSD at 16:00 London on the last two sessions
+      of the month should beat the same short on days 10-12 (no rebalance).
+      Distinct from rejected H24 (gold follow month-to-date, not USD bid).
+      One symbol, calendar rule, EA-shaped. EURUSD H1, 1:1 ATR, 16 bars.
+      Frozen fx_h1. Do not retune to quarter-end after seeing results.
+    params:
+      symbols: [EURUSD]
+      timeframe: H1
+      signal_hour_london: 16
+      month_end_days: 2
+      base_days: [10, 11, 12]
+      horizon_bars: 16
+      stop_atr: 1.0
+      target_atr: 1.0
+

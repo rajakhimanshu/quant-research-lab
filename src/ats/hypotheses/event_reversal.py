@@ -43,8 +43,9 @@ def event_reversal_events(
     if not calendar.empty:
         tmin = pd.to_datetime(calendar["datetime_utc"], utc=True).min()
         tmax = pd.to_datetime(calendar["datetime_utc"], utc=True).max()
-        bar_t = pd.to_datetime(work["time"], utc=True)
-        work = work.loc[(bar_t >= tmin) & (bar_t <= tmax)].reset_index(drop=True)
+        if (tmax - tmin) >= pd.Timedelta(days=30):
+            bar_t = pd.to_datetime(work["time"], utc=True)
+            work = work.loc[(bar_t >= tmin) & (bar_t <= tmax)].reset_index(drop=True)
     large_idx = work.index[work["atr_multiple"] >= min_atr]
     if len(work) == 0:
         return pd.DataFrame()

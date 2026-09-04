@@ -10,10 +10,55 @@ from ats.config import DATA_DIR, load_hypotheses, load_settings
 from ats.data.calendar import load_calendar
 from ats.data.mt5_client import load_raw
 from ats.features.prepare import prepare_frame
+from ats.hypotheses.atr_momentum import atr_momentum_events
+from ats.hypotheses.cot_spec_fade import cot_spec_fade_events
+from ats.hypotheses.gold_dxy_relink import gold_dxy_relink_events
+from ats.hypotheses.gold_ema200_expand import gold_ema200_expand_events
+from ats.hypotheses.london_close_fade import london_close_fade_events
+from ats.hypotheses.rapid_bullet import rapid_bullet_events
+from ats.hypotheses.equity_rsi2 import equity_rsi2_events
 from ats.hypotheses.event_reversal import event_reversal_events
+from ats.hypotheses.ema_13_50_200 import ema_13_50_200_events
+from ats.hypotheses.ema200_drd_entry import ema200_drd_entry_events
+from ats.hypotheses.ny_ema_drd import ny_ema_drd_events
+from ats.hypotheses.fx_session import (
+    compression_expand_events,
+    friday_flatten_events,
+    h1_tsmom_events,
+    inside_bar_break_events,
+    london_asia_break_events,
+    overlap_continuation_events,
+    postfix_usd_fade_events,
+    pre_ecb_usd_events,
+    ranaldo_local_hours_events,
+    month_end_usd_events,
+    ny_close_asia_fade_events,
+    prior_day_range_fade_events,
+    tokyo_close_flatten_events,
+    tokyo_lunch_fade_events,
+    weekend_gap_fx_events,
+    xs_momentum_events,
+)
+from ats.hypotheses.forced_flow import (
+    lbma_pm_run_events,
+    month_end_rebalance_events,
+    streak_inventory_fade_events,
+    weekend_gap_fade_events,
+    wm_fix_follow_events,
+)
+from ats.hypotheses.m15_micro import (
+    large_bar_fade_events,
+    ny_box_fade_events,
+    pdh_pdl_fade_events,
+    round_bounce_events,
+    volume_spike_cont_events,
+    vwap_extreme_fade_events,
+)
+from ats.hypotheses.ny_open_sweep import ny_open_sweep_events
+from ats.hypotheses.session_orb import session_orb_events
 from ats.hypotheses.tap_breakout import tap_events
 from ats.research.stats import HypothesisReport, rates
-from ats.timeutil import time_splits
+from ats.timeutil import hyp_key, time_splits, locked_calendar_split, split_book_for
 
 LOCKED = "LOCKED — re-run with --unlock-oos after you pick a survivor. Do not peek."
 
@@ -31,17 +76,95 @@ def _events_for(hyp: dict, frames: dict[str, pd.DataFrame], settings: dict) -> p
     costs = settings["costs"]
     chunks = []
     merged_params = {**settings["features"], **(hyp.get("params") or {})}
+    hid = hyp["id"]
+    key = hyp_key(hid)
+    if key == "H38":
+        print(f"  scoring {hid} cross-section ({len(frames)} pairs)")
+        return xs_momentum_events(frames, merged_params, settings)
     for symbol, df in frames.items():
         spread = float(costs["spread_pips"].get(symbol, 1.5))
-        slip = float(costs["slippage_pips"])
-        hid = hyp["id"]
+        slip = float((costs.get("slippage_by_symbol") or {}).get(symbol, costs["slippage_pips"]))
         print(f"  scoring {hid} on {symbol} ({len(df)} bars)")
-        if hid.startswith("H1"):
+        if key == "H1":
             ev = event_reversal_events(df, symbol, merged_params, calendar, spread, slip)
-        elif hid.startswith("H2"):
+        elif key == "H2":
             ev = tap_events(df, symbol, merged_params)
             if not ev.empty:
                 ev = ev.loc[ev["treatment"] | ev["tap_no"].isin([1, 2])].copy()
+        elif key in {"H3", "H6"}:
+            ev = ny_open_sweep_events(df, symbol, merged_params, spread, slip)
+        elif key in {"H4", "H7"}:
+            ev = session_orb_events(df, symbol, merged_params, spread, slip)
+        elif key == "H8":
+            ev = atr_momentum_events(df, symbol, merged_params, spread, slip)
+        elif key == "H9":
+            ev = cot_spec_fade_events(df, symbol, merged_params, spread, slip)
+        elif key == "H10":
+            ev = rapid_bullet_events(df, symbol, merged_params, spread, slip)
+        elif key == "H11":
+            ev = gold_dxy_relink_events(df, symbol, merged_params, spread, slip)
+        elif key == "H12":
+            ev = london_close_fade_events(df, symbol, merged_params, spread, slip)
+        elif key == "H13":
+            ev = gold_ema200_expand_events(df, symbol, merged_params, spread, slip)
+        elif key == "H14":
+            ev = ny_ema_drd_events(df, symbol, merged_params, spread, slip)
+        elif key == "H15":
+            ev = ema200_drd_entry_events(df, symbol, merged_params, spread, slip)
+        elif key == "H16":
+            ev = ema_13_50_200_events(df, symbol, merged_params, spread, slip)
+        elif key == "H17":
+            ev = pdh_pdl_fade_events(df, symbol, merged_params, spread, slip)
+        elif key == "H18":
+            ev = large_bar_fade_events(df, symbol, merged_params, spread, slip)
+        elif key == "H19":
+            ev = vwap_extreme_fade_events(df, symbol, merged_params, spread, slip)
+        elif key == "H20":
+            ev = volume_spike_cont_events(df, symbol, merged_params, spread, slip)
+        elif key == "H21":
+            ev = round_bounce_events(df, symbol, merged_params, spread, slip)
+        elif key == "H22":
+            ev = ny_box_fade_events(df, symbol, merged_params, spread, slip)
+        elif key == "H23":
+            ev = lbma_pm_run_events(df, symbol, merged_params, spread, slip)
+        elif key == "H24":
+            ev = month_end_rebalance_events(df, symbol, merged_params, spread, slip)
+        elif key == "H25":
+            ev = streak_inventory_fade_events(df, symbol, merged_params, spread, slip)
+        elif key == "H26":
+            ev = weekend_gap_fade_events(df, symbol, merged_params, spread, slip)
+        elif key == "H27":
+            ev = wm_fix_follow_events(df, symbol, merged_params, spread, slip)
+        elif key == "H28":
+            ev = postfix_usd_fade_events(df, symbol, merged_params, spread, slip)
+        elif key == "H29":
+            ev = pre_ecb_usd_events(df, symbol, merged_params, spread, slip)
+        elif key == "H30":
+            ev = london_asia_break_events(df, symbol, merged_params, spread, slip)
+        elif key == "H31":
+            ev = h1_tsmom_events(df, symbol, merged_params, spread, slip)
+        elif key == "H32":
+            ev = ranaldo_local_hours_events(df, symbol, merged_params, spread, slip)
+        elif key == "H33":
+            ev = inside_bar_break_events(df, symbol, merged_params, spread, slip)
+        elif key == "H34":
+            ev = compression_expand_events(df, symbol, merged_params, spread, slip)
+        elif key == "H35":
+            ev = friday_flatten_events(df, symbol, merged_params, spread, slip)
+        elif key == "H36":
+            ev = overlap_continuation_events(df, symbol, merged_params, spread, slip)
+        elif key == "H37":
+            ev = weekend_gap_fx_events(df, symbol, merged_params, spread, slip)
+        elif key == "H39":
+            ev = tokyo_lunch_fade_events(df, symbol, merged_params, spread, slip)
+        elif key == "H40":
+            ev = ny_close_asia_fade_events(df, symbol, merged_params, spread, slip)
+        elif key == "H41":
+            ev = prior_day_range_fade_events(df, symbol, merged_params, spread, slip)
+        elif key == "H42":
+            ev = tokyo_close_flatten_events(df, symbol, merged_params, spread, slip)
+        elif key == "H43":
+            ev = month_end_usd_events(df, symbol, merged_params, spread, slip)
         else:
             raise ValueError(f"Unknown hypothesis {hid}")
         if ev is not None and not ev.empty:
@@ -85,7 +208,6 @@ def decide(
         return "REJECT", f"train-val gap {gap:.3f} > {max_gap} (overfit signature)"
     if validation["rate"] <= validation["baseline_rate"]:
         return "REJECT", "validation success is not above baseline"
-    notes.append("OOS is locked until you explicitly unlock it.")
     return "CANDIDATE", None
 
 
@@ -98,7 +220,34 @@ def evaluate(
 ) -> HypothesisReport:
     notes: list[str] = []
     hid = hyp["id"]
-    if hid.startswith("H1") and load_calendar().empty:
+    key = hyp_key(hid)
+    if key == "H5":
+        print("  scoring H5_equity_rsi2 via Yahoo daily")
+        events = equity_rsi2_events(hyp.get("params") or {})
+        frames = frames or {}
+    elif key == "H9":
+        from ats.ideas.cot import combined_path
+
+        if not combined_path().exists():
+            return HypothesisReport(
+                hypothesis=hid,
+                name=hyp["name"],
+                why=hyp["why"].strip(),
+                sample_size=0,
+                success_rate=None,
+                baseline_rate=None,
+                p_value=None,
+                train={},
+                validation={},
+                oos={"status": "skipped"},
+                regime_breakdown={},
+                cost_adjusted_success_rate=None,
+                train_val_gap=None,
+                decision="NEEDS_DATA",
+                reject_reason="No data/cot/combined.csv — run python -m ats ideas cot",
+                notes=["H9 uses official CFTC weekly files, not a scrape."],
+            )
+    elif key == "H1" and load_calendar().empty:
         return HypothesisReport(
             hypothesis=hid,
             name=hyp["name"],
@@ -118,7 +267,8 @@ def evaluate(
             notes=["Export a Forex Factory calendar to data/calendar/high_impact.csv"],
         )
 
-    events = _events_for(hyp, frames, settings)
+    if key != "H5":
+        events = _events_for(hyp, frames, settings)
     if events.empty:
         return HypothesisReport(
             hypothesis=hid,
@@ -140,9 +290,12 @@ def evaluate(
         )
 
     v = settings["validation"]
-    idx = pd.DatetimeIndex(pd.to_datetime(events["time"], utc=True))
-    split = time_splits(idx, float(v["train"]), float(v["validation"]))
     times = pd.to_datetime(events["time"], utc=True)
+    idx = pd.DatetimeIndex(times)
+    split = locked_calendar_split(settings, split_book_for(hid))
+    if split is None:
+        split = time_splits(idx, float(v["train"]), float(v["validation"]))
+    notes.append(f"split {split_book_for(hid)} train_end={split.train_end} val_end={split.val_end}")
     train_m = times <= split.train_end
     val_m = (times > split.train_end) & (times <= split.val_end)
     oos_m = times > split.val_end
@@ -169,6 +322,32 @@ def evaluate(
     gap = None
     if train.get("n") and validation.get("n"):
         gap = abs(train["rate"] - validation["rate"])
+
+    if "r_mult" in events.columns:
+        for label, mask in ("train", train_m), ("validation", val_m), ("oos", oos_m):
+            part = events.loc[mask & events["treatment"]]
+            if part.empty or not unlock_oos and label == "oos":
+                continue
+            notes.append(
+                f"{label} treatment mean R={float(part['r_mult'].mean()):.4f} "
+                f"n={len(part)} total R={float(part['r_mult'].sum()):.1f}"
+            )
+
+    if decision == "CANDIDATE" and not unlock_oos:
+        notes.append("OOS is locked until you explicitly unlock it.")
+    elif decision == "CANDIDATE" and unlock_oos:
+        min_oos = max(30, int(v["min_trades"]) // 4)
+        if oos.get("n", 0) < min_oos:
+            decision, reason = "NEEDS_MORE_DATA", f"oos n={oos.get('n')} too small"
+        elif oos.get("rate") is None or oos.get("rate") <= oos.get("baseline_rate", 1):
+            decision, reason = "REJECT", "oos success is not above baseline"
+        else:
+            gap_oos = abs(train["rate"] - oos["rate"])
+            if gap_oos > float(v["max_train_val_gap"]):
+                decision, reason = "REJECT", f"train-oos gap {gap_oos:.3f} > {v['max_train_val_gap']}"
+            else:
+                decision = "OOS_PASS"
+                notes.append("OOS unlocked after survivor pick. Not a live go.")
 
     return HypothesisReport(
         hypothesis=hid,
@@ -222,18 +401,25 @@ def print_report(report: HypothesisReport) -> None:
 
 def run_hypotheses(ids: list[str] | None, unlock_oos: bool) -> list[HypothesisReport]:
     settings = load_settings()
-    hyps = [h for h in load_hypotheses() if h.get("enabled", True)]
+    hyps = load_hypotheses()
     if ids:
         want = set(ids)
         hyps = [h for h in hyps if h["id"] in want]
         missing = want - {h["id"] for h in hyps}
         if missing:
             raise SystemExit(f"Unknown hypothesis ids: {missing}")
-    universe = settings["universe"]
-    frames = load_frames(universe["symbols"], universe["timeframe"], settings)
+    else:
+        hyps = [h for h in hyps if h.get("enabled", True)]
     n_tests = len(hyps)
     reports = []
     for hyp in hyps:
+        params = hyp.get("params") or {}
+        if hyp_key(hyp["id"]) == "H5":
+            frames = {}
+        else:
+            symbols = params.get("symbols") or settings["universe"]["symbols"]
+            tf = params.get("timeframe") or settings["universe"]["timeframe"]
+            frames = load_frames(symbols, tf, settings)
         report = evaluate(hyp, frames, settings, n_tests, unlock_oos)
         path = save_report(report)
         print_report(report)
