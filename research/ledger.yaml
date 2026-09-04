@@ -1,0 +1,478 @@
+# Canonical closed book. One row per hypothesis. Do not retune a REJECT.
+# Print: python -m ats ledger
+# Journal.md is the dated log. This file is the lookup.
+
+protocol: >
+  An edge is who pays you, after spread+slippage, on a frozen spec, with a
+  baseline, on locked train/val, Bonferroni if a family, OOS locked until a
+  survivor. Indicator combos are not a why. Do not reopen a REJECT because
+  costs got cheaper or a knob looks unused.
+
+how_we_pick:
+  - "Forced flow: someone must trade (fixes, auctions, month-end, rolls)."
+  - "Inventory: dealers skew quotes after a one-way run, then fade."
+  - "Risk premium: you are paid to hold something others dump (H5 dip-buy)."
+  - "Not an edge: EMA stacks, round numbers, VWAP stretch, PDH tags, volume spikes, NY-box folklore — already tested, all REJECT after costs."
+
+do_not_reopen:
+  - H1 news retrace
+  - H2 3rd-tap
+  - H3/H6 NY or London sweep-reclaim
+  - H4/H7 Asia vs NY ORB
+  - H8 ATR momentum continuation
+  - H9 COT percentile width (n too small; do not widen)
+  - H10 Rapid Bullet swings
+  - H11 gold-DXY z
+  - H12 London-close fade of prior 7 H1
+  - H13 EMA200 expansion
+  - H14-H16 any EMA/Dr.D stack
+  - H17 PDH/PDL fade
+  - H18 large-bar fade
+  - H19 VWAP stretch fade
+  - H20 volume-spike side
+  - H21 $5 round
+  - H22 NY 9:00-9:30 box fade-vs-break
+  - H23 LBMA PM follow
+  - H24 month-end MTD follow
+  - H25 5-bar streak fade
+  - H26 weekend gap fade
+  - H27 WM 4pm follow (hit-rate only, negative R)
+  - H28 Krohn postfix long EURUSD
+  - H29 Krohn pre-ECB short EURUSD
+  - H30 London-Asia break follow
+  - H31 EURUSD 5-day TSMOM
+  - H32 Ranaldo London-hours short
+  - H33 inside-bar follow
+  - H34 compression-expansion follow
+  - H35 Friday 15:00 flatten
+  - H36 London-NY overlap continuation
+  - H37 EURUSD weekend-gap 36h (do not loosen; val n short)
+  - H38 5-day cross-sectional FX momentum (do not flip to reversal)
+  - H39 USDJPY Tokyo lunch fade
+  - H40 NY-close Asia fade (hit-rate only, negative R)
+  - H41 prior-day range fade
+  - H42 Tokyo cash-close flatten
+  - H43 EURUSD month-end USD bid (do not retune to quarter-end)
+
+tests:
+  - id: H1_event_reversal
+    date: 2026-09-03
+    book: fx_h1
+    decision: REJECT
+    mechanism: High-impact news overshoots; fade the large bar vs same bar with no news.
+    baseline: Same 2.5 ATR bar, no news window.
+    train: 67.8% vs 72.0%
+    why_closed: News filter was worse than the unfiltered large bar. Do not retune 2.5 ATR or 40% retrace.
+
+  - id: H2_tap_breakout
+    date: 2026-09-03
+    book: fx_h1
+    decision: REJECT
+    mechanism: Third tap of a swing cluster is absorption then breakout vs tap 1-2.
+    baseline: Tap 1-2 of the same cluster.
+    train: 57.3% vs 54.4%, p=0.12
+    why_closed: 3pp noise. Do not retune cluster width or tap count.
+
+  - id: H3_ny_open_sweep
+    date: 2026-09-03
+    book: gold_m15
+    decision: REJECT
+    mechanism: Overnight-range stops get run at NY cash open, then reclaim.
+    baseline: Same sweep rule 11-16 NY.
+    train: 61.7% vs 54.9%, p=0.059; path expectancy negative
+    why_closed: Hit-rate mirage. Do not retune stop/target or RR.
+
+  - id: H4_asia_vs_ny_orb
+    date: 2026-09-03
+    book: gold_m15
+    decision: REJECT
+    mechanism: Asia opening-range breakout should beat NY ORB.
+    baseline: NY 13-17 UTC ORB.
+    train: 33.5% vs 46.2%
+    why_closed: Opposite of the live book. Asia ORB lost. Do not flip hours.
+
+  - id: H5_equity_rsi2
+    date: 2026-09-03
+    book: equity_daily
+    decision: PAPER_CANDIDATE
+    mechanism: Liquid US ETFs dip-buy above SMA200. RSI(2)<10 vs same dip below SMA200.
+    baseline: RSI(2)<10 below SMA200.
+    train: 0.091R / val 0.136R / OOS 0.154R (unlocked after survivor)
+    why_closed: Only paper book. Not live. Not FX. Do not retune RSI 10/65 or 200.
+
+  - id: H6_london_sweep
+    date: 2026-09-03
+    book: gold_m15
+    decision: REJECT
+    mechanism: Same as H3 with London 03-08 NY as the stop pool.
+    baseline: Control hours outside London pool.
+    train: 62.9% vs 52.5%, p=0.006, mean R -0.08
+    why_closed: Hit rate up, expectancy negative. Do not retune RR.
+
+  - id: H7_asia_fade
+    date: 2026-09-03
+    book: gold_m15
+    decision: REJECT
+    mechanism: Fade first Asia ORB vs fade first NY ORB.
+    baseline: Fade NY ORB.
+    train: both sides lose
+    why_closed: Breakout and fade both lose. Journal is not this rule.
+
+  - id: H8_atr_momentum
+    date: 2026-09-03
+    book: fx_h1
+    decision: REJECT
+    mechanism: Large H1 candle, close in outer 20%, continuation vs same-size mid-close.
+    baseline: Same-size mid-close candles.
+    train: 33.7% vs 32.6%, p=0.13, mean R +0.012
+    why_closed: 1:2 coin flip. Do not retune to ATR SL/TP.
+
+  - id: H9_cot_spec_fade
+    date: 2026-09-03
+    book: gold_m15
+    decision: NEEDS_MORE_DATA
+    mechanism: Fade crowded CFTC spec gold vs mid-percentile fade. 6-day publish lag.
+    baseline: Mid-percentile spec fade.
+    train: n=87 < 100; 63% vs 52%, p=0.16; val 36% vs 29%, gap 27.5%, val R -0.29
+    why_closed: Under min_trades. Do not widen percentiles to chase n. OOS locked.
+
+  - id: H10_rapid_bullet
+    date: 2026-09-03
+    book: fx_h1
+    decision: REJECT
+    mechanism: M5 buy/sell-stop at nearest intact 5-bar swing vs 20-bar Donchian.
+    baseline: Donchian extreme.
+    train: 50.6% vs 51.0%, p=0.56
+    why_closed: Pivot is not better than a raw extreme. Do not turn trailing on.
+
+  - id: H11_gold_dxy_relink
+    date: 2026-09-03
+    book: gold_m15
+    decision: REJECT
+    mechanism: Restore gold-dollar inverse beta after 60d corr_z >= 1.
+    baseline: "Same dollar-fade when |z| <= 0.35."
+    train: 56.9% vs 39.6% p=0.004; val 53.5% vs 64.7%
+    why_closed: Train lift died in val. Do not retune z.
+
+  - id: H12_london_close_fade
+    date: 2026-09-04
+    book: fx_h1
+    decision: REJECT
+    mechanism: Fade prior 7 H1 bars at 15:00 London vs same fade at 08:00.
+    baseline: 08:00 London fade.
+    train: 43.5% vs 41.1% p=0.009; val 36.5% vs 36.9%; R -0.14/-0.25
+    why_closed: 2.5pp mirage. Do not move the hours.
+
+  - id: H13_gold_ema200_expand
+    date: 2026-09-04
+    book: gold_m15
+    decision: REJECT
+    mechanism: Gold M30 expansion off EMA200 vs same-size expansion far from EMA.
+    baseline: Expansion far from EMA200.
+    train: 40.8% vs 44.3%, mean R -0.19
+    why_closed: Displacement off the mean is worse. Do not retune EMA or flip to fade.
+
+  - id: H14_ny_ema_drd
+    date: 2026-09-04
+    book: gold_m5
+    decision: REJECT
+    mechanism: M5 EMA 4-9-18 + Dr.D new stack in NY 9-12 vs London 03-08.
+    baseline: Same stack in London.
+    train: 45.4% vs 43.5% p=0.26, mean R -0.09
+    why_closed: NY is not better. Do not scan other EMA sets.
+
+  - id: H15_ema200_drd_entry
+    date: 2026-09-04
+    book: gold_m5
+    decision: REJECT
+    mechanism: EMA200 trend + new Dr.D entry vs same Dr.D against the 200.
+    baseline: Dr.D against the 200.
+    train: 44.5% vs 45.8%, mean R -0.11
+    why_closed: The 200 is not a filter. Do not retune 200 or ADX.
+
+  - id: H16_ema_13_50_200
+    date: 2026-09-04
+    book: gold_m15
+    decision: REJECT
+    mechanism: New EMA 13/50/200 stack vs new 13/50 fighting the 200.
+    baseline: 13/50 fighting 200.
+    train: 39.6% vs 40.6%, mean R -0.21
+    why_closed: Alignment is not better. Do not retune 13/50/200.
+
+  - id: H17_pdh_pdl_fade
+    date: 2026-09-04
+    book: gold_m15
+    family: m15_micro
+    decision: REJECT
+    mechanism: First M15 tag of prior-day high/low fades vs first tag of prior-day mid.
+    baseline: Prior-day mid fade.
+    train: 43.4% vs 45.2%, mean R -0.13
+    why_closed: Stop-pool fade lost to mid. Do not switch to 2nd touch or breakout.
+
+  - id: H18_large_bar_fade
+    date: 2026-09-04
+    book: gold_m15
+    family: m15_micro
+    decision: REJECT
+    mechanism: Fade 2.5+ ATR M15 bar vs fade 1.0-1.5 ATR bar.
+    baseline: Ordinary 1.0-1.5 ATR fade.
+    train: 42.6% vs 43.5%, mean R -0.15
+    why_closed: Exhaustion fade is not special. Do not flip to follow-through.
+
+  - id: H19_session_vwap_extreme
+    date: 2026-09-04
+    book: gold_m15
+    family: m15_micro
+    decision: REJECT
+    mechanism: "Fade |close-NY VWAP| > 1.5 ATR vs fade when glued to VWAP."
+    baseline: "|close-VWAP| < 0.35 ATR fade."
+    train: 44.7% vs 44.2% p=0.30, mean R -0.11
+    why_closed: Stretch is not a usable fade. Do not retune 1.5/0.35.
+
+  - id: H20_volume_spike_cont
+    date: 2026-09-04
+    book: gold_m15
+    family: m15_micro
+    decision: REJECT
+    mechanism: Follow a 2x tick-volume spike vs fade the same spike.
+    baseline: Fade the spike.
+    train: 42.9% vs 44.3%, mean R -0.14
+    why_closed: Train follow lost. Do not flip the spec because val looked better.
+
+  - id: H21_round_number_bounce
+    date: 2026-09-04
+    book: gold_m15
+    family: m15_micro
+    decision: REJECT
+    mechanism: First tag of a $5 gold round bounces vs first tag of yesterday's open.
+    baseline: Yesterday's open tag.
+    train: 40.3% vs 43.1%, mean R -0.19
+    why_closed: $5 magnet is worse. Do not retune to $10/$50.
+
+  - id: H22_ny_box_fade_vs_break
+    date: 2026-09-04
+    book: gold_m5
+    family: m15_micro
+    decision: REJECT
+    mechanism: Fade first close through NY 9:00-9:30 M5 box vs trade that break.
+    baseline: Trade the break.
+    train: 50.7% vs 41.8% p=0.032 not < 0.0083 (family of 6); train R +0.015, val R -0.014
+    why_closed: Hit-rate lift, no expectancy. Do not re-run as n_tests=1 to dodge Bonferroni.
+
+  - id: H23_lbma_pm_run
+    date: 2026-09-04
+    book: gold_m15
+    family: forced_flow
+    decision: REJECT
+    mechanism: Follow 30 min into LBMA PM 15:00 London vs same 30 min at 11:30 London.
+    baseline: Follow 11:30 London 30-min run.
+    train: 47.1% vs 43.5% p=0.12, mean R -0.06; val 45.7% vs 46.8% R -0.08
+    why_closed: Auction follow is not significant and R is negative. Do not retune to AM 10:30 or flip to fade.
+
+  - id: H24_month_end_rebalance
+    date: 2026-09-04
+    book: gold_m15
+    family: forced_flow
+    decision: REJECT
+    mechanism: Follow MTD gold on last 5 NY sessions vs day-of-month 10-14.
+    baseline: Mid-month follow of the same MTD sign.
+    train: 48.8% vs 43.9% p=0.23, mean R -0.02; val 37.8% vs 50.0% R -0.24
+    why_closed: No month-end lift after costs. Do not retune to quarter-end only.
+
+  - id: H25_streak_inventory_fade
+    date: 2026-09-04
+    book: gold_m15
+    family: forced_flow
+    decision: REJECT
+    mechanism: Fade first completed 5-bar same-direction streak vs fade a 2-bar streak.
+    baseline: 2-bar streak fade.
+    train: 43.9% vs 43.9%, mean R -0.13
+    why_closed: 5-bar fade is identical to 2-bar. Do not retune 5 vs 2 or flip to follow.
+
+  - id: H26_weekend_gap_fade
+    date: 2026-09-04
+    book: gold_m15
+    family: forced_flow
+    decision: REJECT
+    mechanism: Fade Friday-Sunday gold gap vs fade a 0.3 ATR London-open jump.
+    baseline: London 08:00 jump (never printed on this M15 book).
+    train: "weekend fade 49.1% n=114, R -0.02; baseline n=0"
+    why_closed: Weekend fade itself is a coin flip. Do not loosen gap size to manufacture a baseline.
+
+  - id: H27_wm_fix_follow
+    date: 2026-09-04
+    book: fx_h1
+    family: forced_flow
+    decision: REJECT
+    mechanism: Follow 14:00 London H1 into WM 4pm vs follow the 10:00 London bar.
+    baseline: Follow 10:00 London H1.
+    train: 44.9% vs 41.5% p=0.0013; val 46.1% vs 39.6% p=0.0086; gap 1.1pp; mean R -0.10 / -0.06
+    why_closed: Rate gate said CANDIDATE vs 10:00 follow, but 1:1 at 45% is -0.10R. Same hit-rate mirage as H3. Not a trade. Do not unlock OOS. Do not retune hours or flip to fade.
+
+  - id: H28_postfix_usd_fade
+    date: 2026-09-04
+    book: fx_h1
+    family: eurusd
+    decision: REJECT
+    mechanism: Unconditional long EURUSD at London 16:00 (Krohn postfix) vs same long at 08:00.
+    baseline: Long EURUSD at 08:00 London.
+    train: 44.0% vs 44.2%, mean R -0.09
+    why_closed: Postfix long is not better than morning long after costs. Do not retune hours.
+
+  - id: H29_pre_ecb_usd
+    date: 2026-09-04
+    book: fx_h1
+    family: eurusd
+    decision: REJECT
+    mechanism: Unconditional short EURUSD at London 07:00 (into ECB window) vs short at 00:00.
+    baseline: Short EURUSD at 00:00 London.
+    train: 43.3% vs 46.6%, mean R -0.13
+    why_closed: Pre-ECB short lost to Asia short. Do not retune to 14:15.
+
+  - id: H30_london_asia_break
+    date: 2026-09-04
+    book: fx_m5
+    family: eurusd
+    decision: REJECT
+    mechanism: Follow first London M5 break of Asia range vs fade that break.
+    baseline: Fade the break.
+    train: 35.6% vs 42.3% fade, mean R -0.29
+    why_closed: Follow lost to fade. Do not flip the spec to a fade. Do not retune Asia hours.
+
+  - id: H31_h1_tsmom
+    date: 2026-09-04
+    book: fx_h1
+    family: eurusd
+    decision: REJECT
+    mechanism: Follow EURUSD 5-day return at 16:00 London vs fade it, hold 24 H1.
+    baseline: Fade the 5-day return.
+    train: 45.6% vs 45.3% p=0.43, mean R -0.09; val 41.6% vs 49.4%
+    why_closed: 5-day TSMOM is a coin flip after costs. Do not retune lookback.
+
+  - id: H32_ranaldo_local_hours
+    date: 2026-09-04
+    book: fx_h1
+    family: eurusd
+    decision: REJECT
+    mechanism: Unconditional short EURUSD at London 08:00 vs short at 16:00 (Ranaldo local-hours).
+    baseline: Short EURUSD at 16:00 London.
+    train: 37.7% vs 44.6%, mean R -0.25
+    why_closed: London short lost to US-hours short after costs. Do not retune hours.
+
+  - id: H33_inside_bar_break
+    date: 2026-09-04
+    book: fx_h1
+    family: eurusd
+    decision: REJECT
+    mechanism: Follow H1 close beyond mother after an inside bar vs fade that close.
+    baseline: Fade the inside-bar break.
+    train: 39.3% vs 48.7% fade, mean R -0.18
+    why_closed: Follow lost. Fade looked better — do not flip the spec after the score.
+
+  - id: H34_compression_expand
+    date: 2026-09-04
+    book: fx_h1
+    family: eurusd
+    decision: REJECT
+    mechanism: Follow ATR expansion after compression vs expansion with no prior squeeze.
+    baseline: Expansion without compression.
+    train: 50.3% vs 43.5% p=0.046 not < 0.0125; mean R -0.007; val n=10
+    why_closed: Family p-gate and negative R. Do not re-run as n_tests=1. Do not retune 0.7/1.3.
+
+  - id: H35_friday_flatten
+    date: 2026-09-04
+    book: fx_h1
+    family: eurusd
+    decision: REJECT
+    mechanism: Fade prior 4 H1 bars at Friday 15:00 London vs Wednesday 15:00.
+    baseline: Wednesday flatten.
+    train: 46.5% vs 44.5% p=0.32, mean R -0.08
+    why_closed: Friday is not a better flatten than Wednesday. Do not move the weekday.
+
+  - id: H36_overlap_continuation
+    date: 2026-09-04
+    book: fx_h1
+    family: eurusd
+    decision: REJECT
+    mechanism: Follow 08:00-12:00 London EURUSD return from 13:00 overlap vs from 16:00.
+    baseline: Follow the same morning after London close.
+    train: 42.3% vs 45.2%, mean R -0.15
+    why_closed: Overlap continuation lost to post-London follow. Do not retune the clock.
+
+  - id: H37_weekend_gap_fx
+    date: 2026-09-04
+    book: fx_h1
+    family: eurusd
+    decision: NEEDS_MORE_DATA
+    mechanism: Fade EURUSD weekend halt gap vs fade Wednesday London-open overnight.
+    baseline: Wednesday 08:00 overnight fade.
+    train: 58.8% vs 41.4% p=2.9e-5, mean R +0.12; val 52.2% vs 32.1% n=23, mean R +0.02
+    why_closed: Val n=23 < 30. Do not loosen the 36-hour gap. Do not move val_end. Do not peek OOS.
+
+  - id: H38_xs_momentum
+    date: 2026-09-04
+    book: fx_h1
+    family: eurusd
+    decision: REJECT
+    mechanism: Long 5-day winner major and short loser vs the reverse (Menkhoff XS).
+    baseline: Reverse the cross-section (short winner, long loser).
+    train: 44.8% vs 46.6%, mean R -0.10; val reverse won
+    why_closed: XS follow lost. Do not flip to reversal. Do not retune to 1-month.
+
+  - id: H39_tokyo_lunch_jpy
+    date: 2026-09-04
+    book: fx_h1
+    family: eurusd
+    decision: REJECT
+    mechanism: Fade USDJPY Tokyo morning at 12:00 JST vs follow that morning.
+    baseline: Follow the same 3 H1 bars.
+    train: 45.2% vs 46.6%, mean R -0.08
+    why_closed: Tokyo lunch fade is not better than follow. Do not move the lunch hour.
+
+  - id: H40_ny_close_asia_fade
+    date: 2026-09-04
+    book: fx_h1
+    family: retail_ea
+    decision: REJECT
+    mechanism: Fade EURUSD 13:00-20:00 London at 21:00 vs fade 08:00-12:00 at noon.
+    baseline: Fade London morning at 12:00.
+    train: 48.4% vs 26.4% p~0 (rate gate CANDIDATE); mean R -0.036; val R -0.13
+    why_closed: Hit-rate mirage. Baseline is a losing fade (26%). Do not unlock OOS.
+
+  - id: H41_prior_day_range_fade
+    date: 2026-09-04
+    book: fx_h1
+    family: retail_ea
+    decision: REJECT
+    mechanism: Fade first H1 close through yesterday's range vs follow that close.
+    baseline: Follow the prior-day range break.
+    train: 46.2% vs 43.8% p=0.10, mean R -0.08
+    why_closed: No lift after costs. Do not flip to follow.
+
+  - id: H42_tokyo_close_flatten
+    date: 2026-09-04
+    book: fx_h1
+    family: retail_ea
+    decision: REJECT
+    mechanism: Fade USDJPY at 15:00 JST close vs fade at 12:00 JST lunch.
+    baseline: Tokyo lunch fade.
+    train: 42.6% vs 45.2%, mean R -0.13
+    why_closed: Close flatten lost to lunch fade. Do not move the close hour.
+
+  - id: H43_month_end_usd
+    date: 2026-09-04
+    book: fx_h1
+    family: retail_ea
+    decision: REJECT
+    mechanism: Short EURUSD last 2 London sessions of the month vs days 10-12.
+    baseline: Same short on days 10-12.
+    train: 52.4% vs 43.0% p=0.051 not < 0.0125; mean R +0.06; val n=14
+    why_closed: Family p-gate. Do not re-run as n_tests=1. Do not retune to quarter-end.
+
+open:
+  - "Working universe: FX majors + XAUUSD, intraday (M5/M15) and swing (H1). No stocks."
+  - "Retail path: paper -> $100-200 live x several (execution) -> $1000-2000 -> EA. No grid. One symbol until a survivor."
+  - H5_equity_rsi2 archived (equity-only paper). Out of scope. Do not port to gold/FX.
+  - H9_cot_spec_fade still NEEDS_MORE_DATA (do not widen percentiles)
+  - H37_weekend_gap_fx still NEEDS_MORE_DATA (val n=23; do not loosen 36h gap; do not peek OOS)
+  - No FX/gold survivor. No MT5 EA until a paper candidate exists.
