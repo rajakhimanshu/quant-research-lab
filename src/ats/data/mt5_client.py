@@ -80,6 +80,7 @@ def shutdown() -> None:
 def mt5_timeframe(name: str):
     mt5 = _mt5()
     mapping = {
+        "M5": mt5.TIMEFRAME_M5,
         "M15": mt5.TIMEFRAME_M15,
         "M30": mt5.TIMEFRAME_M30,
         "H1": mt5.TIMEFRAME_H1,
@@ -130,19 +131,41 @@ def copy_ohlc(symbol: str, timeframe: str, years: int) -> pd.DataFrame:
     mt5 = _mt5()
     resolved = resolve_symbol(symbol)
     tf = mt5_timeframe(timeframe)
-    # MT5 Python bindings often reject tz-aware datetimes.
     utc_from = years_ago(years).astimezone(timezone.utc).replace(tzinfo=None)
     utc_to = datetime.now(timezone.utc).replace(tzinfo=None)
     minutes = TIMEFRAME_MINUTES[timeframe]
-    count = int(years * 365 * 24 * 60 / minutes) + 2000
-    rates = mt5.copy_rates_from_pos(resolved, tf, 0, count)
-    if rates is None or len(rates) == 0:
+    want = int(years * 365 * 24 * 60 / minutes) + 2000
+    info = mt5.terminal_info()
+    maxbars = int(getattr(info, "maxbars", 0) or 0)
+    if maxbars and want > maxbars:
+        print(
+            f"WARNING: {resolved} {timeframe} wants {want} bars but this terminal "
+            f"maxbars={maxbars} (Tools > Options > Charts > Max bars in chart). "
+            f"MT5 is not unlimited. Set Unlimited, restart MT5, open the {resolved} "
+            f"chart and scroll left, then pull again. Capping the request at {maxbars}."
+        )
+        want = maxbars
+    chunk = 20000
+    frames = []
+    off = 0
+    while off < want:
+        n = min(chunk, want - off)
+        part = mt5.copy_rates_from_pos(resolved, tf, off, n)
+        if part is None or len(part) == 0:
+            break
+        frames.append(pd.DataFrame(part))
+        if len(part) < n:
+            break
+        off += len(part)
+    if frames:
+        df = pd.concat(frames, ignore_index=True)
+    else:
         rates = mt5.copy_rates_range(resolved, tf, utc_from, utc_to)
-    if rates is None or len(rates) == 0:
-        rates = mt5.copy_rates_from(resolved, tf, utc_from, count)
-    if rates is None or len(rates) == 0:
-        raise RuntimeError(f"No bars for {resolved} {timeframe}: {mt5.last_error()}")
-    df = pd.DataFrame(rates)
+        if rates is None or len(rates) == 0:
+            rates = mt5.copy_rates_from(resolved, tf, utc_from, min(want, 20000))
+        if rates is None or len(rates) == 0:
+            raise RuntimeError(f"No bars for {resolved} {timeframe}: {mt5.last_error()}")
+        df = pd.DataFrame(rates)
     df["time"] = pd.to_datetime(df["time"], unit="s", utc=True)
     if "tick_volume" in df.columns:
         df = df.rename(columns={"tick_volume": "volume"})
@@ -151,6 +174,11 @@ def copy_ohlc(symbol: str, timeframe: str, years: int) -> pd.DataFrame:
     df["symbol"] = resolved
     df["requested_symbol"] = symbol
     df["timeframe"] = timeframe
+    if maxbars and len(df) >= maxbars:
+        print(
+            f"WARNING: {resolved} {timeframe} hit the {maxbars}-bar terminal cap. "
+            "This is MT5 Max bars in chart, not a Python limit and not 'unlimited'."
+        )
     return df.reset_index(drop=True)
 
 
