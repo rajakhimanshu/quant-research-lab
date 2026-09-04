@@ -19,6 +19,7 @@ dependencies = [
     "python-dotenv>=1.0",
     "matplotlib>=3.8",
     "pyarrow>=15.0",
+    "yfinance>=0.2.40",
 ]
 
 [project.optional-dependencies]

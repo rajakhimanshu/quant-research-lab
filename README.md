@@ -76,6 +76,30 @@ Defined in `config/hypotheses.yaml`:
 
 Thresholds live in `config/settings.yaml` and `config/hypotheses.yaml`. Change numbers there, not by sprinkling magic constants into detectors.
 
+## Idea intake (not an edge finder)
+
+Sources feed an inbox. You still write the `why` and freeze a spec before `python -m ats test`. The lab will not auto-code papers into EAs or scrape broker logins.
+
+```powershell
+python -m ats ideas list
+python -m ats ideas arxiv
+python -m ats ideas blogs
+python -m ats ideas cot
+python -m ats ideas cross
+python -m ats ideas sentiment
+python -m ats test --id H9_cot_spec_fade
+```
+
+| Command | What it is | What it is not |
+|---|---|---|
+| `ideas arxiv` | arXiv q-fin paper leads | A trade rule |
+| `ideas blogs` | Methodology reading list | Signals |
+| `ideas cot` | Official CFTC weekly files | A buy/sell |
+| `ideas cross` | Gold–DXY (and yields–JPY) correlation snapshot | A mean-reversion EA |
+| `ideas sentiment` | CSV you drop under `data/sentiment/` | An IG scrape |
+
+Inbox: `config/ideas.yaml`. Same discipline as H1/H2: precise definition, causal why, frozen params, costed train/val, OOS locked.
+
 ## Honest expectations
 
 Most hypotheses die in the quick-reject step. That is the system working. A candidate is not a live strategy. Paper trade comes after a survivor, then tiny size.
