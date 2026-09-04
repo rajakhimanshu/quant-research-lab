@@ -1,0 +1,281 @@
+# Idea inbox. A lead is not a test. A test is not an edge.
+# Promote to config/hypotheses.yaml only after a frozen why + frozen params.
+
+protocol: >
+  Take a lead from any source below. Write it as a precise H1/H2-style
+  definition with a causal why. Freeze params. Then
+  `python -m ats test --id ...` on fresh splits with costs. You accept or
+  reject. This inbox does not hunt edges, scrape signals, or auto-code papers
+  into EAs. Do not reopen H1–H7.
+
+method:
+  - Source a lead (paper, blog method, COT, dislocation, sentiment CSV).
+  - Write a one-sentence mechanism (why), not an indicator combo.
+  - Freeze entry, stop, target, horizon, baseline, costs — before seeing results.
+  - Run train/validation only. Do not pass --unlock-oos until a survivor.
+  - Journal accept/reject. Do not retune after the fact.
+
+sources:
+  academic: >
+    SSRN and arXiv q-fin. Use `python -m ats ideas arxiv`. Papers are leads.
+    You still write the why and freeze the spec. Do not copy a paper's backtest
+    numbers onto this broker's book.
+  blogs: >
+    Methodology only, never signals: QuantConnect research posts, QuantInsti
+    blog, Robot Wealth. If a post says "buy here", discard it. If it says
+    "we test X vs Y with this baseline", that is a lead.
+  cot: >
+    CFTC Commitment of Traders, official weekly files.
+    `python -m ats ideas cot` then `python -m ats test --id H9_cot_spec_fade`.
+  cross_market: >
+    Temporary breaks in usual links (gold vs DXY, yields vs USDJPY).
+    `python -m ats ideas cross` is a snapshot. A z-score is not a trade until
+    you freeze a why and a spec.
+  sentiment: >
+    Broker retail positioning (e.g. IG Client Sentiment). No login scrape.
+    Drop a CSV at data/sentiment/*.csv with date,instrument,long_pct then
+    `python -m ats ideas sentiment`. Extreme retail is a contrarian *lead*.
+
+ideas:
+  - id: LEAD_arxiv
+    status: lead
+    source: academic
+    note: Run python -m ats ideas arxiv --save after you pick a paper family.
+
+  - id: LEAD_blogs
+    status: lead
+    source: blogs
+    note: >
+      Read method posts (how they test), not signal posts. Promote only with
+      your own why on this broker's data.
+
+  - id: H9_cot_spec_fade
+    status: tested
+    source: cot
+    hyp_id: H9_cot_spec_fade
+    why: >
+      Crowded CFTC non-commercial gold positioning is the late leveraged side;
+      fade extremes vs the same fade when specs are not extreme. Publication
+      lag is frozen so the test cannot see Tuesday's book before Friday.
+    note: >
+      Frozen in hypotheses.yaml. First run 2026-09-03 NEEDS_MORE_DATA
+      (train n=87). Do not retune.
+
+  - id: H11_gold_dxy_relink
+    status: tested
+    source: cross_market
+    hyp_id: H11_gold_dxy_relink
+    why: >
+      Gold usually moves opposite DXY. When 60d correlation is a sigma above
+      its own year, fade gold back to a negative dollar beta vs the same
+      trade when correlation is near average.
+    note: >
+      Frozen in hypotheses.yaml. 2026-09-03 REJECT. Val lost to mid-band
+      baseline. Do not retune z.
+
+  - id: LEAD_retail_sentiment
+    status: lead
+    source: sentiment
+    note: Drop CSV, do not scrape. No hypothesis until you write a why.
+
+  - id: H17_pdh_pdl_fade
+    status: tested
+    source: microstructure
+    hyp_id: H17_pdh_pdl_fade
+    why: >
+      First M15 tag of prior-day high/low is a stop pool; fade vs first tag
+      of prior-day mid (no pool).
+    note: 2026-09-04 REJECT. Train worse than mid fade. Do not retune.
+
+  - id: H18_large_bar_fade
+    status: tested
+    source: microstructure
+    hyp_id: H18_large_bar_fade
+    why: Fade 2.5+ ATR M15 exhaustion vs fade an ordinary 1.0-1.5 ATR bar.
+    note: 2026-09-04 REJECT. Do not flip to follow-through.
+
+  - id: H19_session_vwap_extreme
+    status: tested
+    source: microstructure
+    hyp_id: H19_session_vwap_extreme
+    why: Fade |close-NY VWAP| > 1.5 ATR vs the same fade when glued to VWAP.
+    note: 2026-09-04 REJECT. p=0.30, negative mean R. Do not retune 1.5/0.35.
+
+  - id: H20_volume_spike_cont
+    status: tested
+    source: microstructure
+    hyp_id: H20_volume_spike_cont
+    why: Follow a 2x tick-volume spike vs fade the same spike.
+    note: 2026-09-04 REJECT. Train follow lost to fade. Do not flip the spec.
+
+  - id: H21_round_number_bounce
+    status: tested
+    source: microstructure
+    hyp_id: H21_round_number_bounce
+    why: First tag of a $5 gold round bounces vs first tag of yesterday's open.
+    note: 2026-09-04 REJECT. Do not retune to $10/$50.
+
+  - id: H22_ny_box_fade_vs_break
+    status: tested
+    source: microstructure
+    hyp_id: H22_ny_box_fade_vs_break
+    why: Fade first close through the NY 9:00-9:30 M5 box vs trade that break.
+    note: >
+      2026-09-04 REJECT. Family α=0.0083; train p=0.032. Val mean R negative.
+      Do not re-run as a single test.
+
+  - id: H23_lbma_pm_run
+    status: tested
+    source: academic
+    hyp_id: H23_lbma_pm_run
+    why: Follow 30 min into LBMA PM 15:00 London vs same 30 min at 11:30.
+    note: 2026-09-04 REJECT. p=0.12, negative R. Do not retune to AM or fade.
+
+  - id: H24_month_end_rebalance
+    status: tested
+    source: academic
+    hyp_id: H24_month_end_rebalance
+    why: Follow MTD gold on last 5 NY sessions vs day-of-month 10-14.
+    note: 2026-09-04 REJECT. Do not retune to quarter-end.
+
+  - id: H25_streak_inventory_fade
+    status: tested
+    source: academic
+    hyp_id: H25_streak_inventory_fade
+    why: Fade a 5-bar same-direction streak vs fade a 2-bar streak.
+    note: 2026-09-04 REJECT. 5-bar equals 2-bar. Do not flip to follow.
+
+  - id: H26_weekend_gap_fade
+    status: tested
+    source: microstructure
+    hyp_id: H26_weekend_gap_fade
+    why: Fade weekend halt gap vs fade a London-open jump of similar size.
+    note: 2026-09-04 REJECT. Weekend 49% R -0.02. Baseline n=0. Do not loosen gap.
+
+  - id: H27_wm_fix_follow
+    status: tested
+    source: academic
+    hyp_id: H27_wm_fix_follow
+    why: Follow 14:00 London H1 into WM 4pm vs follow the 10:00 bar.
+    note: >
+      2026-09-04 REJECT. Rate gate CANDIDATE, mean R -0.10. Hit-rate mirage.
+      Do not unlock OOS. Do not retune hours.
+
+  - id: H28_postfix_usd_fade
+    status: tested
+    source: academic
+    hyp_id: H28_postfix_usd_fade
+    why: Krohn postfix — long EURUSD at London 16:00 vs 08:00.
+    note: 2026-09-04 REJECT. Do not retune hours.
+
+  - id: H29_pre_ecb_usd
+    status: tested
+    source: academic
+    hyp_id: H29_pre_ecb_usd
+    why: Krohn pre-ECB — short EURUSD at London 07:00 vs 00:00.
+    note: 2026-09-04 REJECT. Do not retune to 14:15.
+
+  - id: H30_london_asia_break
+    status: tested
+    source: microstructure
+    hyp_id: H30_london_asia_break
+    why: Follow first London break of Asia EURUSD range vs fade.
+    note: 2026-09-04 REJECT. Follow lost. Do not flip to fade.
+
+  - id: H31_h1_tsmom
+    status: tested
+    source: academic
+    hyp_id: H31_h1_tsmom
+    why: Follow EURUSD 5-day return at 16:00 vs fade.
+    note: 2026-09-04 REJECT. Coin flip after costs. Do not retune lookback.
+
+  - id: H32_ranaldo_local_hours
+    status: tested
+    source: academic
+    hyp_id: H32_ranaldo_local_hours
+    why: Ranaldo — short EURUSD at London 08:00 vs 16:00.
+    note: 2026-09-04 REJECT. London short lost to US-hours short. Do not retune hours.
+
+  - id: H33_inside_bar_break
+    status: tested
+    source: microstructure
+    hyp_id: H33_inside_bar_break
+    why: Follow H1 close beyond mother after an inside bar vs fade.
+    note: 2026-09-04 REJECT. Follow lost. Do not flip to fade.
+
+  - id: H34_compression_expand
+    status: tested
+    source: microstructure
+    hyp_id: H34_compression_expand
+    why: Follow ATR expansion after compression vs expansion with no squeeze.
+    note: 2026-09-04 REJECT. Family p-gate and negative R. Do not rerun solo.
+
+  - id: H35_friday_flatten
+    status: tested
+    source: microstructure
+    hyp_id: H35_friday_flatten
+    why: Fade Friday 15:00 vs Wednesday 15:00, 4 H1 lookback.
+    note: 2026-09-04 REJECT. Friday is not a better flatten than Wednesday.
+
+  - id: H36_overlap_continuation
+    status: tested
+    source: academic
+    hyp_id: H36_overlap_continuation
+    why: Follow London morning into NY overlap vs after London close.
+    note: 2026-09-04 REJECT. Overlap lost. Do not retune the clock.
+
+  - id: H37_weekend_gap_fx
+    status: tested
+    source: microstructure
+    hyp_id: H37_weekend_gap_fx
+    why: Fade EURUSD weekend halt vs Wednesday London-open overnight.
+    note: >
+      2026-09-04 NEEDS_MORE_DATA. Train 58.8% vs 41.4% R +0.12. Val n=23.
+      Do not loosen 36h. Do not peek OOS.
+
+  - id: H38_xs_momentum
+    status: tested
+    source: academic
+    hyp_id: H38_xs_momentum
+    why: Long 5-day winner major and short loser vs the reverse.
+    note: 2026-09-04 REJECT. XS follow lost. Do not flip to reversal.
+
+  - id: H39_tokyo_lunch_jpy
+    status: tested
+    source: academic
+    hyp_id: H39_tokyo_lunch_jpy
+    why: Fade USDJPY Tokyo morning at 12:00 JST vs follow.
+    note: 2026-09-04 REJECT. Lunch fade not better than follow.
+
+  - id: H40_ny_close_asia_fade
+    status: tested
+    source: microstructure
+    hyp_id: H40_ny_close_asia_fade
+    why: Fade NY-day EURUSD at 21:00 London vs fade London morning at noon.
+    note: >
+      2026-09-04 REJECT. Rate gate CANDIDATE, mean R negative. Hit-rate
+      mirage. Do not unlock OOS.
+
+  - id: H41_prior_day_range_fade
+    status: tested
+    source: microstructure
+    hyp_id: H41_prior_day_range_fade
+    why: Fade first H1 close through yesterday's range vs follow.
+    note: 2026-09-04 REJECT. Do not flip to follow.
+
+  - id: H42_tokyo_close_flatten
+    status: tested
+    source: microstructure
+    hyp_id: H42_tokyo_close_flatten
+    why: Fade USDJPY at 15:00 JST vs 12:00 JST lunch.
+    note: 2026-09-04 REJECT. Close flatten lost to lunch fade.
+
+  - id: H43_month_end_usd
+    status: tested
+    source: academic
+    hyp_id: H43_month_end_usd
+    why: Short EURUSD last 2 sessions of the month vs days 10-12.
+    note: 2026-09-04 REJECT. Family p-gate. Do not retune to quarter-end.
+
+
+
