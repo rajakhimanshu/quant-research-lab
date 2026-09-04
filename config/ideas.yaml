@@ -277,5 +277,34 @@ ideas:
     why: Short EURUSD last 2 sessions of the month vs days 10-12.
     note: 2026-09-04 REJECT. Family p-gate. Do not retune to quarter-end.
 
+  - id: H44_wm_postfix_fade
+    status: tested
+    source: microstructure
+    hyp_id: H44_wm_postfix_fade
+    why: Fade pre-WM 14:00-16:00 run at 16:00 vs fade 10:00-12:00.
+    note: 2026-09-04 REJECT. Rate gate CANDIDATE, R −0.41. Hit-rate mirage.
+
+  - id: H45_big_figure_fade
+    status: tested
+    source: microstructure
+    hyp_id: H45_big_figure_fade
+    why: Fade first H1 tag of a 100-pip figure vs yesterday's open.
+    note: 2026-09-04 REJECT. Do not retune to 50 pips.
+
+  - id: H46_stop_pool_20_fade
+    status: tested
+    source: microstructure
+    hyp_id: H46_stop_pool_20_fade
+    why: Fade a new 20-H1 extreme vs fade a new 5-H1 extreme.
+    note: 2026-09-04 REJECT. Family p-gate and negative R. Do not rerun solo.
+
+  - id: H47_london_lunch_fade
+    status: tested
+    source: microstructure
+    hyp_id: H47_london_lunch_fade
+    why: Fade EURUSD at London 12:00 vs 08:00, 3 H1.
+    note: 2026-09-04 REJECT. Lunch fade not better than open fade.
+
+
 
 

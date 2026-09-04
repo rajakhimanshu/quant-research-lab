@@ -22,21 +22,25 @@ from ats.hypotheses.ema_13_50_200 import ema_13_50_200_events
 from ats.hypotheses.ema200_drd_entry import ema200_drd_entry_events
 from ats.hypotheses.ny_ema_drd import ny_ema_drd_events
 from ats.hypotheses.fx_session import (
+    big_figure_fade_events,
     compression_expand_events,
     friday_flatten_events,
     h1_tsmom_events,
     inside_bar_break_events,
     london_asia_break_events,
+    london_lunch_fade_events,
+    month_end_usd_events,
+    ny_close_asia_fade_events,
     overlap_continuation_events,
     postfix_usd_fade_events,
     pre_ecb_usd_events,
-    ranaldo_local_hours_events,
-    month_end_usd_events,
-    ny_close_asia_fade_events,
     prior_day_range_fade_events,
+    ranaldo_local_hours_events,
+    stop_pool_20_fade_events,
     tokyo_close_flatten_events,
     tokyo_lunch_fade_events,
     weekend_gap_fx_events,
+    wm_postfix_fade_events,
     xs_momentum_events,
 )
 from ats.hypotheses.forced_flow import (
@@ -165,6 +169,14 @@ def _events_for(hyp: dict, frames: dict[str, pd.DataFrame], settings: dict) -> p
             ev = tokyo_close_flatten_events(df, symbol, merged_params, spread, slip)
         elif key == "H43":
             ev = month_end_usd_events(df, symbol, merged_params, spread, slip)
+        elif key == "H44":
+            ev = wm_postfix_fade_events(df, symbol, merged_params, spread, slip)
+        elif key == "H45":
+            ev = big_figure_fade_events(df, symbol, merged_params, spread, slip)
+        elif key == "H46":
+            ev = stop_pool_20_fade_events(df, symbol, merged_params, spread, slip)
+        elif key == "H47":
+            ev = london_lunch_fade_events(df, symbol, merged_params, spread, slip)
         else:
             raise ValueError(f"Unknown hypothesis {hid}")
         if ev is not None and not ev.empty:

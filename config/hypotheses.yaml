@@ -875,3 +875,82 @@ hypotheses:
       stop_atr: 1.0
       target_atr: 1.0
 
+  - id: H44_wm_postfix_fade
+    enabled: false
+    name: Fade EURUSD pre-WM run at 16:00 vs fade late morning at noon
+    why: >
+      After the WM 4pm matching, the pre-fix squeeze is leftover inventory,
+      so fading the 14:00-16:00 London return at 16:00 should beat fading
+      10:00-12:00 at noon (no fix). Distinct from rejected H27 (follow into
+      14:00) and H28 (unconditional long 16:00). One symbol, clock, EA-shaped.
+      EURUSD H1, 1:1 ATR, 4 bars. Frozen fx_h1. Do not retune to 16:00 fade of
+      a different window.
+    params:
+      symbols: [EURUSD]
+      timeframe: H1
+      treat_start_london: 14
+      treat_end_london: 16
+      base_start_london: 10
+      base_end_london: 12
+      min_prior_atr: 0.25
+      horizon_bars: 4
+      stop_atr: 1.0
+      target_atr: 1.0
+
+  - id: H45_big_figure_fade
+    enabled: false
+    name: Fade first EURUSD H1 tag of a 100-pip figure vs yesterday's open
+    why: >
+      Option strikes and stops cluster on the 00 big figure. The first H1 tag
+      of 1.xx00 should bounce more than the first tag of yesterday's open (no
+      strike magnet). Distinct from rejected H21 (gold $5). One symbol, OHLC,
+      EA-shaped. EURUSD H1, 1:1 ATR, 8 bars. Frozen fx_h1. Do not retune to
+      50-pip figures.
+    params:
+      symbols: [EURUSD]
+      timeframe: H1
+      figure_pips: 100
+      near_atr: 0.40
+      horizon_bars: 8
+      stop_atr: 1.0
+      target_atr: 1.0
+
+  - id: H46_stop_pool_20_fade
+    enabled: false
+    name: Fade a new 20-H1 EURUSD extreme vs fade a new 5-H1 extreme
+    why: >
+      Swing stops sit beyond the 20-bar high/low. A new 20-H1 extreme is that
+      pool getting run, so fading it should beat fading a 5-H1 extreme (noise,
+      not a stop cluster). Distinct from rejected H10 (pending stop at a
+      5-bar swing vs Donchian baseline) and H25 (gold streak length). One
+      symbol, OHLC, EA-shaped. EURUSD H1, 1:1 ATR, 8 bars. Frozen fx_h1. Do
+      not retune 20/5 after seeing results.
+    params:
+      symbols: [EURUSD]
+      timeframe: H1
+      treat_lookback: 20
+      base_lookback: 5
+      horizon_bars: 8
+      stop_atr: 1.0
+      target_atr: 1.0
+
+  - id: H47_london_lunch_fade
+    enabled: false
+    name: Fade EURUSD London morning at lunch vs the same fade at London open
+    why: >
+      London lunch thins the book, so morning inventory is faded at 12:00
+      more than at 08:00 when the two-way session is starting. Distinct from
+      rejected H12 (15:00 vs 08:00, 7 bars) and H39 (Tokyo lunch USDJPY).
+      One symbol, clock, EA-shaped. EURUSD H1, 1:1 ATR, 3 bars. Frozen fx_h1.
+      Do not move lunch to 13:00.
+    params:
+      symbols: [EURUSD]
+      timeframe: H1
+      lookback_bars: 3
+      lunch_hour_london: 12
+      open_hour_london: 8
+      min_prior_atr: 0.25
+      horizon_bars: 3
+      stop_atr: 1.0
+      target_atr: 1.0
+

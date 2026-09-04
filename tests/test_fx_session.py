@@ -2,11 +2,13 @@ import numpy as np
 import pandas as pd
 
 from ats.hypotheses.fx_session import (
+    big_figure_fade_events,
     compression_expand_events,
     friday_flatten_events,
     h1_tsmom_events,
     inside_bar_break_events,
     london_asia_break_events,
+    london_lunch_fade_events,
     long_foreign_side,
     month_end_usd_events,
     ny_close_asia_fade_events,
@@ -16,8 +18,10 @@ from ats.hypotheses.fx_session import (
     prior_day_range_fade_events,
     ranaldo_local_hours_events,
     short_foreign_side,
+    stop_pool_20_fade_events,
     tokyo_close_flatten_events,
     tokyo_lunch_fade_events,
+    wm_postfix_fade_events,
     weekend_gap_fx_events,
     xs_momentum_events,
 )
@@ -68,6 +72,10 @@ def test_fx_session_handlers_run():
         (prior_day_range_fade_events, h1),
         (tokyo_close_flatten_events, h1),
         (month_end_usd_events, h1),
+        (wm_postfix_fade_events, h1),
+        (big_figure_fade_events, h1),
+        (stop_pool_20_fade_events, h1),
+        (london_lunch_fade_events, h1),
     ):
         ev = fn(df, "EURUSD", params, 0.8, 0.2)
         assert ev is not None

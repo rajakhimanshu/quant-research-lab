@@ -52,3 +52,7 @@ def test_hypotheses_file_lists_h1_and_h2():
     assert "H41_prior_day_range_fade" in ids
     assert "H42_tokyo_close_flatten" in ids
     assert "H43_month_end_usd" in ids
+    assert "H44_wm_postfix_fade" in ids
+    assert "H45_big_figure_fade" in ids
+    assert "H46_stop_pool_20_fade" in ids
+    assert "H47_london_lunch_fade" in ids

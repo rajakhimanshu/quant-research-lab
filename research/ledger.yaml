@@ -53,6 +53,10 @@ do_not_reopen:
   - H41 prior-day range fade
   - H42 Tokyo cash-close flatten
   - H43 EURUSD month-end USD bid (do not retune to quarter-end)
+  - H44 WM postfix fade (hit-rate only, negative R)
+  - H45 EURUSD 100-pip figure fade
+  - H46 20-H1 stop-pool fade
+  - H47 London lunch fade
 
 tests:
   - id: H1_event_reversal
@@ -468,6 +472,46 @@ tests:
     baseline: Same short on days 10-12.
     train: 52.4% vs 43.0% p=0.051 not < 0.0125; mean R +0.06; val n=14
     why_closed: Family p-gate. Do not re-run as n_tests=1. Do not retune to quarter-end.
+
+  - id: H44_wm_postfix_fade
+    date: 2026-09-04
+    book: fx_h1
+    family: retail_ea
+    decision: REJECT
+    mechanism: Fade EURUSD 14:00-16:00 at 16:00 vs fade 10:00-12:00 at noon.
+    baseline: Fade late-morning at noon.
+    train: 29.0% vs 18.2% (rate gate CANDIDATE); mean R -0.41; val R -0.39
+    why_closed: Hit-rate mirage. Both sides lose money. Do not unlock OOS.
+
+  - id: H45_big_figure_fade
+    date: 2026-09-04
+    book: fx_h1
+    family: retail_ea
+    decision: REJECT
+    mechanism: Fade first H1 tag of a 100-pip figure vs first tag of yesterday's open.
+    baseline: Yesterday's open tag.
+    train: 45.3% vs 45.6%, mean R -0.09
+    why_closed: Big figure is not a magnet after costs. Do not retune to 50 pips.
+
+  - id: H46_stop_pool_20_fade
+    date: 2026-09-04
+    book: fx_h1
+    family: retail_ea
+    decision: REJECT
+    mechanism: Fade a new 20-H1 extreme vs fade a new 5-H1 extreme.
+    baseline: 5-H1 extreme fade.
+    train: 46.3% vs 44.8% p=0.022 not < 0.0125; mean R -0.08
+    why_closed: Family p-gate and negative R. Do not re-run as n_tests=1. Do not retune 20/5.
+
+  - id: H47_london_lunch_fade
+    date: 2026-09-04
+    book: fx_h1
+    family: retail_ea
+    decision: REJECT
+    mechanism: Fade EURUSD prior 3 H1 at 12:00 London vs 08:00.
+    baseline: London open fade.
+    train: 41.6% vs 42.8%, mean R -0.17
+    why_closed: Lunch fade is not better than open fade. Do not move lunch hour.
 
 open:
   - "Working universe: FX majors + XAUUSD, intraday (M5/M15) and swing (H1). No stocks."

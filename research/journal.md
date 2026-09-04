@@ -58,3 +58,8 @@
 | 2026-09-04 | H42 | Fade USDJPY 15:00 JST close vs 12:00 JST lunch. Frozen 1:1, 3 H1. Family of 4. EA-shaped. | REJECT | Train 42.6% vs 45.2%, R −0.13. Do not move close hour. OOS locked. |
 | 2026-09-04 | H43 | Short EURUSD last 2 sessions of month vs days 10–12. Frozen 1:1, 16 H1. Family of 4. EA-shaped. | REJECT | Train 52.4% vs 43.0% p=0.051 not < 0.0125, R +0.06, val n=14. Do not rerun solo. Do not retune quarter-end. |
 | 2026-09-04 | retail | H40–H43 EA-shaped family closed. No paper candidate. No $100 live. No EA. | WAIT | H37 still parked. Next hyp still needs a new why. |
+| 2026-09-04 | H44 | Fade EURUSD 14:00-16:00 at 16:00 vs fade 10:00-12:00. Frozen 1:1, 4 H1. Family of 4, α=0.0125. | REJECT | Rate gate CANDIDATE (29% vs 18%) but R −0.41/−0.39. Hit-rate mirage. Do not unlock OOS. |
+| 2026-09-04 | H45 | Fade first H1 100-pip figure vs yesterday's open. Frozen 1:1, 8 H1. Family of 4. | REJECT | Train 45.3% vs 45.6%, R −0.09. Do not retune to 50 pips. OOS locked. |
+| 2026-09-04 | H46 | Fade new 20-H1 extreme vs 5-H1 extreme. Frozen 1:1, 8 H1. Family of 4. | REJECT | Train 46.3% vs 44.8% p=0.022 not < 0.0125, R −0.08. Do not rerun solo. OOS locked. |
+| 2026-09-04 | H47 | Fade EURUSD at 12:00 London vs 08:00, 3 H1. Family of 4. | REJECT | Train 41.6% vs 42.8%, R −0.17. Do not move lunch. OOS locked. |
+| 2026-09-04 | retail | H44–H47 family closed. No paper candidate. No EA. | WAIT | H37 still parked. Next why cannot be WM postfix, big figure, 20-bar fade, or London lunch. |

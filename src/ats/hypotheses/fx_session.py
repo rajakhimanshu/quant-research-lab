@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 
 from ats.hypotheses.m15_micro import _trade
-from ats.timeutil import cost_price
+from ats.timeutil import cost_price, pip_size
 
 LONDON = ZoneInfo("Europe/London")
 
@@ -570,6 +570,153 @@ def month_end_usd_events(df, symbol, params, spread_pips=1.5, slippage_pips=0.2)
             treat = False
         else:
             continue
+        row = _trade(work, i - 1, side, treat, symbol, cost, horizon, stop_atr, target_atr)
+        if row:
+            rows.append(row)
+    return pd.DataFrame(rows)
+
+
+def wm_postfix_fade_events(df, symbol, params, spread_pips=1.5, slippage_pips=0.2) -> pd.DataFrame:
+    """Fade the pre-WM run at 16:00 London vs fade the late-morning run at noon."""
+    work = df.dropna(subset=["atr"]).copy().reset_index(drop=True)
+    if work.empty:
+        return pd.DataFrame()
+    horizon, stop_atr, target_atr, cost = _params(params, symbol, spread_pips, slippage_pips)
+    t0 = int(params.get("treat_start_london", 14))
+    t1 = int(params.get("treat_end_london", 16))
+    b0 = int(params.get("base_start_london", 10))
+    b1 = int(params.get("base_end_london", 12))
+    min_prior = float(params.get("min_prior_atr", 0.25))
+    ldn = pd.to_datetime(work["time"], utc=True).dt.tz_convert(LONDON)
+    work["lh"] = ldn.dt.hour
+    work["ldate"] = ldn.dt.date
+    rows = []
+    for _, g in work.groupby("ldate", sort=True):
+        atr = float(g["atr"].iloc[-1]) if len(g) else 0.0
+        if not np.isfinite(atr) or atr <= 0:
+            continue
+        b_t0, b_t1 = g[g["lh"] == t0], g[g["lh"] == t1]
+        b_b0, b_b1 = g[g["lh"] == b0], g[g["lh"] == b1]
+        if not b_t0.empty and not b_t1.empty:
+            prior = float(work.at[b_t1.index[0], "close"]) - float(work.at[b_t0.index[0], "close"])
+            if abs(prior) >= min_prior * atr:
+                side = "short" if prior > 0 else "long"
+                row = _trade(work, int(b_t1.index[0]) - 1, side, True, symbol, cost, horizon, stop_atr, target_atr)
+                if row:
+                    rows.append(row)
+        if not b_b0.empty and not b_b1.empty:
+            prior = float(work.at[b_b1.index[0], "close"]) - float(work.at[b_b0.index[0], "close"])
+            if abs(prior) >= min_prior * atr:
+                side = "short" if prior > 0 else "long"
+                row = _trade(work, int(b_b1.index[0]) - 1, side, False, symbol, cost, horizon, stop_atr, target_atr)
+                if row:
+                    rows.append(row)
+    return pd.DataFrame(rows)
+
+
+def big_figure_fade_events(df, symbol, params, spread_pips=1.5, slippage_pips=0.2) -> pd.DataFrame:
+    """Fade first H1 tag of a 100-pip figure vs first tag of yesterday's open."""
+    work = df.dropna(subset=["atr"]).copy().reset_index(drop=True)
+    if work.empty:
+        return pd.DataFrame()
+    horizon, stop_atr, target_atr, cost = _params(params, symbol, spread_pips, slippage_pips)
+    step = float(params.get("figure_pips", 100)) * pip_size(symbol)
+    near_atr = float(params.get("near_atr", 0.40))
+    ldn = pd.to_datetime(work["time"], utc=True).dt.tz_convert(LONDON)
+    work["ldate"] = ldn.dt.date
+    daily = work.groupby("ldate", sort=True).agg(o=("open", "first"))
+    daily["prev_open"] = daily["o"].shift(1)
+    rows = []
+    for day, g in work.groupby("ldate", sort=True):
+        prev_open = daily.at[day, "prev_open"] if day in daily.index else np.nan
+        saw_r = saw_o = False
+        for i in g.index:
+            o, hi, lo = float(work.at[i, "open"]), float(work.at[i, "high"]), float(work.at[i, "low"])
+            atr = float(work.at[i, "atr"])
+            rnd = round(o / step) * step
+            if not saw_r and abs(o - rnd) <= near_atr * atr and lo <= rnd <= hi:
+                side = "short" if o < rnd else "long"
+                row = _trade(work, int(i), side, True, symbol, cost, horizon, stop_atr, target_atr)
+                if row:
+                    rows.append(row)
+                saw_r = True
+            if not saw_o and np.isfinite(prev_open) and lo <= float(prev_open) <= hi:
+                side = "short" if o < float(prev_open) else "long"
+                row = _trade(work, int(i), side, False, symbol, cost, horizon, stop_atr, target_atr)
+                if row:
+                    rows.append(row)
+                saw_o = True
+            if saw_r and saw_o:
+                break
+    return pd.DataFrame(rows)
+
+
+def stop_pool_20_fade_events(df, symbol, params, spread_pips=1.5, slippage_pips=0.2) -> pd.DataFrame:
+    """Fade a new 20-H1 extreme vs fade a new 5-H1 extreme."""
+    work = df.dropna(subset=["atr"]).copy().reset_index(drop=True)
+    if work.empty:
+        return pd.DataFrame()
+    horizon, stop_atr, target_atr, cost = _params(params, symbol, spread_pips, slippage_pips)
+    n_treat = int(params.get("treat_lookback", 20))
+    n_base = int(params.get("base_lookback", 5))
+    rows = []
+    n = len(work)
+    start = max(n_treat, n_base)
+    for i in range(start, n):
+        hi = float(work.at[i, "high"])
+        lo = float(work.at[i, "low"])
+        prev20_h = float(work["high"].iloc[i - n_treat : i].max())
+        prev20_l = float(work["low"].iloc[i - n_treat : i].min())
+        prev5_h = float(work["high"].iloc[i - n_base : i].max())
+        prev5_l = float(work["low"].iloc[i - n_base : i].min())
+        treat_side = None
+        if hi > prev20_h:
+            treat_side = "short"
+        elif lo < prev20_l:
+            treat_side = "long"
+        base_side = None
+        if hi > prev5_h:
+            base_side = "short"
+        elif lo < prev5_l:
+            base_side = "long"
+        if treat_side is not None:
+            row = _trade(work, i, treat_side, True, symbol, cost, horizon, stop_atr, target_atr)
+            if row:
+                rows.append(row)
+        elif base_side is not None:
+            row = _trade(work, i, base_side, False, symbol, cost, horizon, stop_atr, target_atr)
+            if row:
+                rows.append(row)
+    return pd.DataFrame(rows)
+
+
+def london_lunch_fade_events(df, symbol, params, spread_pips=1.5, slippage_pips=0.2) -> pd.DataFrame:
+    """Fade the London morning at lunch vs the same fade at London open."""
+    work = df.dropna(subset=["atr"]).copy().reset_index(drop=True)
+    if work.empty:
+        return pd.DataFrame()
+    horizon, stop_atr, target_atr, cost = _params(params, symbol, spread_pips, slippage_pips)
+    lookback = int(params.get("lookback_bars", 3))
+    treat_hour = int(params.get("lunch_hour_london", 12))
+    base_hour = int(params.get("open_hour_london", 8))
+    min_prior = float(params.get("min_prior_atr", 0.25))
+    ldn = pd.to_datetime(work["time"], utc=True).dt.tz_convert(LONDON)
+    work["lh"] = ldn.dt.hour
+    rows = []
+    n = len(work)
+    for i in range(lookback, n):
+        hour = int(work.at[i, "lh"])
+        if hour == treat_hour:
+            treat = True
+        elif hour == base_hour:
+            treat = False
+        else:
+            continue
+        atr = float(work.at[i, "atr"])
+        prior = float(work.at[i - 1, "close"]) - float(work.at[i - lookback, "close"])
+        if not np.isfinite(atr) or atr <= 0 or abs(prior) < min_prior * atr:
+            continue
+        side = "short" if prior > 0 else "long"
         row = _trade(work, i - 1, side, treat, symbol, cost, horizon, stop_atr, target_atr)
         if row:
             rows.append(row)
