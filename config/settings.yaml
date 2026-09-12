@@ -107,6 +107,12 @@ splits:
     train_end: "2026-02-21"
     val_end: "2026-05-29"
     note: "EURUSD M5 broker cap 100k from 2025-05-05. Frozen 60/20/20 before H30. Do not move after seeing H30."
+  fx_m15:
+    bar_start: "2022-08-30"
+    bar_end: "2026-09-04"
+    train_end: "2025-01-28"
+    val_end: "2025-11-14"
+    note: "EURUSD M15 100k from 2022-08-30. Frozen 60/20/20 before H48. Do not move after seeing H48."
   equity_daily:
     train_end: "2020-02-27"
     val_end: "2023-03-16"

@@ -305,6 +305,786 @@ ideas:
     why: Fade EURUSD at London 12:00 vs 08:00, 3 H1.
     note: 2026-09-04 REJECT. Lunch fade not better than open fade.
 
+  - id: H48_london_ist_break
+    status: tested
+    source: microstructure
+    hyp_id: H48_london_ist_break
+    why: Follow second M15 close through 12:30 IST candle vs fade, 1:1 range.
+    note: 2026-09-05 REJECT. Follow R −0.14. Do not switch RR to 1.5/2.
+
+  - id: H49_london_ist_break_gold
+    status: tested
+    source: microstructure
+    hyp_id: H49_london_ist_break_gold
+    why: Same 12:30 IST second-M15 close follow on gold.
+    note: 2026-09-05 REJECT. Val R negative. Do not unlock OOS.
+
+  - id: H50_london_fib_bounce
+    status: tested
+    source: microstructure
+    hyp_id: H50_london_fib_bounce
+    why: Bounce 61.8% of London IST impulse vs 50%, EURUSD M15.
+    note: 2026-09-05 REJECT. 61.8 lost to 50%. Do not add other fibs.
+
+  - id: H87_monday_cash_gbp
+    status: tested
+    source: microstructure
+    hyp_id: H87_monday_cash_gbp
+    why: >
+      Weekend inventory still sits at Monday London cash; fade Friday-to-Monday
+      at 08:00 vs Tuesday-to-Wednesday at 08:00. Weekday spread, not Sunday tax.
+    note: 2026-09-05 REJECT. Train worse than Wednesday. Do not flip. Do not move to Sunday.
+
+  - id: H88_monday_cash_jpy
+    status: tested
+    source: microstructure
+    hyp_id: H88_monday_cash_jpy
+    why: Same Monday-cash fade on USDJPY.
+    note: 2026-09-05 REJECT. p=0.33, negative R. Do not rerun solo.
+
+  - id: H89_monday_cash_aud
+    status: tested
+    source: microstructure
+    hyp_id: H89_monday_cash_aud
+    why: Same Monday-cash fade on AUDUSD.
+    note: 2026-09-05 REJECT. p=0.12, negative R. Do not move to ASX 10:00.
+
+  - id: H90_ny_cut_eur
+    status: tested
+    source: microstructure
+    hyp_id: H90_ny_cut_eur
+    why: Fade EURUSD at the daily NY 10:00 option cut vs 11:00. Skip Friday (H68).
+    note: 2026-09-05 REJECT. p=0.34, R negative. Do not add Friday. Do not flip.
+
+  - id: H91_ny_cut_gbp
+    status: tested
+    source: microstructure
+    hyp_id: H91_ny_cut_gbp
+    why: Same NY 10:00 cut fade on GBPUSD.
+    note: 2026-09-05 REJECT. Do not add Friday. Do not flip.
+
+  - id: H92_ny_cut_jpy
+    status: tested
+    source: microstructure
+    hyp_id: H92_ny_cut_jpy
+    why: Same NY 10:00 cut fade on USDJPY.
+    note: 2026-09-05 REJECT. Train below baseline. Do not flip.
+
+  - id: H93_wm_postfix_eur
+    status: tested
+    source: microstructure
+    hyp_id: H93_wm_postfix_eur
+    why: Fade EURUSD on the M15 after WM 16:00 vs 15:45 (still building the fix).
+    note: 2026-09-05 REJECT. Worse than 15:45. Do not move to 16:00. Do not flip.
+
+  - id: H94_wm_postfix_gbp
+    status: tested
+    source: microstructure
+    hyp_id: H94_wm_postfix_gbp
+    why: Same post-WM fade on GBPUSD.
+    note: 2026-09-05 REJECT. Do not flip.
+
+  - id: H95_wm_postfix_jpy
+    status: tested
+    source: microstructure
+    hyp_id: H95_wm_postfix_jpy
+    why: Same post-WM fade on USDJPY.
+    note: 2026-09-05 REJECT. Do not flip.
+
+  - id: H96_asia_box_gold
+    status: tested
+    source: microstructure
+    hyp_id: H96_asia_box_gold
+    why: Fade gold first London tag of Asia overnight high/low vs Asia mid.
+    note: 2026-09-05 REJECT. Train below mid. Do not flip. Do not move Asia to NY.
+
+  - id: H97_asia_box_gbp
+    status: tested
+    source: microstructure
+    hyp_id: H97_asia_box_gbp
+    why: Same Asia-box London fade on GBPUSD. EURUSD excluded.
+    note: 2026-09-05 REJECT. Do not add EURUSD. Do not flip.
+
+  - id: H98_asia_box_aud
+    status: tested
+    source: microstructure
+    hyp_id: H98_asia_box_aud
+    why: Same Asia-box London fade on AUDUSD.
+    note: 2026-09-05 REJECT. Do not add EURUSD. Do not flip.
+
+  - id: H99_tokyo_roll_jpy
+    status: tested
+    source: microstructure
+    hyp_id: H99_tokyo_roll_jpy
+    why: Fade USDJPY at Tokyo midnight book-roll vs 03:00 JST.
+    note: 2026-09-05 REJECT. p=0.079, R negative. Do not move to 09:00. Do not flip.
+
+  - id: H100_tokyo_roll_eur
+    status: tested
+    source: microstructure
+    hyp_id: H100_tokyo_roll_eur
+    why: Same Tokyo midnight fade on EURUSD.
+    note: 2026-09-05 REJECT. Do not flip.
+
+  - id: H101_tokyo_roll_gbp
+    status: tested
+    source: microstructure
+    hyp_id: H101_tokyo_roll_gbp
+    why: Same Tokyo midnight fade on GBPUSD.
+    note: 2026-09-05 REJECT. p=0.041 not < 0.0167. R negative. Do not rerun solo.
+
+  - id: H102_overnight_xs_fade
+    status: tested
+    source: microstructure
+    hyp_id: H102_overnight_xs_fade
+    why: >
+      Fade ATR-ranked overnight winner/loser at London 08:00 vs follow.
+      Distinct from H38 (5-day XS follow at 16:00) and H87–H89 (no ranking).
+    note: 2026-09-05 REJECT. Val lost to follow. Mean R negative. Do not flip. Do not expand pairs. Do not move to 16:00.
+
+  - id: H103_cls_settle_eur
+    status: tested
+    source: microstructure
+    hyp_id: H103_cls_settle_eur
+    why: Fade EURUSD at 07:00 CET CLS pay-in vs 09:00 CET.
+    note: 2026-09-05 REJECT. Worse than 09:00. R negative. Do not move to London 08:00. Do not flip.
+
+  - id: H104_cls_settle_gbp
+    status: tested
+    source: microstructure
+    hyp_id: H104_cls_settle_gbp
+    why: Same CLS 07:00 CET fade on GBPUSD.
+    note: 2026-09-05 REJECT. Do not flip.
+
+  - id: H105_cls_settle_jpy
+    status: tested
+    source: microstructure
+    hyp_id: H105_cls_settle_jpy
+    why: Same CLS 07:00 CET fade on USDJPY.
+    note: 2026-09-05 REJECT. p=0.22. R negative. Do not rerun solo. Do not flip.
+
+  - id: H106_silver_bullet_eur
+    status: tested
+    source: microstructure
+    hyp_id: H106_silver_bullet_eur
+    why: Follow first M15 FVG tag in NY 10:00-11:00 vs 11:00-12:00.
+    note: 2026-09-05 REJECT. 11:00 hour won. R negative. Do not add Judas/MSS/OTE. Do not flip to fade.
+
+  - id: H107_silver_bullet_gbp
+    status: tested
+    source: microstructure
+    hyp_id: H107_silver_bullet_gbp
+    why: Same NY AM Silver Bullet FVG-follow on GBPUSD.
+    note: 2026-09-05 REJECT. Do not flip to fade.
+
+  - id: H108_silver_bullet_gold
+    status: tested
+    source: microstructure
+    hyp_id: H108_silver_bullet_gold
+    why: Same NY AM Silver Bullet FVG-follow on XAUUSD.
+    note: 2026-09-05 REJECT. p=0.35. R negative. Do not rerun solo. Do not flip.
+
+  - id: H109_asx_close_fade
+    status: tested
+    source: microstructure
+    hyp_id: H109_asx_close_fade
+    why: Fade AUDUSD at ASX 16:00 Sydney close vs 12:00.
+    note: 2026-09-05 REJECT. p=0.34. R negative. Do not move to 10:00. Do not flip.
+
+  - id: H110_nzx_close_fade
+    status: tested
+    source: microstructure
+    hyp_id: H110_nzx_close_fade
+    why: Fade NZDUSD at NZX 16:45 Auckland close vs 12:00.
+    note: 2026-09-05 REJECT. p=0.096. R negative. Do not rerun solo. Do not flip.
+
+  - id: H111_tsx_close_fade
+    status: tested
+    source: microstructure
+    hyp_id: H111_tsx_close_fade
+    why: Fade USDCAD at TSX 16:00 Toronto close vs 12:00.
+    note: 2026-09-05 REJECT. Noon won. R negative. Do not move to 08:30. Do not flip.
+
+  - id: H112_london_open_eur
+    status: tested
+    source: microstructure
+    hyp_id: H112_london_open_eur
+    why: Follow EURUSD at London 08:00 cash open vs 07:00.
+    note: 2026-09-05 REJECT. p=0.18. R negative. Do not move to 16:00. Do not flip.
+
+  - id: H113_london_open_gbp
+    status: tested
+    source: microstructure
+    hyp_id: H113_london_open_gbp
+    why: Same London 08:00 cash-open follow on GBPUSD.
+    note: 2026-09-05 REJECT. p=0.43. R negative. Do not flip.
+
+  - id: H114_london_open_gold
+    status: tested
+    source: microstructure
+    hyp_id: H114_london_open_gold
+    why: Follow gold at London 08:00 loco open vs 07:00.
+    note: 2026-09-05 REJECT. 07:00 won. R negative. Do not move to 10:30. Do not flip.
+
+  - id: H115_eia_cad
+    status: tested
+    source: microstructure
+    hyp_id: H115_eia_cad
+    why: Fade USDCAD 10:30 NY Wednesday EIA vs Tuesday 10:30.
+    note: 2026-09-05 REJECT. Tuesday won. R negative. Do not add WTI. Do not move to 09:00. Do not flip.
+
+  - id: H116_eia_aud
+    status: tested
+    source: microstructure
+    hyp_id: H116_eia_aud
+    why: Same EIA Wednesday fade on AUDUSD.
+    note: 2026-09-05 REJECT. R negative. Do not flip.
+
+  - id: H117_eia_gold
+    status: tested
+    source: microstructure
+    hyp_id: H117_eia_gold
+    why: Same EIA Wednesday fade on XAUUSD.
+    note: 2026-09-05 REJECT. p=0.16. Val R negative. Do not rerun solo. Do not flip.
+
+  - id: H118_london_orb_eur
+    status: tested
+    source: microstructure
+    hyp_id: H118_london_orb_eur
+    why: Fade first London 08:00-08:30 M15 box break vs follow. Daily weekday.
+    note: 2026-09-05 REJECT. Follow won. R negative. Do not move the box to NY. Do not flip.
+
+  - id: H119_london_orb_gbp
+    status: tested
+    source: microstructure
+    hyp_id: H119_london_orb_gbp
+    why: Same London opening-range fade on GBPUSD.
+    note: 2026-09-05 REJECT. R negative. Do not flip.
+
+  - id: H120_london_orb_gold
+    status: tested
+    source: microstructure
+    hyp_id: H120_london_orb_gold
+    why: Same London opening-range fade on XAUUSD.
+    note: 2026-09-05 REJECT. p=0.13. R negative. Do not rerun solo. Do not flip.
+
+  - id: H121_tokyo_orb_jpy
+    status: tested
+    source: microstructure
+    hyp_id: H121_tokyo_orb_jpy
+    why: Fade first Tokyo 09:00-09:30 M15 box break vs follow. Daily weekday.
+    note: 2026-09-05 REJECT. Follow won. R negative. Do not move to 09:55 or London. Do not flip.
+
+  - id: H122_tokyo_orb_eur
+    status: tested
+    source: microstructure
+    hyp_id: H122_tokyo_orb_eur
+    why: Same Tokyo opening-range fade on EURUSD.
+    note: 2026-09-05 REJECT. p=0.20. R negative. Do not flip.
+
+  - id: H123_tokyo_orb_gold
+    status: tested
+    source: microstructure
+    hyp_id: H123_tokyo_orb_gold
+    why: Same Tokyo opening-range fade on XAUUSD.
+    note: 2026-09-05 REJECT. R negative. Do not flip.
+
+  - id: H124_prior_hour_eur
+    status: tested
+    source: microstructure
+    hyp_id: H124_prior_hour_eur
+    why: Fade first prior-hour H/L tag in London 08:00-12:00 vs NY 08:00-12:00. Daily weekday.
+    note: 2026-09-05 REJECT. p=0.076. R negative. Do not move the windows. Do not flip. Do not retune to one hour.
+
+  - id: H125_prior_hour_gbp
+    status: tested
+    source: microstructure
+    hyp_id: H125_prior_hour_gbp
+    why: Same prior-hour fade on GBPUSD.
+    note: 2026-09-05 REJECT. NY won. R negative. Do not flip.
+
+  - id: H126_prior_hour_gold
+    status: tested
+    source: microstructure
+    hyp_id: H126_prior_hour_gold
+    why: Same prior-hour fade on XAUUSD.
+    note: 2026-09-05 REJECT. NY won. R negative. Do not flip.
+
+  - id: H127_hour_close_eur
+    status: tested
+    source: microstructure
+    hyp_id: H127_hour_close_eur
+    why: Fade hour-to-date move at :45 London AM vs NY AM. Daily weekday.
+    note: 2026-09-05 REJECT. p=0.32. R negative. Do not move to 15:45. Do not flip. Do not retune fire_minute.
+
+  - id: H128_hour_close_gbp
+    status: tested
+    source: microstructure
+    hyp_id: H128_hour_close_gbp
+    why: Same hourly-close flatten on GBPUSD.
+    note: 2026-09-05 REJECT. p=0.28. R negative. Do not flip.
+
+  - id: H129_hour_close_gold
+    status: tested
+    source: microstructure
+    hyp_id: H129_hour_close_gold
+    why: Same hourly-close flatten on XAUUSD.
+    note: 2026-09-05 REJECT. NY won. R negative. Do not flip.
+
+  - id: H130_hour_gap_eur
+    status: tested
+    source: microstructure
+    hyp_id: H130_hour_gap_eur
+    why: Fade hourly :00 gap vs prior hour close, London AM vs NY AM. Daily weekday.
+    note: 2026-09-05 REJECT. Train n=1. No hourly M15 gap on this book. Do not loosen 0.25 ATR. Do not switch to H1. Do not flip.
+
+  - id: H131_hour_gap_gbp
+    status: tested
+    source: microstructure
+    hyp_id: H131_hour_gap_gbp
+    why: Same hourly-gap fade on GBPUSD.
+    note: 2026-09-05 REJECT. Train n=1. Do not loosen. Do not flip.
+
+  - id: H132_hour_gap_gold
+    status: tested
+    source: microstructure
+    hyp_id: H132_hour_gap_gold
+    why: Same hourly-gap fade on XAUUSD.
+    note: 2026-09-05 REJECT. Train n=0. Do not loosen. Do not flip.
+
+  - id: H133_us830_slot_eur
+    status: tested
+    source: microstructure
+    hyp_id: H133_us830_slot_eur
+    why: Fade EURUSD at 08:30 NY print slot vs 09:00. Daily weekday, not a news filter.
+    note: 2026-09-05 REJECT. 09:00 won. R negative. Do not add a calendar filter. Do not move to 10:00. Do not flip.
+
+  - id: H134_us830_slot_gbp
+    status: tested
+    source: microstructure
+    hyp_id: H134_us830_slot_gbp
+    why: Same 08:30 NY print-slot fade on GBPUSD.
+    note: 2026-09-05 REJECT. R negative. Do not flip.
+
+  - id: H135_us830_slot_gold
+    status: tested
+    source: microstructure
+    hyp_id: H135_us830_slot_gold
+    why: Same 08:30 NY print-slot fade on XAUUSD.
+    note: 2026-09-05 REJECT. p=0.24. R negative. Do not rerun solo. Do not flip.
+
+  - id: H136_pdc_tag_eur
+    status: tested
+    source: microstructure
+    hyp_id: H136_pdc_tag_eur
+    why: Fade first prior-weekday-close tag in London AM vs NY AM. Daily weekday.
+    note: 2026-09-05 REJECT. NY won. R negative. Do not hunt PDH. Do not flip. Do not move the windows.
+
+  - id: H137_pdc_tag_gbp
+    status: tested
+    source: microstructure
+    hyp_id: H137_pdc_tag_gbp
+    why: Same prior-close tag fade on GBPUSD.
+    note: 2026-09-05 REJECT. R negative. Do not flip.
+
+  - id: H138_pdc_tag_gold
+    status: tested
+    source: microstructure
+    hyp_id: H138_pdc_tag_gold
+    why: Same prior-close tag fade on XAUUSD.
+    note: 2026-09-05 REJECT. R negative. Do not flip.
+
+  - id: H139_tnext_roll_eur
+    status: tested
+    source: microstructure
+    hyp_id: H139_tnext_roll_eur
+    why: Fade EURUSD at NY 17:00 tom-next roll vs 16:00. Mon-Thu.
+    note: 2026-09-05 REJECT. Train-val gap 23%. Do not last-level. Do not peek OOS. Do not flip.
+
+  - id: H140_tnext_roll_gbp
+    status: tested
+    source: microstructure
+    hyp_id: H140_tnext_roll_gbp
+    why: Same tom-next roll fade on GBPUSD.
+    note: 2026-09-05 REJECT. Lab CANDIDATE then last-level FAIL. Fill ~9 pips vs lab 1.2. Do not rerun solo. Do not flip.
+
+  - id: H141_tnext_roll_gold
+    status: tested
+    source: microstructure
+    hyp_id: H141_tnext_roll_gold
+    why: Same tom-next roll fade on XAUUSD.
+    note: 2026-09-05 REJECT. Train n=0. Do not loosen. Do not flip.
+
+  - id: H142_syd09_fade_aud
+    status: tested
+    source: microstructure
+    hyp_id: H142_syd09_fade_aud
+    why: Fade AUDUSD at 09:00 Sydney vs 11:00. Last thin hour before ASX 10:00 auction.
+    note: 2026-09-05 REJECT. Train p=0.36. R negative. Do not move to 10:00. Do not flip.
+
+  - id: H143_syd09_fade_nzd
+    status: tested
+    source: microstructure
+    hyp_id: H143_syd09_fade_nzd
+    why: Same 09:00 Sydney pre-auction fade on NZDUSD.
+    note: 2026-09-05 REJECT. Train not above baseline. R negative. Do not flip.
+
+  - id: H144_syd09_fade_gold
+    status: tested
+    source: microstructure
+    hyp_id: H144_syd09_fade_gold
+    why: Same 09:00 Sydney pre-auction fade on XAUUSD.
+    note: 2026-09-05 REJECT. Train not above baseline. R negative. Do not flip.
+
+  - id: H145_ldn10_cut_eur
+    status: tested
+    source: microstructure
+    hyp_id: H145_ldn10_cut_eur
+    why: Fade EURUSD at 10:00 London European option cut vs 11:00.
+    note: 2026-09-05 REJECT. Train not above baseline. R negative. Do not move to 10:00 NY. Do not flip.
+
+  - id: H146_ldn10_cut_gbp
+    status: tested
+    source: microstructure
+    hyp_id: H146_ldn10_cut_gbp
+    why: Same London 10:00 cut fade on GBPUSD.
+    note: 2026-09-05 REJECT. Train p=0.33. R negative. Do not flip.
+
+  - id: H147_ldn10_cut_jpy
+    status: tested
+    source: microstructure
+    hyp_id: H147_ldn10_cut_jpy
+    why: Same London 10:00 cut fade on USDJPY.
+    note: 2026-09-05 REJECT. Train not above baseline. R negative. Do not move to 15:00 Tokyo. Do not flip.
+
+  - id: H148_ldn05_hand_eur
+    status: tested
+    source: microstructure
+    hyp_id: H148_ldn05_hand_eur
+    why: Fade EURUSD at 05:00 London Asia-Europe handover vs 08:00.
+    note: 2026-09-05 REJECT. Train not above baseline. R negative. Do not move to 08:00. Do not flip.
+
+  - id: H149_ldn05_hand_gbp
+    status: tested
+    source: microstructure
+    hyp_id: H149_ldn05_hand_gbp
+    why: Same 05:00 London handover fade on GBPUSD.
+    note: 2026-09-05 REJECT. Train p=0.40. R negative. Do not flip.
+
+  - id: H150_ldn05_hand_gold
+    status: tested
+    source: microstructure
+    hyp_id: H150_ldn05_hand_gold
+    why: Same 05:00 London handover fade on XAUUSD.
+    note: 2026-09-05 REJECT. Train p=0.35. R negative. Do not flip.
+
+  - id: H151_tgt18_fade_eur
+    status: tested
+    source: microstructure
+    hyp_id: H151_tgt18_fade_eur
+    why: Fade EURUSD at 18:00 CET TARGET2 close vs 16:00.
+    note: 2026-09-05 REJECT. Train p=0.22. R negative. Do not move to 17:00 CET. Do not flip.
+
+  - id: H152_tgt18_fade_chf
+    status: tested
+    source: microstructure
+    hyp_id: H152_tgt18_fade_chf
+    why: Same TARGET2 18:00 CET fade on USDCHF.
+    note: 2026-09-05 REJECT. Train p=0.47. R negative. Do not flip.
+
+  - id: H153_tgt18_fade_gold
+    status: tested
+    source: microstructure
+    hyp_id: H153_tgt18_fade_gold
+    why: Same TARGET2 18:00 CET fade on XAUUSD.
+    note: 2026-09-05 REJECT. Train p=0.25. Train R negative. Do not rerun solo. Do not flip.
+
+  - id: H154_tyo13_reopen_jpy
+    status: tested
+    source: microstructure
+    hyp_id: H154_tyo13_reopen_jpy
+    why: Follow USDJPY at 13:00 Tokyo afternoon reopen vs 11:00.
+    note: 2026-09-05 REJECT. Train p=0.023 not < 0.0167. R negative. Do not rerun solo. Do not flip.
+
+  - id: H155_tyo13_reopen_eur
+    status: tested
+    source: microstructure
+    hyp_id: H155_tyo13_reopen_eur
+    why: Same 13:00 Tokyo reopen follow on EURUSD.
+    note: 2026-09-05 REJECT. Train not above baseline. R negative. Do not flip.
+
+  - id: H156_tyo13_reopen_gold
+    status: tested
+    source: microstructure
+    hyp_id: H156_tyo13_reopen_gold
+    why: Same 13:00 Tokyo reopen follow on XAUUSD.
+    note: 2026-09-05 REJECT. Train not above baseline. R negative. Do not flip.
+
+  - id: H157_oil1430_fade_cad
+    status: tested
+    source: microstructure
+    hyp_id: H157_oil1430_fade_cad
+    why: Fade USDCAD at 14:30 NY oil settle vs 11:00.
+    note: 2026-09-05 REJECT. Train not above baseline. R negative. Do not add WTI. Do not flip.
+
+  - id: H158_oil1430_fade_aud
+    status: tested
+    source: microstructure
+    hyp_id: H158_oil1430_fade_aud
+    why: Same 14:30 NY oil-settle fade on AUDUSD.
+    note: 2026-09-05 REJECT. Train not above baseline. R negative. Do not flip.
+
+  - id: H159_oil1430_fade_gold
+    status: tested
+    source: microstructure
+    hyp_id: H159_oil1430_fade_gold
+    why: Same 14:30 NY oil-settle fade on XAUUSD.
+    note: 2026-09-05 REJECT. Train not above baseline. R negative. Do not flip.
+
+  - id: H160_ldnbox_ny_eur
+    status: tested
+    source: microstructure
+    hyp_id: H160_ldnbox_ny_eur
+    why: Fade first NY tag of London AM high/low vs tag of that mid.
+    note: 2026-09-05 REJECT. Train p=0.37. R negative. Do not shrink the box. Do not flip.
+
+  - id: H161_ldnbox_ny_gbp
+    status: tested
+    source: microstructure
+    hyp_id: H161_ldnbox_ny_gbp
+    why: Same London-AM NY-tag fade on GBPUSD.
+    note: 2026-09-05 REJECT. Train not above baseline. R negative. Do not flip.
+
+  - id: H162_ldnbox_ny_gold
+    status: tested
+    source: microstructure
+    hyp_id: H162_ldnbox_ny_gold
+    why: Same London-AM NY-tag fade on XAUUSD.
+    note: 2026-09-05 REJECT. Train not above baseline. R negative. Do not flip.
+
+  - id: H163_akl09_fade_nzd
+    status: tested
+    source: microstructure
+    hyp_id: H163_akl09_fade_nzd
+    why: Fade NZDUSD at 09:00 Auckland vs 11:00. Last thin hour before NZX 10:00.
+    note: 2026-09-05 REJECT. Train p=0.21. R negative. Do not move to 10:00. Do not flip.
+
+  - id: H164_akl09_fade_aud
+    status: tested
+    source: microstructure
+    hyp_id: H164_akl09_fade_aud
+    why: Same 09:00 Auckland pre-NZX fade on AUDUSD.
+    note: 2026-09-05 REJECT. Hit-rate CANDIDATE but train/val R negative. Do not last-level. Do not rerun solo. Do not flip.
+
+  - id: H165_akl09_fade_gold
+    status: tested
+    source: microstructure
+    hyp_id: H165_akl09_fade_gold
+    why: Same 09:00 Auckland pre-NZX fade on XAUUSD.
+    note: 2026-09-05 REJECT. Train p=0.11. R negative. Do not rerun solo. Do not flip.
+
+  - id: H166_zur12_fade_chf
+    status: tested
+    source: microstructure
+    hyp_id: H166_zur12_fade_chf
+    why: Fade USDCHF at 12:00 Zurich lunch vs 14:00.
+    note: 2026-09-05 REJECT. Train p=0.086. R negative. Do not move to 09:00. Do not flip.
+
+  - id: H167_zur12_fade_eur
+    status: tested
+    source: microstructure
+    hyp_id: H167_zur12_fade_eur
+    why: Same 12:00 Zurich lunch fade on EURUSD.
+    note: 2026-09-05 REJECT. Hit-rate CANDIDATE but train/val R negative. Do not last-level. Do not rerun solo. Do not flip.
+
+  - id: H168_zur12_fade_gold
+    status: tested
+    source: microstructure
+    hyp_id: H168_zur12_fade_gold
+    why: Same 12:00 Zurich lunch fade on XAUUSD.
+    note: 2026-09-05 REJECT. Train p=0.045. R negative. Do not rerun solo. Do not flip.
+
+  - id: H169_tyo11_fade_jpy
+    status: tested
+    source: microstructure
+    hyp_id: H169_tyo11_fade_jpy
+    why: Fade USDJPY at 11:00 Tokyo last-morning vs 14:00.
+    note: 2026-09-05 REJECT. Train p=0.13. R negative. Do not move to 12:00. Do not flip.
+
+  - id: H170_tyo11_fade_eur
+    status: tested
+    source: microstructure
+    hyp_id: H170_tyo11_fade_eur
+    why: Same 11:00 Tokyo last-morning fade on EURUSD.
+    note: 2026-09-05 REJECT. Train p=0.040. R negative. Do not rerun solo. Do not flip.
+
+  - id: H171_tyo11_fade_gold
+    status: tested
+    source: microstructure
+    hyp_id: H171_tyo11_fade_gold
+    why: Same 11:00 Tokyo last-morning fade on XAUUSD.
+    note: 2026-09-05 REJECT. Train not above baseline. R negative. Do not flip.
+
+  - id: H172_lbma_am_gold
+    status: tested
+    source: microstructure
+    hyp_id: H172_lbma_am_gold
+    why: Fade gold at 10:30 London LBMA AM vs 12:30.
+    note: 2026-09-05 REJECT. Train not above baseline. R negative. Do not move to 10:00. Do not flip.
+
+  - id: H173_lbma_am_aud
+    status: tested
+    source: microstructure
+    hyp_id: H173_lbma_am_aud
+    why: Same 10:30 LBMA AM fade on AUDUSD.
+    note: 2026-09-05 REJECT. Train not above baseline. R negative. Do not flip.
+
+  - id: H174_lbma_am_nzd
+    status: tested
+    source: microstructure
+    hyp_id: H174_lbma_am_nzd
+    why: Same 10:30 LBMA AM fade on NZDUSD.
+    note: 2026-09-05 REJECT. Train not above baseline. R negative. Do not flip.
+
+  - id: H175_sge15_fade_gold
+    status: tested
+    source: microstructure
+    hyp_id: H175_sge15_fade_gold
+    why: Fade gold at 15:00 Shanghai SGE day close vs 11:00.
+    note: 2026-09-05 REJECT. Train not above baseline. R negative. Do not move to 09:00. Do not flip.
+
+  - id: H176_sge15_fade_aud
+    status: tested
+    source: microstructure
+    hyp_id: H176_sge15_fade_aud
+    why: Same 15:00 Shanghai SGE day-close fade on AUDUSD.
+    note: 2026-09-05 REJECT. p=0.24. R negative. Do not rerun solo. Do not flip.
+
+  - id: H177_sge15_fade_jpy
+    status: tested
+    source: microstructure
+    hyp_id: H177_sge15_fade_jpy
+    why: Same 15:00 Shanghai SGE day-close fade on USDJPY.
+    note: 2026-09-05 REJECT. Train not above baseline. R negative. Do not flip.
+
+  - id: H178_mcx09_fade_gold
+    status: tested
+    source: microstructure
+    hyp_id: H178_mcx09_fade_gold
+    why: Fade gold at 09:00 IST MCX open vs 11:00.
+    note: 2026-09-05 REJECT. Train not above baseline. R negative. Do not move to 12:30. Do not flip.
+
+  - id: H179_mcx09_fade_aud
+    status: tested
+    source: microstructure
+    hyp_id: H179_mcx09_fade_aud
+    why: Same 09:00 IST MCX gold-open fade on AUDUSD.
+    note: 2026-09-05 REJECT. p=0.37. R negative. Do not flip.
+
+  - id: H180_mcx09_fade_jpy
+    status: tested
+    source: microstructure
+    hyp_id: H180_mcx09_fade_jpy
+    why: Same 09:00 IST MCX gold-open fade on USDJPY.
+    note: 2026-09-05 REJECT. p=0.094. R negative. Do not rerun solo. Do not flip.
+
+  - id: H181_nybox_pm_eur
+    status: tested
+    source: microstructure
+    hyp_id: H181_nybox_pm_eur
+    why: Fade first NY afternoon tag of NY AM high/low vs tag of that mid.
+    note: 2026-09-05 REJECT. p=0.37. R negative. Do not shrink the box. Do not hunt London. Do not flip.
+
+  - id: H182_nybox_pm_gbp
+    status: tested
+    source: microstructure
+    hyp_id: H182_nybox_pm_gbp
+    why: Same NY-AM range tagged in NY afternoon on GBPUSD.
+    note: 2026-09-05 REJECT. p=0.099. R negative. Do not rerun solo. Do not flip.
+
+  - id: H183_nybox_pm_gold
+    status: tested
+    source: microstructure
+    hyp_id: H183_nybox_pm_gold
+    why: Same NY-AM range tagged in NY afternoon on XAUUSD.
+    note: 2026-09-05 REJECT. Train not above baseline. R negative. Do not flip.
+
+  - id: H184_dxb14_fade_gold
+    status: tested
+    source: microstructure
+    hyp_id: H184_dxb14_fade_gold
+    why: Fade gold at 14:00 Dubai DGCX afternoon vs 11:00.
+    note: 2026-09-05 REJECT. p=0.22. R negative. Do not move to 10:00. Do not flip.
+
+  - id: H185_dxb14_fade_aud
+    status: tested
+    source: microstructure
+    hyp_id: H185_dxb14_fade_aud
+    why: Same 14:00 Dubai DGCX afternoon fade on AUDUSD.
+    note: 2026-09-05 REJECT. p=0.46. R negative. Do not flip.
+
+  - id: H186_dxb14_fade_jpy
+    status: tested
+    source: microstructure
+    hyp_id: H186_dxb14_fade_jpy
+    why: Same 14:00 Dubai DGCX afternoon fade on USDJPY.
+    note: 2026-09-05 REJECT. p=0.086. R negative. Do not rerun solo. Do not flip.
+
+  - id: H187_sgx17_fade_aud
+    status: tested
+    source: microstructure
+    hyp_id: H187_sgx17_fade_aud
+    why: Fade AUDUSD at 17:00 Singapore cash close vs 14:00.
+    note: 2026-09-05 REJECT. p=0.34. R negative. Do not move to 16:00. Do not flip.
+
+  - id: H188_sgx17_fade_jpy
+    status: tested
+    source: microstructure
+    hyp_id: H188_sgx17_fade_jpy
+    why: Same 17:00 Singapore cash-close fade on USDJPY.
+    note: 2026-09-05 REJECT. Train not above baseline. R negative. Do not flip.
+
+  - id: H189_sgx17_fade_gold
+    status: tested
+    source: microstructure
+    hyp_id: H189_sgx17_fade_gold
+    why: Same 17:00 Singapore cash-close fade on XAUUSD.
+    note: 2026-09-05 REJECT. Hit-rate CANDIDATE but R negative. Do not last-level. Do not rerun solo. Do not flip.
+
+  - id: H190_xetra1730_fade_eur
+    status: tested
+    source: microstructure
+    hyp_id: H190_xetra1730_fade_eur
+    why: Fade EURUSD at 17:30 Berlin Xetra close vs 14:00.
+    note: 2026-09-05 REJECT. p=0.057. R negative. Do not move to 09:00. Do not flip.
+
+  - id: H191_xetra1730_fade_gbp
+    status: tested
+    source: microstructure
+    hyp_id: H191_xetra1730_fade_gbp
+    why: Same 17:30 Berlin Xetra close fade on GBPUSD.
+    note: 2026-09-05 REJECT. p=0.29. R negative. Do not flip.
+
+  - id: H192_xetra1730_fade_gold
+    status: tested
+    source: microstructure
+    hyp_id: H192_xetra1730_fade_gold
+    why: Same 17:30 Berlin Xetra close fade on XAUUSD.
+    note: 2026-09-05 PAPER_CANDIDATE. Last-level CLEAR. OOS locked. Not an EA until user asks.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

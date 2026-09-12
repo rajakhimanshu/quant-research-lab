@@ -954,3 +954,1649 @@ hypotheses:
       stop_atr: 1.0
       target_atr: 1.0
 
+  - id: H48_london_ist_break
+    enabled: false
+    name: Follow second M15 close through the 12:30 IST candle vs fade, majors
+    why: >
+      12:30 IST is London cash open. The first M15 is the opening-auction
+      range; a close through that high or low on the next M15 is the side
+      European flow took, so following it at 1:1 of the first-candle range
+      should beat fading the same close. Distinct from rejected H30 (Asia
+      range, M5, not the 12:30 IST print) and H4/H7 (gold Asia vs NY ORB).
+      All FX majors, M15. Fill next open, 1:1 range stop/target, 24 bars.
+      Frozen fx_m15. Do not switch RR to 1.5/2 after seeing results.
+    params:
+      symbols: [EURUSD, GBPUSD, USDJPY, AUDUSD, USDCAD, USDCHF, NZDUSD]
+      timeframe: M15
+      mark_hour_ist: 12
+      mark_minute_ist: 30
+      rr: 1.0
+      horizon_bars: 24
+
+  - id: H49_london_ist_break_gold
+    enabled: false
+    name: Follow second M15 close through the 12:30 IST candle vs fade, gold
+    why: >
+      Same London-open auction as H48, on gold: LBMA and London banks hit
+      XAUUSD at the same clock, so a second-M15 close through the 12:30 IST
+      candle should be followable at 1:1 of that range vs fading it.
+      Distinct from rejected H4/H7 (Asia vs NY ORB, not 12:30 IST) and H48
+      (FX majors). XAUUSD M15. Fill next open, 1:1 range, 24 bars. Frozen
+      gold_m15. Do not switch RR to 1.5/2.
+    params:
+      symbols: [XAUUSD]
+      timeframe: M15
+      mark_hour_ist: 12
+      mark_minute_ist: 30
+      rr: 1.0
+      horizon_bars: 24
+
+  - id: H50_london_fib_bounce
+    enabled: false
+    name: Bounce 61.8% of the London IST impulse vs bounce 50%, EURUSD M15
+    why: >
+      After the 12:30-14:30 IST London impulse, resting orders cluster at
+      the 61.8% retrace (Fibonacci desks and option hedges), so a bounce
+      there in the impulse direction should beat a bounce at 50% (a round
+      half, not the same cluster). Distinct from rejected H2 (tap count)
+      and H48 (second-bar break, not a retrace). EURUSD M15. Fill next
+      open, 1:1 of impulse range, 16 bars. Frozen fx_m15. Do not add 38.2
+      or 78.6 after seeing results.
+    params:
+      symbols: [EURUSD]
+      timeframe: M15
+      impulse_start_hour_ist: 12
+      impulse_start_minute_ist: 30
+      impulse_bars: 8
+      treat_fib: 0.618
+      base_fib: 0.50
+      rr: 1.0
+      horizon_bars: 16
+
+  - id: H51_ny_sweep_follow
+    enabled: false
+    name: Follow NY 9-10 gold overnight sweep that does not reclaim vs later NY
+    why: >
+      Into the NY cash open, stops beyond the overnight gold range get run.
+      When the M15 close stays outside that range, trapped traders must chase,
+      so following that continuation at 9:00-10:00 NY should beat the same
+      un-reclaimed sweep at 11:00-16:00 NY (the cash-open chase is over).
+      Distinct from rejected H3/H6 (reclaim/fade of the same raid) and H8
+      (ATR expansion, not an overnight stop pool). XAUUSD M15. Fill next
+      open, 1:1 ATR, 8 bars. Frozen gold_m15. Do not flip back to reclaim.
+      Do not move the 9-10 window.
+    params:
+      symbols: [XAUUSD]
+      timeframe: M15
+      sweep_atr: 0.10
+      ny_start: 9
+      ny_end: 10
+      control_start: 11
+      control_end: 16
+      horizon_bars: 8
+      stop_atr: 1.0
+      target_atr: 1.0
+
+  - id: H52_carry_roll
+    enabled: false
+    name: Hold textbook G10 carry through the NY 17:00 roll vs London morning
+    why: >
+      Tom-next swap is paid around the New York 17:00 roll. Holding the
+      textbook G10 carry side (long AUDUSD, NZDUSD, USDJPY, USDCHF) from
+      16:00 London for 8 H1 bars goes through that roll, so it should beat
+      the same directional hold from 08:00 London (no roll in the window).
+      Distinct from rejected H31 (5-day return sign) and H38 (cross-section
+      rank). Mon-Thu only. Frozen fx_h1. Do not flip to USD-high-yield or
+      add EURUSD after seeing results.
+    params:
+      symbols: [AUDUSD, NZDUSD, USDJPY, USDCHF]
+      timeframe: H1
+      treat_hour_london: 16
+      base_hour_london: 8
+      horizon_bars: 8
+      stop_atr: 1.0
+      target_atr: 1.0
+
+  - id: H53_tokyo_fix_follow
+    enabled: false
+    name: Follow USDJPY 15 min into the 9:55 Tokyo fix vs 11:30 JST
+    why: >
+      Japanese importers and banks concentrate USDJPY orders into the 9:55
+      Tokyo fixing, so following the signed M15 run that ends at 09:30 JST
+      (entry 09:45, still before the fix) should beat following the same
+      15-minute run at 11:30 JST (fix is done; not Tokyo lunch). Distinct
+      from rejected H39 (fade at 12:00 lunch) and H42 (15:00 cash-close
+      flatten). Not a retune of H23 gold PM to AM. USDJPY M15. Fill next
+      open, 1:1 ATR, 8 bars. Frozen fx_m15. Do not move 09:30 or flip to fade.
+    params:
+      symbols: [USDJPY]
+      timeframe: M15
+      treat_hour: 9
+      treat_minute: 30
+      base_hour: 11
+      base_minute: 30
+      min_prior_atr: 0.25
+      horizon_bars: 8
+      stop_atr: 1.0
+      target_atr: 1.0
+
+  - id: H54_comex_open_follow
+    enabled: false
+    name: Follow gold 15 min into COMEX 8:20 NY vs the same run at 6:00 NY
+    why: >
+      COMEX RTH still clusters US futures, ETF, and miner hedges at the old
+      8:20 ET pit open, so following the signed M15 run that ends at 08:00 NY
+      (entry 08:15, still before 8:20) should beat following the same run at
+      06:00 NY (London-only, no COMEX open). Distinct from rejected H3/H51
+      (9-10 cash sweep) and H23 (LBMA PM 15:00 London). XAUUSD M15. Fill next
+      open, 1:1 ATR, 8 bars. Frozen gold_m15. Do not move 08:00 or flip to fade.
+    params:
+      symbols: [XAUUSD]
+      timeframe: M15
+      treat_hour: 8
+      treat_minute: 0
+      base_hour: 6
+      base_minute: 0
+      fade: false
+      min_prior_atr: 0.25
+      horizon_bars: 8
+      stop_atr: 1.0
+      target_atr: 1.0
+
+  - id: H55_nyse_open_eur
+    enabled: false
+    name: Long EURUSD at NYSE 9:30 vs the same long at 8:00 NY
+    why: >
+      US cash-equity open forces asset-allocators to hedge FX with the stock
+      print. During US hours the home-currency effect (Ranaldo) is that
+      Americans buy foreign currency, so an unconditional long EURUSD at
+      9:30 NY should beat the same long at 8:00 NY (US morning, but before
+      cash equities). Distinct from rejected H32 (London 08:00 vs 16:00 short)
+      and H28 (London 16:00 postfix long). EURUSD M15. Fill next open, 1:1
+      ATR, 8 bars. Frozen fx_m15. Do not move 9:30 or flip to short.
+    params:
+      symbols: [EURUSD]
+      timeframe: M15
+      treat_hour_ny: 9
+      treat_minute_ny: 30
+      base_hour_ny: 8
+      base_minute_ny: 0
+      horizon_bars: 8
+      stop_atr: 1.0
+      target_atr: 1.0
+
+  - id: H56_comex_close_fade
+    enabled: false
+    name: Fade gold 15 min into COMEX 13:30 NY close vs the same fade at 11:00
+    why: >
+      COMEX gold RTH ends 13:30 ET. US futures desks flatten into that halt,
+      so fading the signed M15 run that ends at 13:00 NY should beat fading
+      the same run at 11:00 NY (mid-session, no close). Distinct from rejected
+      H12 (FX London 15:00), H35 (Friday 15:00 flatten), H42 (Tokyo 15:00),
+      and H54 (follow the 8:20 open, not fade the close). XAUUSD M15. Fill
+      next open, 1:1 ATR, 8 bars. Frozen gold_m15. Do not move 13:00 or flip
+      to follow.
+    params:
+      symbols: [XAUUSD]
+      timeframe: M15
+      treat_hour: 13
+      treat_minute: 0
+      base_hour: 11
+      base_minute: 0
+      fade: true
+      min_prior_atr: 0.25
+      horizon_bars: 8
+      stop_atr: 1.0
+      target_atr: 1.0
+
+  - id: H57_sge_open_follow
+    enabled: false
+    name: Follow gold into SGE 09:00 Shanghai vs 07:00
+    why: >
+      Shanghai Gold Exchange cash open concentrates CN physical and SGE
+      hedges onto London spot via the EFP, so following the M15 into 09:00
+      China should beat 07:00 (pre-open). Distinct from H23 LBMA PM and H54
+      COMEX 8:20. XAUUSD M15. 1:1 ATR, 8 bars. Frozen gold_m15.
+    params: {symbols: [XAUUSD], timeframe: M15, tz: Asia/Shanghai, treat_hour: 9, treat_minute: 0, base_hour: 7, base_minute: 0, mode: follow, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H58_ecb_ref_follow
+    enabled: false
+    name: Follow EURUSD into ECB 14:15 Frankfurt vs 11:00
+    why: >
+      The ECB 14:15 CET reference is a forced EUR dealing print, so following
+      the M15 into 14:00 Berlin should beat 11:00 (no reference). Distinct from
+      H29 pre-ECB 07:00 London short and H27 WM 16:00. EURUSD M15. Frozen fx_m15.
+    params: {symbols: [EURUSD], timeframe: M15, tz: Europe/Berlin, treat_hour: 14, treat_minute: 0, base_hour: 11, base_minute: 0, mode: follow, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H59_boe_noon_follow
+    enabled: false
+    name: Follow GBPUSD into 12:00 London vs 10:00
+    why: >
+      BOE and UK official prints cluster at London noon, so following GBPUSD
+      into 12:00 should beat 10:00 (morning two-way). Distinct from H27 WM 16:00
+      and H64 09:30 ONS. GBPUSD M15. Frozen fx_m15.
+    params: {symbols: [GBPUSD], timeframe: M15, tz: Europe/London, treat_hour: 12, treat_minute: 0, base_hour: 10, base_minute: 0, mode: follow, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H60_asx_open_follow
+    enabled: false
+    name: Follow AUDUSD into ASX 10:00 Sydney vs 08:00
+    why: >
+      ASX cash open forces AUD equity-hedge flow onto the pair, so following
+      into 10:00 Sydney should beat 08:00 (pre-cash). Distinct from H52 carry
+      roll. AUDUSD M15. Frozen fx_m15.
+    params: {symbols: [AUDUSD], timeframe: M15, tz: Australia/Sydney, treat_hour: 10, treat_minute: 0, base_hour: 8, base_minute: 0, mode: follow, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H61_nzx_open_follow
+    enabled: false
+    name: Follow NZDUSD into NZX 10:00 Auckland vs 08:00
+    why: >
+      NZX cash open is local NZD equity-hedge flow, so following into 10:00
+      Auckland should beat 08:00. Distinct from H60 ASX. NZDUSD M15. Frozen fx_m15.
+    params: {symbols: [NZDUSD], timeframe: M15, tz: Pacific/Auckland, treat_hour: 10, treat_minute: 0, base_hour: 8, base_minute: 0, mode: follow, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H62_six_open_follow
+    enabled: false
+    name: Follow USDCHF into SIX 09:00 Zurich vs 07:00
+    why: >
+      SIX Swiss cash open concentrates CHF equity and private-bank flow, so
+      following USDCHF into 09:00 Zurich should beat 07:00. Distinct from H32
+      EUR local hours. USDCHF M15. Frozen fx_m15.
+    params: {symbols: [USDCHF], timeframe: M15, tz: Europe/Zurich, treat_hour: 9, treat_minute: 0, base_hour: 7, base_minute: 0, mode: follow, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H63_cad_830_follow
+    enabled: false
+    name: Follow USDCAD into 08:30 NY vs 07:00
+    why: >
+      08:30 NY is the North American data and WTI-adjacent CAD print, so
+      following USDCAD into 08:30 should beat 07:00 (pre-data). Distinct from
+      H1 (fade a large news bar) and H55 (EUR 9:30 long). USDCAD M15. Frozen fx_m15.
+    params: {symbols: [USDCAD], timeframe: M15, tz: America/New_York, treat_hour: 8, treat_minute: 30, base_hour: 7, base_minute: 0, mode: follow, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H64_ons_gbp_follow
+    enabled: false
+    name: Follow GBPUSD into 09:30 London vs 08:00
+    why: >
+      UK ONS releases at 09:30 London force sterling dealing, so following
+      into 09:30 should beat 08:00 (LSE open, no ONS). Distinct from H59 noon
+      and H48 12:30 IST. GBPUSD M15. Frozen fx_m15.
+    params: {symbols: [GBPUSD], timeframe: M15, tz: Europe/London, treat_hour: 9, treat_minute: 30, base_hour: 8, base_minute: 0, mode: follow, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H65_tse_open_follow
+    enabled: false
+    name: Follow USDJPY into TSE 09:00 Tokyo vs 07:30
+    why: >
+      Tokyo Stock Exchange cash open is JPY equity-hedge flow, not the 9:55
+      importer fix (H53). Following into 09:00 JST should beat 07:30 (pre-cash).
+      USDJPY M15. Frozen fx_m15. Do not move to 09:55.
+    params: {symbols: [USDJPY], timeframe: M15, tz: Asia/Tokyo, treat_hour: 9, treat_minute: 0, base_hour: 7, base_minute: 30, mode: follow, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H66_ny_last_hour_fade
+    enabled: false
+    name: Fade EURUSD at 15:00 NY vs 13:00 NY
+    why: >
+      The last hour of US cash equities is when desks pre-hedge the close, so
+      fading the M15 into 15:00 NY should beat 13:00 (midday). Distinct from
+      H40 (21:00 London / 16:00 NY close) and H55 (9:30 long). EURUSD M15.
+      Frozen fx_m15. Do not move to 16:00.
+    params: {symbols: [EURUSD], timeframe: M15, tz: America/New_York, treat_hour: 15, treat_minute: 0, base_hour: 13, base_minute: 0, mode: fade, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H67_gld_close_fade
+    enabled: false
+    name: Fade gold at 16:00 NY vs 14:00 NY
+    why: >
+      GLD and US gold books flatten at the 16:00 NY equity close, so fading
+      gold into 16:00 should beat 14:00. Distinct from H56 COMEX 13:30 RTH
+      halt. XAUUSD M15. Frozen gold_m15.
+    params: {symbols: [XAUUSD], timeframe: M15, tz: America/New_York, treat_hour: 16, treat_minute: 0, base_hour: 14, base_minute: 0, mode: fade, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H68_opex_friday_fade
+    enabled: false
+    name: Fade EURUSD 10:00 NY on 3rd Friday vs other Fridays
+    why: >
+      Monthly equity/index options expiry is the 3rd Friday. Dealers hedge
+      FX delta into the 10:00 NY window, so fading that print on 3rd Fridays
+      should beat the same fade on other Fridays (weekly noise, no monthly
+      pin). Distinct from H35 Friday 15:00 flatten. EURUSD M15. Frozen fx_m15.
+      Do not widen to every Friday.
+    params: {symbols: [EURUSD], timeframe: M15, tz: America/New_York, treat_hour: 10, treat_minute: 0, base_hour: 10, base_minute: 0, mode: fade, opex_friday: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H69_cme_fx_open_follow
+    enabled: false
+    name: Follow EURUSD into CME FX 8:20 NY vs 6:00
+    why: >
+      CME currency futures still cluster US bank FX at the old 8:20 ET RTH
+      open, so following EURUSD into 08:00 NY should beat 06:00. Distinct from
+      H54 (gold COMEX, not FX) and H55 (9:30 cash). EURUSD M15. Frozen fx_m15.
+    params: {symbols: [EURUSD], timeframe: M15, tz: America/New_York, treat_hour: 8, treat_minute: 0, base_hour: 6, base_minute: 0, mode: follow, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H70_xetra_open_follow
+    enabled: false
+    name: Follow EURUSD into Xetra 09:00 Berlin vs 07:30
+    why: >
+      Xetra cash open is German equity-hedge EUR flow, so following into 09:00
+      Berlin should beat 07:30. Distinct from H58 14:15 ECB and H32 London
+      hours. EURUSD M15. Frozen fx_m15.
+    params: {symbols: [EURUSD], timeframe: M15, tz: Europe/Berlin, treat_hour: 9, treat_minute: 0, base_hour: 7, base_minute: 30, mode: follow, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H71_lse_close_fade
+    enabled: false
+    name: Fade GBPUSD into LSE 16:30 close vs 14:00 London
+    why: >
+      LSE cash close at 16:30 forces sterling equity-hedge flatten, so fading
+      into 16:30 should beat 14:00. Distinct from H12 (15:00 fade of 7 H1) and
+      H35 (Friday 15:00). GBPUSD M15. Frozen fx_m15. Do not move to 15:00.
+    params: {symbols: [GBPUSD], timeframe: M15, tz: Europe/London, treat_hour: 16, treat_minute: 30, base_hour: 14, base_minute: 0, mode: fade, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H72_london_reopen_follow
+    enabled: false
+    name: Follow EURUSD at 13:00 London reopen vs 11:00
+    why: >
+      After London lunch the book refills; following the first post-lunch M15
+      at 13:00 should beat following 11:00 (still morning). Distinct from H47
+      (fade at 12:00 lunch). EURUSD M15. Frozen fx_m15. Do not move lunch to 12:00.
+    params: {symbols: [EURUSD], timeframe: M15, tz: Europe/London, treat_hour: 13, treat_minute: 0, base_hour: 11, base_minute: 0, mode: follow, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H73_sge_night_follow
+    enabled: false
+    name: Follow gold into SGE night 21:00 Shanghai vs 19:00
+    why: >
+      SGE night session is the Asia physical/hedge reopen after the day break,
+      so following into 21:00 China should beat 19:00 (still closed). Distinct
+      from H57 SGE 09:00 cash open. XAUUSD M15. Frozen gold_m15.
+    params: {symbols: [XAUUSD], timeframe: M15, tz: Asia/Shanghai, treat_hour: 21, treat_minute: 0, base_hour: 19, base_minute: 0, mode: follow, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H74_wti_open_cad
+    enabled: false
+    name: Follow USDCAD into WTI 09:00 NY vs 07:00
+    why: >
+      WTI RTH opens 09:00 ET; CAD oil hedges hit USDCAD then, so following
+      into 09:00 should beat 07:00. Distinct from H63 08:30 data and H55 EUR
+      9:30. USDCAD M15. Frozen fx_m15. Do not flip to oil futures.
+    params: {symbols: [USDCAD], timeframe: M15, tz: America/New_York, treat_hour: 9, treat_minute: 0, base_hour: 7, base_minute: 0, mode: follow, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H75_ust_open_usd
+    enabled: false
+    name: Short EURUSD at 08:20 NY Treasury/futures open vs 07:00
+    why: >
+      US rates futures still cluster at the old 8:20 ET open; USD bid from
+      that book should make an unconditional short EURUSD at 08:20 beat 07:00.
+      Distinct from H55 (long EUR 9:30) and H69 (signed EUR follow 8:00).
+      EURUSD M15. Frozen fx_m15. Do not flip to long.
+    params: {symbols: [EURUSD], timeframe: M15, tz: America/New_York, treat_hour: 8, treat_minute: 15, base_hour: 7, base_minute: 0, mode: short, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H76_hkex_open_aud
+    enabled: false
+    name: Follow AUDUSD into HKEX 09:30 Hong Kong vs 08:00
+    why: >
+      HKEX cash open is the CNH/AUD Asia equity-hedge print, so following
+      AUDUSD into 09:30 Hong Kong should beat 08:00. Distinct from H60 ASX
+      10:00 Sydney. AUDUSD M15. Frozen fx_m15.
+    params: {symbols: [AUDUSD], timeframe: M15, tz: Asia/Hong_Kong, treat_hour: 9, treat_minute: 30, base_hour: 8, base_minute: 0, mode: follow, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H77_imm_usd_bid
+    enabled: false
+    name: Short EURUSD on IMM Wednesday 16:00 London vs other Wednesdays
+    why: >
+      IMM FX futures roll on the 3rd Wednesday of Mar/Jun/Sep/Dec. Dealers
+      bid USD into that roll, so an unconditional short EURUSD at 16:00 London
+      on IMM Wednesday should beat the same short on other Wednesdays.
+      Distinct from H43 (last two sessions of every month). EURUSD H1, 1:1
+      ATR, 8 bars. Frozen fx_h1. Do not expand to quarter-end week.
+    params: {symbols: [EURUSD], timeframe: H1, tz: Europe/London, treat_hour: 16, treat_minute: 0, base_hour: 16, base_minute: 0, mode: short, imm_wednesday: true, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H78_two_day_fade
+    enabled: false
+    name: Fade a 2-session EURUSD close streak at 16:00 vs a 1-session close
+    why: >
+      Two same-direction sessions leave dealers with inventory they dump into
+      London 16:00, so fading a 2-day close streak should beat fading a 1-day
+      close. Distinct from H25 (gold M15 5 vs 2 bars) and H31 (5-day momentum
+      follow). EURUSD H1. Fill next open, 1:1 ATR, 8 bars. Frozen fx_h1.
+      Do not retune to 3-day.
+    params: {symbols: [EURUSD], timeframe: H1, signal_hour_london: 16, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H79_overnight_usd
+    enabled: false
+    name: Short EURUSD at 21:00 London overnight vs 08:00 London local day
+    why: >
+      After US cash, EUR local flow is gone and Asia funds USD. Holding a short
+      EURUSD from 21:00 London for 12 H1 (overnight) should beat the same short
+      from 08:00 (European business day). Distinct from H32 (08:00 vs 16:00,
+      8 bars) and H40 (fade NY-day at 21:00). Mon-Thu. Frozen fx_h1. Do not
+      move 21:00 to 16:00.
+    params: {symbols: [EURUSD], timeframe: H1, tz: Europe/London, treat_hour: 21, treat_minute: 0, base_hour: 8, base_minute: 0, mode: short, skip_friday: true, horizon_bars: 12, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H80_nfp_cpi_fade
+    enabled: false
+    name: Fade EURUSD 8:00 NY bar on NFP or CPI vs blank 8:00 NY
+    why: >
+      NFP and CPI print into the 8:00–9:00 NY H1. Dealers inventory that
+      impulse and fade it, so fading the 8:00 NY bar on those named prints
+      should beat fading the same bar on a day with no USD high-impact in
+      that hour. Distinct from H1 (2.5 ATR news retrace) and H18 (any large
+      bar). EURUSD H1, 1:1 ATR, 8 bars. Frozen fx_h1. Do not add PPI, claims,
+      or Core CPI.
+    params: {symbols: [EURUSD], timeframe: H1, tz: America/New_York, treat_hour: 8, treat_minute: 0, event_names: ["Non-Farm Employment Change", "CPI m/m"], horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H81_fomc_fade
+    enabled: false
+    name: Fade EURUSD 14:00 NY bar on FOMC Statement vs other Wednesdays
+    why: >
+      FOMC Statement hits 14:00 NY. The first hour is dealer inventory of
+      the funds-rate print, so fading that bar on Statement days should beat
+      fading 14:00 on other Wednesdays with no USD high-impact in the hour.
+      Distinct from H58 (unconditional ECB 14:00 follow, not meeting-only)
+      and H68 (3rd-Friday option expiry). EURUSD H1, 1:1 ATR, 8 bars. Frozen
+      fx_h1. Do not add Powell speeches or minutes.
+    params: {symbols: [EURUSD], timeframe: H1, tz: America/New_York, treat_hour: 14, treat_minute: 0, same_weekday: 2, event_names: ["FOMC Statement"], horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H82_month_start_usd
+    enabled: false
+    name: Short EURUSD first 2 London sessions of the month vs days 10-12
+    why: >
+      Month-start inflows buy US assets and bid USD, so an unconditional
+      short EURUSD at 16:00 London on the first two sessions should beat
+      the same short on days 10-12. Distinct from H43 (last two sessions)
+      and H24 (gold MTD follow). EURUSD H1, 1:1 ATR, 16 bars. Frozen fx_h1.
+      Do not retune to quarter-start.
+    params: {symbols: [EURUSD], timeframe: H1, signal_hour_london: 16, month_start_days: 2, month_end_days: 0, base_days: [10, 11, 12], horizon_bars: 16, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H83_eur_cot_fade
+    enabled: false
+    name: Fade crowded CFTC spec EURO FX vs mid-percentile fade
+    why: >
+      Non-commercials are the late leveraged side in CME EURO FX. When their
+      net as a share of open interest is in the outer 20% of the trailing
+      year, fading that crowding in EURUSD should beat the same fade when
+      specs sit in the middle. Same 52w band and 6-day CFTC lag as H9, not
+      a percentile retune. Distinct from H9 (COMEX gold). EURUSD H1 daily
+      hold, 1:1 ATR, 5 days. Frozen fx_h1. Do not widen 80/20.
+    params: {symbols: [EURUSD], timeframe: H1, cot_market: "EURO FX - CHICAGO MERCANTILE EXCHANGE", percentile_window: 52, extreme_hi: 0.80, extreme_lo: 0.20, mid_lo: 0.40, mid_hi: 0.60, publish_lag_days: 6, horizon_days: 5, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H84_jpy_cot_fade
+    enabled: false
+    name: Fade crowded CFTC spec Japanese Yen vs mid-percentile fade
+    why: >
+      Crowded IMM yen specs are the late side; fading that crowding in
+      USDJPY (long USDJPY when specs are net long yen) should beat a
+      mid-percentile fade. Same 52w and 6-day lag as H9. Distinct from H9
+      gold and from H39 Tokyo lunch. USDJPY H1, 1:1 ATR, 5 days. Frozen
+      fx_h1. Do not widen 80/20.
+    params: {symbols: [USDJPY], timeframe: H1, cot_market: "JAPANESE YEN - CHICAGO MERCANTILE EXCHANGE", percentile_window: 52, extreme_hi: 0.80, extreme_lo: 0.20, mid_lo: 0.40, mid_hi: 0.60, publish_lag_days: 6, horizon_days: 5, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H85_gbp_cot_fade
+    enabled: false
+    name: Fade crowded CFTC spec British Pound vs mid-percentile fade
+    why: >
+      Crowded IMM sterling specs are the late side; fading that crowding in
+      GBPUSD should beat a mid-percentile fade. Same 52w and 6-day lag as
+      H9. Distinct from H9 gold and from H59 BOE noon follow. GBPUSD H1,
+      1:1 ATR, 5 days. Frozen fx_h1. Do not widen 80/20.
+    params: {symbols: [GBPUSD], timeframe: H1, cot_market: ["BRITISH POUND STERLING - CHICAGO MERCANTILE EXCHANGE", "BRITISH POUND - CHICAGO MERCANTILE EXCHANGE"], percentile_window: 52, extreme_hi: 0.80, extreme_lo: 0.20, mid_lo: 0.40, mid_hi: 0.60, publish_lag_days: 6, horizon_days: 5, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H86_weekend_gap_g10
+    enabled: false
+    name: Fade GBP/JPY/AUD weekend halt vs Wednesday overnight, same 36h as H37
+    why: >
+      The weekend halt is a venue event for USD majors, not an EURUSD quirk.
+      Fading a >=36h reopen gap on GBPUSD, USDJPY, and AUDUSD should beat
+      fading Wednesday London-open overnight on those same pairs. Same 0.15
+      ATR, 1:1, 8 H1 as H37. EURUSD is excluded (that is H37; do not mix it
+      back in). Distinct from H26 (gold). Frozen fx_h1. Do not loosen 36h.
+      Do not add NZD/CAD/CHF after seeing results.
+    params: {symbols: [GBPUSD, USDJPY, AUDUSD], timeframe: H1, min_gap_hours: 36, min_gap_atr: 0.15, base_hour_london: 8, prior_hour_london: 16, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H87_monday_cash_gbp
+    enabled: false
+    name: Fade GBPUSD Friday-to-Monday at London 08:00 vs Tuesday-to-Wednesday
+    why: >
+      H86's Sunday reopen is where the halt tax is paid. Weekend inventory is
+      still in the book at Monday London cash, when the spread is a weekday
+      print. Fading Friday close to Monday 08:00 London on GBPUSD should beat
+      fading Tuesday close to Wednesday 08:00 (same clock, no weekend).
+      Distinct from H86 (Sunday fill), H37 (EURUSD Sunday), and H72 (13:00
+      lunch reopen). Frozen fx_h1, 0.15 ATR, 1:1, 8 H1. Do not move to Sunday.
+      Do not add EURUSD.
+    params: {symbols: [GBPUSD], timeframe: H1, tz: Europe/London, cash_hour: 8, min_gap_atr: 0.15, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H88_monday_cash_jpy
+    enabled: false
+    name: Fade USDJPY Friday-to-Monday at London 08:00 vs Tuesday-to-Wednesday
+    why: >
+      Same weekend-inventory / weekday-spread claim as H87, on USDJPY. London
+      08:00 is when G10 cash is shown. Distinct from H86 Sunday fill and H39
+      Tokyo lunch. Frozen fx_h1. Do not move to Sunday. Do not add EURUSD.
+    params: {symbols: [USDJPY], timeframe: H1, tz: Europe/London, cash_hour: 8, min_gap_atr: 0.15, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H89_monday_cash_aud
+    enabled: false
+    name: Fade AUDUSD Friday-to-Monday at London 08:00 vs Tuesday-to-Wednesday
+    why: >
+      Same weekend-inventory / weekday-spread claim as H87, on AUDUSD. Distinct
+      from H86 Sunday fill and H60 (ASX 10:00 follow every day). Frozen fx_h1.
+      Do not move to Sunday or to 10:00 Sydney. Do not add EURUSD.
+    params: {symbols: [AUDUSD], timeframe: H1, tz: Europe/London, cash_hour: 8, min_gap_atr: 0.15, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H90_ny_cut_eur
+    enabled: false
+    name: Fade EURUSD 10:00 NY option cut vs 11:00, skip Friday
+    why: >
+      G10 vanilla options cut at 10:00 New York every weekday. Dealers finish
+      delta into that print, so fading the 10:00 NY M15 should beat fading
+      11:00 (cut already done). Friday is skipped so this is not H68 (3rd-Friday
+      opex only). Distinct from H55 (NYSE 9:30 long). EURUSD M15, 1:1 ATR, 8
+      bars. Frozen fx_m15. Do not add Friday. Do not move to 15:00 NY.
+    params: {symbols: [EURUSD], timeframe: M15, tz: America/New_York, treat_hour: 10, treat_minute: 0, base_hour: 11, base_minute: 0, mode: fade, skip_friday: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H91_ny_cut_gbp
+    enabled: false
+    name: Fade GBPUSD 10:00 NY option cut vs 11:00, skip Friday
+    why: >
+      Same NY 10:00 option-cut dump as H90, on GBPUSD. Skip Friday (H68). Frozen
+      fx_m15. Do not add Friday. Do not move the hour.
+    params: {symbols: [GBPUSD], timeframe: M15, tz: America/New_York, treat_hour: 10, treat_minute: 0, base_hour: 11, base_minute: 0, mode: fade, skip_friday: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H92_ny_cut_jpy
+    enabled: false
+    name: Fade USDJPY 10:00 NY option cut vs 11:00, skip Friday
+    why: >
+      Same NY 10:00 option-cut dump as H90, on USDJPY. Skip Friday (H68). Frozen
+      fx_m15. Do not add Friday. Do not move the hour.
+    params: {symbols: [USDJPY], timeframe: M15, tz: America/New_York, treat_hour: 10, treat_minute: 0, base_hour: 11, base_minute: 0, mode: fade, skip_friday: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H93_wm_postfix_eur
+    enabled: false
+    name: Fade EURUSD 16:15 London after WM vs 15:45 before
+    why: >
+      WM/R matching runs at 16:00 London. Leftover dealer inventory is dumped
+      on the next M15, so fading 16:15 should beat fading 15:45 (still building
+      the fix). Distinct from H27 (follow 14:00 into the fix) and H44 (fade the
+      14:00-16:00 window at 16:00). EURUSD M15, 1:1 ATR, 8 bars. Frozen fx_m15.
+      Do not move to 16:00. Do not flip to follow.
+    params: {symbols: [EURUSD], timeframe: M15, tz: Europe/London, treat_hour: 16, treat_minute: 15, base_hour: 15, base_minute: 45, mode: fade, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H94_wm_postfix_gbp
+    enabled: false
+    name: Fade GBPUSD 16:15 London after WM vs 15:45 before
+    why: >
+      Same post-WM inventory dump as H93, on GBPUSD. Distinct from H27 and H44.
+      Frozen fx_m15. Do not move to 16:00. Do not flip to follow.
+    params: {symbols: [GBPUSD], timeframe: M15, tz: Europe/London, treat_hour: 16, treat_minute: 15, base_hour: 15, base_minute: 45, mode: fade, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H95_wm_postfix_jpy
+    enabled: false
+    name: Fade USDJPY 16:15 London after WM vs 15:45 before
+    why: >
+      Same post-WM inventory dump as H93, on USDJPY. Distinct from H27 and H44.
+      Frozen fx_m15. Do not move to 16:00. Do not flip to follow.
+    params: {symbols: [USDJPY], timeframe: M15, tz: Europe/London, treat_hour: 16, treat_minute: 15, base_hour: 15, base_minute: 45, mode: fade, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H96_asia_box_gold
+    enabled: false
+    name: Fade gold first London tag of Asia high/low vs Asia mid
+    why: >
+      Loco London books Asia's overnight inventory at 08:00. First tag of the
+      Asia 00:00-07:00 London range is a stop pool, so fading that tag should
+      beat fading first tag of Asia mid (no pool). Distinct from H17 (prior NY
+      day), H4 (Asia ORB during Asia), and H30 (EURUSD follow a London break).
+      XAUUSD M15, 1:1 ATR, 8 bars. Frozen gold_m15. Do not switch to follow.
+      Do not move Asia to NY hours.
+    params: {symbols: [XAUUSD], timeframe: M15, asia_end_hour_london: 7, london_hour: 8, london_end_hour: 12, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H97_asia_box_gbp
+    enabled: false
+    name: Fade GBPUSD first London tag of Asia high/low vs Asia mid
+    why: >
+      Same London-books-Asia stop-pool claim as H96, on GBPUSD. EURUSD is
+      excluded (that would be an H30 flip). Frozen fx_m15. Do not add EURUSD.
+      Do not flip to follow.
+    params: {symbols: [GBPUSD], timeframe: M15, asia_end_hour_london: 7, london_hour: 8, london_end_hour: 12, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H98_asia_box_aud
+    enabled: false
+    name: Fade AUDUSD first London tag of Asia high/low vs Asia mid
+    why: >
+      Same London-books-Asia stop-pool claim as H96, on AUDUSD. Distinct from
+      H60 (ASX 10:00 follow). Frozen fx_m15. Do not add EURUSD. Do not flip.
+    params: {symbols: [AUDUSD], timeframe: M15, asia_end_hour_london: 7, london_hour: 8, london_end_hour: 12, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H99_tokyo_roll_jpy
+    enabled: false
+    name: Fade USDJPY 00:00 Tokyo date-roll vs 03:00
+    why: >
+      Japanese official and real-money FX books roll at midnight JST. Fading
+      the 00:00 Tokyo M15 should beat fading 03:00 (post-roll quiet). Distinct
+      from H39 (lunch), H42 (15:00 close), H53 (9:55 follow), and H79 (21:00
+      London overnight). USDJPY M15, 1:1 ATR, 8 bars. Frozen fx_m15. Skip
+      weekend JST. Do not move to 09:00. Do not flip to follow.
+    params: {symbols: [USDJPY], timeframe: M15, tz: Asia/Tokyo, treat_hour: 0, treat_minute: 0, base_hour: 3, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H100_tokyo_roll_eur
+    enabled: false
+    name: Fade EURUSD 00:00 Tokyo date-roll vs 03:00
+    why: >
+      Same Tokyo midnight book-roll as H99, on EURUSD (Tokyo EUR desk). Frozen
+      fx_m15. Do not move to 09:00. Do not flip to follow.
+    params: {symbols: [EURUSD], timeframe: M15, tz: Asia/Tokyo, treat_hour: 0, treat_minute: 0, base_hour: 3, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H101_tokyo_roll_gbp
+    enabled: false
+    name: Fade GBPUSD 00:00 Tokyo date-roll vs 03:00
+    why: >
+      Same Tokyo midnight book-roll as H99, on GBPUSD. Frozen fx_m15. Do not
+      move to 09:00. Do not flip to follow.
+    params: {symbols: [GBPUSD], timeframe: M15, tz: Asia/Tokyo, treat_hour: 0, treat_minute: 0, base_hour: 3, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H102_overnight_xs_fade
+    enabled: false
+    name: Fade overnight ATR winner/loser at London 08:00 vs follow that XS
+    why: >
+      Overnight inventory is what London cash mean-reverts at the open, not a
+      5-day winner (rejected H38 follow at 16:00). At 08:00 London, rank
+      GBPUSD, USDJPY, and AUDUSD by overnight return in ATR (today 08:00 open
+      minus prior session 16:00 close). Short the overnight winner and long
+      the loser should beat following that same ranking. EURUSD excluded.
+      Ranking is ATR-normalized so JPY quotes cannot dominate. Distinct from
+      H87-H89 (each pair faded vs Wednesday, no ranking). Frozen fx_h1, 1:1
+      ATR, 8 H1, fill 08:00 open. Do not expand to 7 pairs. Do not flip to
+      follow. Do not move to 16:00.
+    params:
+      symbols: [GBPUSD, USDJPY, AUDUSD]
+      timeframe: H1
+      signal_hour_london: 8
+      prior_hour_london: 16
+      horizon_bars: 8
+      stop_atr: 1.0
+      target_atr: 1.0
+
+  - id: H103_cls_settle_eur
+    enabled: false
+    name: Fade EURUSD 07:00 CET CLS pay-in vs 09:00
+    why: >
+      CLS Bank PvP settlement starts at 07:00 Central European Time. Funding
+      shorts cover into that cutoff, so fading the 07:00 CET M15 should beat
+      fading 09:00 CET (settlement window closed, no pay-in clock). Distinct
+      from H32 (Ranaldo short London 08:00 hours, not a CLS fade) and H79
+      (21:00 London overnight). EURUSD M15, 1:1 ATR, 8 bars. Frozen fx_m15.
+      Skip weekend CET. Do not move to London 08:00. Do not flip to follow.
+    params: {symbols: [EURUSD], timeframe: M15, tz: Europe/Berlin, treat_hour: 7, treat_minute: 0, base_hour: 9, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H104_cls_settle_gbp
+    enabled: false
+    name: Fade GBPUSD 07:00 CET CLS pay-in vs 09:00
+    why: >
+      Same CLS 07:00 CET pay-in fade as H103, on GBPUSD. Frozen fx_m15. Do not
+      move to London 08:00. Do not flip to follow.
+    params: {symbols: [GBPUSD], timeframe: M15, tz: Europe/Berlin, treat_hour: 7, treat_minute: 0, base_hour: 9, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H105_cls_settle_jpy
+    enabled: false
+    name: Fade USDJPY 07:00 CET CLS pay-in vs 09:00
+    why: >
+      Same CLS 07:00 CET pay-in fade as H103, on USDJPY. Frozen fx_m15. Do not
+      move to London 08:00. Do not flip to follow.
+    params: {symbols: [USDJPY], timeframe: M15, tz: Europe/Berlin, treat_hour: 7, treat_minute: 0, base_hour: 9, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H106_silver_bullet_eur
+    enabled: false
+    name: Follow first M15 FVG tag in NY 10:00-11:00 vs 11:00-12:00
+    why: >
+      A 3-bar M15 fair-value gap is a skip in the book. ICT Silver Bullet
+      claims NY 10:00-11:00 is when that hole still has morning cash/options
+      flow behind it, so the first tag of a gap that completed in the hour
+      should continue the displacement. Following that first tag in 10:00-11:00
+      NY should beat the same first-FVG-tag rule in 11:00-12:00 (named window
+      closed). Distinct from H90 (fade the 10:00 print, no FVG), H22 (9:00-9:30
+      box), H17 (PDH/PDL), and H51 (unreclaimed sweep). EURUSD M15, 1:1 ATR, 8
+      bars. Frozen fx_m15. Do not add Judas/MSS/OTE. Do not move to London 03:00
+      or NY 14:00. Do not flip to fade the gap.
+    params: {symbols: [EURUSD], timeframe: M15, treat_hour: 10, base_hour: 11, min_gap_atr: 0.15, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H107_silver_bullet_gbp
+    enabled: false
+    name: Follow first M15 FVG tag in NY 10:00-11:00 vs 11:00-12:00
+    why: >
+      Same NY AM Silver Bullet FVG-follow as H106, on GBPUSD. Frozen fx_m15.
+      Do not add Judas/MSS/OTE. Do not move the hour. Do not flip to fade.
+    params: {symbols: [GBPUSD], timeframe: M15, treat_hour: 10, base_hour: 11, min_gap_atr: 0.15, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H108_silver_bullet_gold
+    enabled: false
+    name: Follow first gold M15 FVG tag in NY 10:00-11:00 vs 11:00-12:00
+    why: >
+      Same NY AM Silver Bullet FVG-follow as H106, on XAUUSD (ICT's usual
+      book, not indices). Frozen gold_m15. Do not add Judas/MSS/OTE. Do not
+      move the hour. Do not flip to fade.
+    params: {symbols: [XAUUSD], timeframe: M15, treat_hour: 10, base_hour: 11, min_gap_atr: 0.15, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H109_asx_close_fade
+    enabled: false
+    name: Fade AUDUSD at ASX 16:00 Sydney close vs 12:00
+    why: >
+      ASX cash close at 16:00 Sydney is when Australian real-money flattens
+      AUD equity hedges. Fading that M15 should beat fading 12:00 Sydney
+      (lunch, no close). Distinct from H60 (ASX 10:00 follow) and H76 (HKEX
+      09:30 AUD follow). AUDUSD M15, 1:1 ATR, 8 bars. Frozen fx_m15. Skip
+      weekend Sydney. Do not move to 10:00. Do not flip to follow.
+    params: {symbols: [AUDUSD], timeframe: M15, tz: Australia/Sydney, treat_hour: 16, treat_minute: 0, base_hour: 12, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H110_nzx_close_fade
+    enabled: false
+    name: Fade NZDUSD at NZX 16:45 Auckland close vs 12:00
+    why: >
+      NZX cash close at 16:45 Auckland is local NZD equity-hedge flatten, so
+      fading that M15 should beat fading 12:00 (no close). Distinct from H61
+      (NZX 10:00 follow). NZDUSD M15. Frozen fx_m15. Skip weekend Auckland.
+      Do not move to 10:00. Do not flip to follow.
+    params: {symbols: [NZDUSD], timeframe: M15, tz: Pacific/Auckland, treat_hour: 16, treat_minute: 45, base_hour: 12, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H111_tsx_close_fade
+    enabled: false
+    name: Fade USDCAD at TSX 16:00 Toronto close vs 12:00
+    why: >
+      TSX cash close at 16:00 Toronto is Canadian real-money CAD flatten, so
+      fading USDCAD then should beat fading 12:00 Toronto (no close). Distinct
+      from H63 (08:30 NY follow), H71 (LSE 16:30 GBP), and H74 (WTI 09:00 CAD
+      follow). USDCAD M15. Frozen fx_m15. Skip weekend Toronto. Do not move
+      to 08:30. Do not flip to follow.
+    params: {symbols: [USDCAD], timeframe: M15, tz: America/Toronto, treat_hour: 16, treat_minute: 0, base_hour: 12, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H112_london_open_eur
+    enabled: false
+    name: Follow EURUSD at London 08:00 cash open vs 07:00
+    why: >
+      London OTC cash opens near 08:00. The signed M15 into that open is the
+      first real European book, so following 08:00 should beat following 07:00
+      (still thin, no cash). Distinct from H32 (always-short London hours vs
+      16:00, not a signed open follow) and H55 (NYSE 9:30). EURUSD M15, 1:1
+      ATR, 8 bars. Frozen fx_m15. Skip weekend London. Do not move to 16:00.
+      Do not flip to fade.
+    params: {symbols: [EURUSD], timeframe: M15, tz: Europe/London, treat_hour: 8, treat_minute: 0, base_hour: 7, base_minute: 0, mode: follow, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H113_london_open_gbp
+    enabled: false
+    name: Follow GBPUSD at London 08:00 cash open vs 07:00
+    why: >
+      Same London 08:00 cash-open follow as H112, on GBPUSD. Distinct from H87
+      (Monday leftover fade). Frozen fx_m15. Do not move to 16:00. Do not flip.
+    params: {symbols: [GBPUSD], timeframe: M15, tz: Europe/London, treat_hour: 8, treat_minute: 0, base_hour: 7, base_minute: 0, mode: follow, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H114_london_open_gold
+    enabled: false
+    name: Follow gold at London 08:00 loco open vs 07:00
+    why: >
+      Loco London gold OTC opens at 08:00. Overnight SGE inventory is handed
+      to that book, so following 08:00 should beat following 07:00 (still Asia).
+      Distinct from H57 (SGE 09:00 Beijing follow), H73 (SGE 21:00), and H54
+      (COMEX 8:20 NY). Frozen gold_m15. Do not move to 10:30 AM fix. Do not flip.
+    params: {symbols: [XAUUSD], timeframe: M15, tz: Europe/London, treat_hour: 8, treat_minute: 0, base_hour: 7, base_minute: 0, mode: follow, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H115_eia_cad
+    enabled: false
+    name: Fade USDCAD 10:30 NY on Wednesday EIA vs Tuesday 10:30
+    why: >
+      EIA weekly crude inventories print Wednesday 10:30 NY and reprice CAD
+      via the oil beta. Fading that M15 on Wednesday should beat fading 10:30
+      on Tuesday (no inventory print). Distinct from H74 (follow USDCAD into
+      09:00 WTI open, not the 10:30 dump) and H80 (NFP/CPI). USDCAD M15, 1:1
+      ATR, 8 bars. Frozen fx_m15. Do not add WTI as a symbol. Do not move to
+      09:00. Do not flip to follow.
+    params: {symbols: [USDCAD], timeframe: M15, tz: America/New_York, treat_hour: 10, treat_minute: 30, base_hour: 10, base_minute: 30, treat_dow: 2, base_dow: 1, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H116_eia_aud
+    enabled: false
+    name: Fade AUDUSD 10:30 NY on Wednesday EIA vs Tuesday 10:30
+    why: >
+      Same EIA Wednesday oil-inventory dump as H115, on AUDUSD (commodity
+      beta). Frozen fx_m15. Do not add WTI. Do not move to 09:00. Do not flip.
+    params: {symbols: [AUDUSD], timeframe: M15, tz: America/New_York, treat_hour: 10, treat_minute: 30, base_hour: 10, base_minute: 30, treat_dow: 2, base_dow: 1, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H117_eia_gold
+    enabled: false
+    name: Fade gold 10:30 NY on Wednesday EIA vs Tuesday 10:30
+    why: >
+      Same EIA Wednesday inventory dump as H115, on XAUUSD (energy-risk
+      beta). Distinct from H23 (LBMA 10:30 AM London fix — do not mix). Frozen
+      gold_m15. Do not add WTI. Do not move to 09:00. Do not flip.
+    params: {symbols: [XAUUSD], timeframe: M15, tz: America/New_York, treat_hour: 10, treat_minute: 30, base_hour: 10, base_minute: 30, treat_dow: 2, base_dow: 1, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H118_london_orb_eur
+    enabled: false
+    name: Fade first London 08:00-08:30 M15 box break vs follow it
+    why: >
+      London cash opens into an 08:00-08:30 auction range. The first M15 close
+      through that box is often a stop run, so fading it should beat following
+      it. Weekday-only, one trade per session. Distinct from H22 (NY 9:00-9:30
+      gold box), H30 (Asia range, not London ORB), and H112 (08:00 signed-bar
+      follow, no box). EURUSD M15, 1:1 ATR, 8 bars. Frozen fx_m15. Do not move
+      the box to NY. Do not flip to follow-only.
+    params: {symbols: [EURUSD], timeframe: M15, tz: Europe/London, box_start_hour: 8, box_start_minute: 0, box_end_hour: 8, box_end_minute: 30, hunt_end_hour: 12, box_bars: 2, skip_weekend: true, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H119_london_orb_gbp
+    enabled: false
+    name: Fade first London 08:00-08:30 M15 box break vs follow it
+    why: >
+      Same London 08:00-08:30 opening-range fade as H118, on GBPUSD. Frozen
+      fx_m15. Do not move the box to NY. Do not flip to follow-only.
+    params: {symbols: [GBPUSD], timeframe: M15, tz: Europe/London, box_start_hour: 8, box_start_minute: 0, box_end_hour: 8, box_end_minute: 30, hunt_end_hour: 12, box_bars: 2, skip_weekend: true, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H120_london_orb_gold
+    enabled: false
+    name: Fade first London 08:00-08:30 gold M15 box break vs follow it
+    why: >
+      Same London 08:00-08:30 opening-range fade as H118, on XAUUSD (loco
+      London). Distinct from H22 (NY box). Frozen gold_m15. Do not move the
+      box to NY. Do not flip to follow-only.
+    params: {symbols: [XAUUSD], timeframe: M15, tz: Europe/London, box_start_hour: 8, box_start_minute: 0, box_end_hour: 8, box_end_minute: 30, hunt_end_hour: 12, box_bars: 2, skip_weekend: true, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H121_tokyo_orb_jpy
+    enabled: false
+    name: Fade first Tokyo 09:00-09:30 M15 box break vs follow it
+    why: >
+      TSE cash opens at 09:00 JST. The 09:00-09:30 range is the Tokyo auction,
+      so the first M15 close through that box is a stop run that should fade
+      rather than follow. Weekday-only, one trade per Tokyo session. Distinct
+      from H65 (follow the 09:00 print, no box), H118 (London 08:00 box), and
+      H39 (lunch 12:00 fade). USDJPY M15, 1:1 ATR, 8 bars. Frozen fx_m15. Do
+      not move to 09:55. Do not move to London. Do not flip to follow-only.
+    params: {symbols: [USDJPY], timeframe: M15, tz: Asia/Tokyo, box_start_hour: 9, box_start_minute: 0, box_end_hour: 9, box_end_minute: 30, hunt_end_hour: 12, box_bars: 2, skip_weekend: true, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H122_tokyo_orb_eur
+    enabled: false
+    name: Fade first Tokyo 09:00-09:30 M15 box break vs follow it
+    why: >
+      Same Tokyo 09:00-09:30 opening-range fade as H121, on EURUSD (Tokyo EUR
+      desk). Frozen fx_m15. Do not move to London. Do not flip to follow-only.
+    params: {symbols: [EURUSD], timeframe: M15, tz: Asia/Tokyo, box_start_hour: 9, box_start_minute: 0, box_end_hour: 9, box_end_minute: 30, hunt_end_hour: 12, box_bars: 2, skip_weekend: true, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H123_tokyo_orb_gold
+    enabled: false
+    name: Fade first Tokyo 09:00-09:30 gold M15 box break vs follow it
+    why: >
+      Same Tokyo 09:00-09:30 opening-range fade as H121, on XAUUSD (TOCOM
+      morning). Distinct from H120 (London loco box). Frozen gold_m15. Do not
+      move to London. Do not flip to follow-only.
+    params: {symbols: [XAUUSD], timeframe: M15, tz: Asia/Tokyo, box_start_hour: 9, box_start_minute: 0, box_end_hour: 9, box_end_minute: 30, hunt_end_hour: 12, box_bars: 2, skip_weekend: true, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H124_prior_hour_eur
+    enabled: false
+    name: Fade first prior-hour H/L tag in London AM vs NY AM
+    why: >
+      Clock-hour highs and lows are stop and barrier prints. The first M15
+      tag of the prior clock-hour extreme is a stop run. London 08:00-12:00
+      is the deepest two-way cash book, so fading that tag there should beat
+      the same fade in NY 08:00-12:00 ET after London has already printed.
+      Rolling hourly, weekday, not a session ORB. Distinct from H17 (prior
+      day), H118 (08:00-08:30 box), and H22 (NY 9:00 box). EURUSD M15, 1:1
+      ATR, 8 bars. Frozen fx_m15. Do not move the windows. Do not flip to
+      follow. Do not retune to a single hour.
+    params: {symbols: [EURUSD], timeframe: M15, treat_tz: Europe/London, base_tz: America/New_York, window_start_hour: 8, window_end_hour: 12, skip_weekend: true, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H125_prior_hour_gbp
+    enabled: false
+    name: Fade first prior-hour H/L tag in London AM vs NY AM
+    why: >
+      Same prior-hour stop-run fade as H124, on GBPUSD (London cash pair).
+      Frozen fx_m15. Do not move the windows. Do not flip to follow.
+    params: {symbols: [GBPUSD], timeframe: M15, treat_tz: Europe/London, base_tz: America/New_York, window_start_hour: 8, window_end_hour: 12, skip_weekend: true, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H126_prior_hour_gold
+    enabled: false
+    name: Fade first prior-hour gold H/L tag in London AM vs NY AM
+    why: >
+      Same prior-hour stop-run fade as H124, on XAUUSD (loco London vs COMEX
+      AM). Distinct from H118/H120 session boxes. Frozen gold_m15. Do not
+      move the windows. Do not flip to follow.
+    params: {symbols: [XAUUSD], timeframe: M15, treat_tz: Europe/London, base_tz: America/New_York, window_start_hour: 8, window_end_hour: 12, skip_weekend: true, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H127_hour_close_eur
+    enabled: false
+    name: Fade the hour-to-date move at :45 London AM vs NY AM
+    why: >
+      The clock-hour close is a marking print for hourly bars, options, and
+      CTA books. One-way inventory into :45 is faded into that print. London
+      08:45-11:45 is the deepest cash book, so fading the hour-to-date move
+      there should beat the same :45 flatten in NY 08:00-12:00 ET. Distinct
+      from H12 (single 15:00 flatten of 7 H1), H93 (WM 15:45 vs 16:15), and
+      H124 (prior-hour H/L tag, not this hour's direction). EURUSD M15, 1:1
+      ATR, 8 bars. Frozen fx_m15. Do not move to 15:45. Do not flip. Do not
+      retune fire_minute.
+    params: {symbols: [EURUSD], timeframe: M15, treat_tz: Europe/London, base_tz: America/New_York, window_start_hour: 8, window_end_hour: 12, fire_minute: 45, min_prior_atr: 0.25, skip_weekend: true, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H128_hour_close_gbp
+    enabled: false
+    name: Fade the hour-to-date move at :45 London AM vs NY AM
+    why: >
+      Same hourly-close flatten as H127, on GBPUSD. Frozen fx_m15. Do not
+      move to 15:45. Do not flip. Do not retune fire_minute.
+    params: {symbols: [GBPUSD], timeframe: M15, treat_tz: Europe/London, base_tz: America/New_York, window_start_hour: 8, window_end_hour: 12, fire_minute: 45, min_prior_atr: 0.25, skip_weekend: true, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H129_hour_close_gold
+    enabled: false
+    name: Fade the gold hour-to-date move at :45 London AM vs NY AM
+    why: >
+      Same hourly-close flatten as H127, on XAUUSD. Frozen gold_m15. Do not
+      move to 15:45. Do not flip. Do not retune fire_minute.
+    params: {symbols: [XAUUSD], timeframe: M15, treat_tz: Europe/London, base_tz: America/New_York, window_start_hour: 8, window_end_hour: 12, fire_minute: 45, min_prior_atr: 0.25, skip_weekend: true, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H130_hour_gap_eur
+    enabled: false
+    name: Fade the hourly opening gap in London AM vs NY AM
+    why: >
+      The last trade of hour H-1 and the first trade of hour H are often a
+      stale mark, not informed flow. That :00 gap should fade in the two-way
+      London 08:00-12:00 cash book more than in NY 08:00-12:00 ET. Distinct
+      from H86 (weekend halt), H112 (follow 08:00 vs 07:00), H124 (prior-hour
+      H/L tag), and H127 (:45 flatten of this hour). EURUSD M15, 1:1 ATR, 8
+      bars. Frozen fx_m15. Do not move the windows. Do not flip. Do not
+      retune to London 08:00 only.
+    params: {symbols: [EURUSD], timeframe: M15, treat_tz: Europe/London, base_tz: America/New_York, window_start_hour: 8, window_end_hour: 12, min_prior_atr: 0.25, skip_weekend: true, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H131_hour_gap_gbp
+    enabled: false
+    name: Fade the hourly opening gap in London AM vs NY AM
+    why: >
+      Same hourly opening-gap fade as H130, on GBPUSD. Frozen fx_m15. Do not
+      move the windows. Do not flip. Do not retune to London 08:00 only.
+    params: {symbols: [GBPUSD], timeframe: M15, treat_tz: Europe/London, base_tz: America/New_York, window_start_hour: 8, window_end_hour: 12, min_prior_atr: 0.25, skip_weekend: true, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H132_hour_gap_gold
+    enabled: false
+    name: Fade the gold hourly opening gap in London AM vs NY AM
+    why: >
+      Same hourly opening-gap fade as H130, on XAUUSD. Frozen gold_m15. Do
+      not move the windows. Do not flip. Do not retune to London 08:00 only.
+    params: {symbols: [XAUUSD], timeframe: M15, treat_tz: Europe/London, base_tz: America/New_York, window_start_hour: 8, window_end_hour: 12, min_prior_atr: 0.25, skip_weekend: true, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H133_us830_slot_eur
+    enabled: false
+    name: Fade EURUSD at the 08:30 NY print slot vs 09:00
+    why: >
+      08:30 ET is the primary US macro print slot. The book thins into that
+      minute even on a blank calendar (options and algos pause), so fading
+      the signed M15 into 08:30 should beat fading 09:00 (quotes already
+      restored). Daily weekday, not a news filter. Distinct from H80
+      (NFP/CPI days only), H63 (USDCAD follow into 08:30), H90 (10:00 cut),
+      and H55 (09:30 NYSE follow). EURUSD M15, 1:1 ATR, 8 bars. Frozen
+      fx_m15. Do not add a calendar filter. Do not move to 10:00. Do not
+      flip to follow.
+    params: {symbols: [EURUSD], timeframe: M15, tz: America/New_York, treat_hour: 8, treat_minute: 30, base_hour: 9, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H134_us830_slot_gbp
+    enabled: false
+    name: Fade GBPUSD at the 08:30 NY print slot vs 09:00
+    why: >
+      Same 08:30 NY print-slot fade as H133, on GBPUSD. Frozen fx_m15. Do
+      not add a calendar filter. Do not move to 10:00. Do not flip.
+    params: {symbols: [GBPUSD], timeframe: M15, tz: America/New_York, treat_hour: 8, treat_minute: 30, base_hour: 9, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H135_us830_slot_gold
+    enabled: false
+    name: Fade gold at the 08:30 NY print slot vs 09:00
+    why: >
+      Same 08:30 NY print-slot fade as H133, on XAUUSD. Frozen gold_m15. Do
+      not add a calendar filter. Do not move to 10:00. Do not flip.
+    params: {symbols: [XAUUSD], timeframe: M15, tz: America/New_York, treat_hour: 8, treat_minute: 30, base_hour: 9, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H136_pdc_tag_eur
+    enabled: false
+    name: Fade first prior-weekday-close tag in London AM vs NY AM
+    why: >
+      Yesterday's close is the mark for funds, daily options, and CTA books.
+      The first M15 tag of that close is a liquidity grab, so fading it in
+      the London 08:00-12:00 cash book should beat the same fade in NY
+      08:00-12:00 ET. Distinct from H17 (PDH/PDL vs mid), H41 (close through
+      the prior-day range vs follow), and H124 (prior clock-hour H/L).
+      EURUSD M15, 1:1 ATR, 8 bars. Frozen fx_m15. Do not hunt PDH. Do not
+      flip. Do not move the windows.
+    params: {symbols: [EURUSD], timeframe: M15, treat_tz: Europe/London, base_tz: America/New_York, window_start_hour: 8, window_end_hour: 12, skip_weekend: true, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H137_pdc_tag_gbp
+    enabled: false
+    name: Fade first prior-weekday-close tag in London AM vs NY AM
+    why: >
+      Same prior-close tag fade as H136, on GBPUSD. Frozen fx_m15. Do not
+      hunt PDH. Do not flip. Do not move the windows.
+    params: {symbols: [GBPUSD], timeframe: M15, treat_tz: Europe/London, base_tz: America/New_York, window_start_hour: 8, window_end_hour: 12, skip_weekend: true, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H138_pdc_tag_gold
+    enabled: false
+    name: Fade first prior-weekday gold close tag in London AM vs NY AM
+    why: >
+      Same prior-close tag fade as H136, on XAUUSD. Distinct from H17.
+      Frozen gold_m15. Do not hunt PDH. Do not flip. Do not move the windows.
+    params: {symbols: [XAUUSD], timeframe: M15, treat_tz: Europe/London, base_tz: America/New_York, window_start_hour: 8, window_end_hour: 12, skip_weekend: true, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H139_tnext_roll_eur
+    enabled: false
+    name: Fade EURUSD at the NY 17:00 tom-next roll vs 16:00
+    why: >
+      Tom-next swap is cut around 17:00 New York. Banks square leftover USD
+      inventory into that print, so fading the signed M15 into 17:00 should
+      beat fading 16:00 (equity close, no swap cut). Mon-Thu, skip Friday
+      weekend flatten. Distinct from H52 (hold G10 carry through the roll),
+      H66 (fade 15:00 last cash hour), H67 (gold 16:00), and H79 (21:00
+      overnight short). EURUSD M15, 1:1 ATR, 8 bars. Frozen fx_m15. Do not
+      move to 21:00. Do not flip to follow. Do not add Friday.
+    params: {symbols: [EURUSD], timeframe: M15, tz: America/New_York, treat_hour: 17, treat_minute: 0, base_hour: 16, base_minute: 0, mode: fade, skip_friday: true, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H140_tnext_roll_gbp
+    enabled: false
+    name: Fade GBPUSD at the NY 17:00 tom-next roll vs 16:00
+    why: >
+      Same tom-next roll fade as H139, on GBPUSD. Frozen fx_m15. Do not move
+      to 21:00. Do not flip. Do not add Friday.
+    params: {symbols: [GBPUSD], timeframe: M15, tz: America/New_York, treat_hour: 17, treat_minute: 0, base_hour: 16, base_minute: 0, mode: fade, skip_friday: true, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H141_tnext_roll_gold
+    enabled: false
+    name: Fade gold at the NY 17:00 tom-next roll vs 16:00
+    why: >
+      Same tom-next roll fade as H139, on XAUUSD (USD-priced metal). Distinct
+      from H67 (16:00 GLD flatten). Frozen gold_m15. Do not move to 21:00.
+      Do not flip. Do not add Friday.
+    params: {symbols: [XAUUSD], timeframe: M15, tz: America/New_York, treat_hour: 17, treat_minute: 0, base_hour: 16, base_minute: 0, mode: fade, skip_friday: true, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H142_syd09_fade_aud
+    enabled: false
+    name: Fade AUDUSD at 09:00 Sydney vs 11:00
+    why: >
+      09:00 Sydney is the last thin hour before the ASX 10:00 opening auction.
+      Local FX desks fade inventory into that auction, so fading the signed
+      M15 at 09:00 should beat fading 11:00 (cash already two-way). Daily
+      weekday. Distinct from H60 (follow into 10:00 vs 08:00), H109 (16:00
+      ASX close fade), and H118 (London ORB). AUDUSD M15, 1:1 ATR, 8 bars.
+      Frozen fx_m15. Do not move to 10:00. Do not flip to follow. Do not
+      move to 16:00.
+    params: {symbols: [AUDUSD], timeframe: M15, tz: Australia/Sydney, treat_hour: 9, treat_minute: 0, base_hour: 11, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H143_syd09_fade_nzd
+    enabled: false
+    name: Fade NZDUSD at 09:00 Sydney vs 11:00
+    why: >
+      Same 09:00 Sydney pre-auction fade as H142, on NZDUSD (same morning
+      book). Distinct from H61 (follow NZX 10:00). Frozen fx_m15. Do not
+      move to 10:00. Do not flip. Do not move to 16:00.
+    params: {symbols: [NZDUSD], timeframe: M15, tz: Australia/Sydney, treat_hour: 9, treat_minute: 0, base_hour: 11, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H144_syd09_fade_gold
+    enabled: false
+    name: Fade gold at 09:00 Sydney vs 11:00
+    why: >
+      Same 09:00 Sydney pre-auction fade as H142, on XAUUSD (Asia loco).
+      Frozen gold_m15. Do not move to 10:00. Do not flip. Do not move to 16:00.
+    params: {symbols: [XAUUSD], timeframe: M15, tz: Australia/Sydney, treat_hour: 9, treat_minute: 0, base_hour: 11, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H145_ldn10_cut_eur
+    enabled: false
+    name: Fade EURUSD at 10:00 London option cut vs 11:00
+    why: >
+      10:00 London is the primary European G10 vanilla expiry (the original
+      "cut"). Dealers finish delta into that print, so fading the signed M15
+      at 10:00 London should beat fading 11:00 (gamma already gone). Daily
+      weekday, all Fridays included so this is not H68 (3rd-Friday opex) and
+      not H90 (10:00 New York). Distinct from H112 (08:00 cash-open follow)
+      and H118 (08:00-08:30 ORB). EURUSD M15, 1:1 ATR, 8 bars. Frozen fx_m15.
+      Do not move to 10:00 NY. Do not move to 10:30. Do not flip to follow.
+    params: {symbols: [EURUSD], timeframe: M15, tz: Europe/London, treat_hour: 10, treat_minute: 0, base_hour: 11, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H146_ldn10_cut_gbp
+    enabled: false
+    name: Fade GBPUSD at 10:00 London option cut vs 11:00
+    why: >
+      Same London 10:00 European cut fade as H145, on GBPUSD. Frozen fx_m15.
+      Do not move to 10:00 NY. Do not move to 10:30. Do not flip.
+    params: {symbols: [GBPUSD], timeframe: M15, tz: Europe/London, treat_hour: 10, treat_minute: 0, base_hour: 11, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H147_ldn10_cut_jpy
+    enabled: false
+    name: Fade USDJPY at 10:00 London option cut vs 11:00
+    why: >
+      Same London 10:00 European cut fade as H145, on USDJPY. Distinct from
+      H53 (Tokyo 09:55 fix follow) and H92 (NY 10:00). Frozen fx_m15. Do not
+      move to 10:00 NY. Do not move to 15:00 Tokyo. Do not flip.
+    params: {symbols: [USDJPY], timeframe: M15, tz: Europe/London, treat_hour: 10, treat_minute: 0, base_hour: 11, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H148_ldn05_hand_eur
+    enabled: false
+    name: Fade EURUSD at 05:00 London Asia-Europe handover vs 08:00
+    why: >
+      05:00 London is the first European desk print on the overnight Asia
+      book. Those desks fade Asia inventory into deeper London liquidity, so
+      fading the signed M15 at 05:00 should beat fading 08:00 (cash already
+      two-way). Daily weekday. Distinct from H7 (Asia ORB fade), H40 (21:00
+      NY-close into Asia), H96 (first London tag of Asia H/L), and H112
+      (08:00 cash-open follow). EURUSD M15, 1:1 ATR, 8 bars. Frozen fx_m15.
+      Do not move to 08:00. Do not move to 03:00. Do not flip to follow.
+    params: {symbols: [EURUSD], timeframe: M15, tz: Europe/London, treat_hour: 5, treat_minute: 0, base_hour: 8, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H149_ldn05_hand_gbp
+    enabled: false
+    name: Fade GBPUSD at 05:00 London Asia-Europe handover vs 08:00
+    why: >
+      Same 05:00 London handover fade as H148, on GBPUSD. Frozen fx_m15. Do
+      not move to 08:00. Do not move to 03:00. Do not flip.
+    params: {symbols: [GBPUSD], timeframe: M15, tz: Europe/London, treat_hour: 5, treat_minute: 0, base_hour: 8, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H150_ldn05_hand_gold
+    enabled: false
+    name: Fade gold at 05:00 London Asia-Europe handover vs 08:00
+    why: >
+      Same 05:00 London handover fade as H148, on XAUUSD (loco gold is an
+      Asia-then-London book). Frozen gold_m15. Do not move to 08:00. Do not
+      move to 03:00. Do not flip.
+    params: {symbols: [XAUUSD], timeframe: M15, tz: Europe/London, treat_hour: 5, treat_minute: 0, base_hour: 8, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H151_tgt18_fade_eur
+    enabled: false
+    name: Fade EURUSD at 18:00 CET TARGET2 close vs 16:00
+    why: >
+      TARGET2 customer payments cut off at 18:00 CET. Euro banks square EUR
+      inventory into that print, so fading the signed M15 at 18:00 Berlin
+      should beat fading 16:00 (afternoon cash, not a payment close). Daily
+      weekday. Distinct from H27/H93 (WM 16:00 London = 17:00 CET), H12
+      (15:00 London H1 flatten), H71 (16:30 LSE), and H139 (17:00 NY
+      tom-next). EURUSD M15, 1:1 ATR, 8 bars. Frozen fx_m15. Do not move to
+      17:00 CET. Do not move to 16:00 London. Do not move to 17:00 NY. Do
+      not flip to follow.
+    params: {symbols: [EURUSD], timeframe: M15, tz: Europe/Berlin, treat_hour: 18, treat_minute: 0, base_hour: 16, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H152_tgt18_fade_chf
+    enabled: false
+    name: Fade USDCHF at 18:00 CET TARGET2 close vs 16:00
+    why: >
+      Same TARGET2 18:00 CET fade as H151, on USDCHF (Swiss EUR-neighbor
+      book). Distinct from H62 (SIX 09:00 follow). Frozen fx_m15. Do not
+      move to 17:00 CET. Do not move to 17:00 NY. Do not flip.
+    params: {symbols: [USDCHF], timeframe: M15, tz: Europe/Berlin, treat_hour: 18, treat_minute: 0, base_hour: 16, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H153_tgt18_fade_gold
+    enabled: false
+    name: Fade gold at 18:00 CET TARGET2 close vs 16:00
+    why: >
+      Same TARGET2 18:00 CET fade as H151, on XAUUSD (European loco hedges
+      into the EUR payment close). Frozen gold_m15. Do not move to 17:00
+      CET. Do not move to 17:00 NY. Do not flip.
+    params: {symbols: [XAUUSD], timeframe: M15, tz: Europe/Berlin, treat_hour: 18, treat_minute: 0, base_hour: 16, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H154_tyo13_reopen_jpy
+    enabled: false
+    name: Follow USDJPY at 13:00 Tokyo afternoon reopen vs 11:00
+    why: >
+      TSE lunch ends 12:30 JST. Afternoon cash and JGB books refill, so
+      following the signed M15 at 13:00 Tokyo should beat following 11:00
+      (still morning, pre-lunch). Daily weekday. Distinct from H39 (fade
+      morning at 12:00 lunch), H42 (15:00 close flatten vs lunch), H65
+      (09:00 TSE open follow), and H72 (London 13:00 reopen follow).
+      USDJPY M15, 1:1 ATR, 8 bars. Frozen fx_m15. Do not move to 15:00.
+      Do not move to 12:00. Do not flip to fade. Do not move to London 13:00.
+    params: {symbols: [USDJPY], timeframe: M15, tz: Asia/Tokyo, treat_hour: 13, treat_minute: 0, base_hour: 11, base_minute: 0, mode: follow, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H155_tyo13_reopen_eur
+    enabled: false
+    name: Follow EURUSD at 13:00 Tokyo afternoon reopen vs 11:00
+    why: >
+      Same 13:00 Tokyo afternoon reopen follow as H154, on EURUSD. Frozen
+      fx_m15. Do not move to 15:00. Do not move to 12:00. Do not flip.
+    params: {symbols: [EURUSD], timeframe: M15, tz: Asia/Tokyo, treat_hour: 13, treat_minute: 0, base_hour: 11, base_minute: 0, mode: follow, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H156_tyo13_reopen_gold
+    enabled: false
+    name: Follow gold at 13:00 Tokyo afternoon reopen vs 11:00
+    why: >
+      Same 13:00 Tokyo afternoon reopen follow as H154, on XAUUSD (Asia
+      loco). Frozen gold_m15. Do not move to 15:00. Do not move to 12:00.
+      Do not flip.
+    params: {symbols: [XAUUSD], timeframe: M15, tz: Asia/Tokyo, treat_hour: 13, treat_minute: 0, base_hour: 11, base_minute: 0, mode: follow, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H157_oil1430_fade_cad
+    enabled: false
+    name: Fade USDCAD at 14:30 NY oil settle vs 11:00
+    why: >
+      NYMEX crude settles near 14:30 ET every weekday. CAD oil hedges flatten
+      into that print, so fading the signed M15 at 14:30 NY should beat
+      fading 11:00 (mid-morning, no settle). Daily weekday, not Wednesday-only.
+      Distinct from H74 (09:00 WTI open follow), H115 (Wednesday 10:30 EIA),
+      H66 (15:00 equity last-hour fade), and H106 (do not use 14:00 NY FVG).
+      USDCAD M15, 1:1 ATR, 8 bars. Frozen fx_m15. Do not add WTI as a symbol.
+      Do not move to 09:00. Do not move to 10:30. Do not move to 15:00 or
+      14:00. Do not flip to follow.
+    params: {symbols: [USDCAD], timeframe: M15, tz: America/New_York, treat_hour: 14, treat_minute: 30, base_hour: 11, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H158_oil1430_fade_aud
+    enabled: false
+    name: Fade AUDUSD at 14:30 NY oil settle vs 11:00
+    why: >
+      Same 14:30 NY oil-settle fade as H157, on AUDUSD (commodity FX). Frozen
+      fx_m15. Do not add WTI. Do not move to 09:00, 10:30, 15:00, or 14:00.
+      Do not flip.
+    params: {symbols: [AUDUSD], timeframe: M15, tz: America/New_York, treat_hour: 14, treat_minute: 30, base_hour: 11, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H159_oil1430_fade_gold
+    enabled: false
+    name: Fade gold at 14:30 NY oil settle vs 11:00
+    why: >
+      Same 14:30 NY oil-settle fade as H157, on XAUUSD (energy-risk beta).
+      Frozen gold_m15. Do not add WTI. Do not move to 09:00, 10:30, 15:00,
+      or 14:00. Do not flip.
+    params: {symbols: [XAUUSD], timeframe: M15, tz: America/New_York, treat_hour: 14, treat_minute: 30, base_hour: 11, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H160_ldnbox_ny_eur
+    enabled: false
+    name: Fade first NY tag of London AM high/low vs tag of that mid
+    why: >
+      London 08:00-12:00 builds a completed morning range. Stops sit beyond
+      that high and low. The first NY 08:00-12:00 M15 tag of that extreme is
+      a stop run, so fading it should beat fading the first NY tag of the
+      London AM mid (no pool). Daily weekday. Distinct from H96 (Asia range
+      tagged in London), H118 (08:00-08:30 ORB, do not move that box to NY),
+      H124 (prior clock-hour, not the morning range), and H136 (prior-day
+      close). EURUSD M15, 1:1 ATR, 8 bars. Frozen fx_m15. Do not move the
+      hunt to London. Do not shrink the box to 08:00-08:30. Do not flip to
+      follow.
+    params: {symbols: [EURUSD], timeframe: M15, source_tz: Europe/London, source_start_hour: 8, source_end_hour: 12, hunt_tz: America/New_York, hunt_start_hour: 8, hunt_end_hour: 12, skip_weekend: true, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H161_ldnbox_ny_gbp
+    enabled: false
+    name: Fade first NY tag of London AM high/low vs tag of that mid
+    why: >
+      Same London-AM range tagged in NY as H160, on GBPUSD. Frozen fx_m15.
+      Do not move the hunt to London. Do not shrink the box. Do not flip.
+    params: {symbols: [GBPUSD], timeframe: M15, source_tz: Europe/London, source_start_hour: 8, source_end_hour: 12, hunt_tz: America/New_York, hunt_start_hour: 8, hunt_end_hour: 12, skip_weekend: true, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H162_ldnbox_ny_gold
+    enabled: false
+    name: Fade first NY tag of London AM high/low vs tag of that mid
+    why: >
+      Same London-AM range tagged in NY as H160, on XAUUSD. Frozen gold_m15.
+      Do not move the hunt to London. Do not shrink the box. Do not flip.
+    params: {symbols: [XAUUSD], timeframe: M15, source_tz: Europe/London, source_start_hour: 8, source_end_hour: 12, hunt_tz: America/New_York, hunt_start_hour: 8, hunt_end_hour: 12, skip_weekend: true, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H163_akl09_fade_nzd
+    enabled: false
+    name: Fade NZDUSD at 09:00 Auckland vs 11:00
+    why: >
+      09:00 Auckland is the last thin hour before the NZX 10:00 opening
+      auction. Local FX desks fade NZD inventory into that auction, so fading
+      the signed M15 at 09:00 Auckland should beat fading 11:00 (cash already
+      two-way). Daily weekday. Distinct from H61 (follow NZX 10:00), H110
+      (16:45 close fade), H142 (09:00 Sydney, not Auckland), and H143 (NZD at
+      Sydney 09:00). NZDUSD M15, 1:1 ATR, 8 bars. Frozen fx_m15. Do not move
+      to 10:00. Do not move to 16:45. Do not move to Sydney 09:00. Do not
+      flip to follow.
+    params: {symbols: [NZDUSD], timeframe: M15, tz: Pacific/Auckland, treat_hour: 9, treat_minute: 0, base_hour: 11, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H164_akl09_fade_aud
+    enabled: false
+    name: Fade AUDUSD at 09:00 Auckland vs 11:00
+    why: >
+      Same 09:00 Auckland pre-NZX fade as H163, on AUDUSD (same Pacific
+      morning book). Frozen fx_m15. Do not move to 10:00. Do not move to
+      Sydney 09:00. Do not flip.
+    params: {symbols: [AUDUSD], timeframe: M15, tz: Pacific/Auckland, treat_hour: 9, treat_minute: 0, base_hour: 11, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H165_akl09_fade_gold
+    enabled: false
+    name: Fade gold at 09:00 Auckland vs 11:00
+    why: >
+      Same 09:00 Auckland pre-NZX fade as H163, on XAUUSD (Asia-Pacific loco).
+      Frozen gold_m15. Do not move to 10:00. Do not move to Sydney 09:00.
+      Do not flip.
+    params: {symbols: [XAUUSD], timeframe: M15, tz: Pacific/Auckland, treat_hour: 9, treat_minute: 0, base_hour: 11, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H166_zur12_fade_chf
+    enabled: false
+    name: Fade USDCHF at 12:00 Zurich lunch vs 14:00
+    why: >
+      Swiss desks flatten CHF inventory into Zurich lunch, so fading the
+      signed M15 at 12:00 Zurich should beat fading 14:00 (afternoon cash
+      already two-way). Daily weekday. Distinct from H62 (SIX 09:00 follow),
+      H47 (London 12:00 lunch), H72 (London 13:00 reopen follow), and H151
+      (18:00 CET TARGET2). USDCHF M15, 1:1 ATR, 8 bars. Frozen fx_m15. Do
+      not move to 09:00. Do not move to 12:00 London. Do not move to 18:00
+      CET. Do not flip to follow.
+    params: {symbols: [USDCHF], timeframe: M15, tz: Europe/Zurich, treat_hour: 12, treat_minute: 0, base_hour: 14, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H167_zur12_fade_eur
+    enabled: false
+    name: Fade EURUSD at 12:00 Zurich lunch vs 14:00
+    why: >
+      Same 12:00 Zurich lunch fade as H166, on EURUSD (EUR-CHF neighbor).
+      Frozen fx_m15. Do not move to 09:00. Do not move to 12:00 London. Do
+      not flip.
+    params: {symbols: [EURUSD], timeframe: M15, tz: Europe/Zurich, treat_hour: 12, treat_minute: 0, base_hour: 14, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H168_zur12_fade_gold
+    enabled: false
+    name: Fade gold at 12:00 Zurich lunch vs 14:00
+    why: >
+      Same 12:00 Zurich lunch fade as H166, on XAUUSD (Swiss loco gold
+      trading). Frozen gold_m15. Do not move to 09:00. Do not move to 12:00
+      London. Do not flip.
+    params: {symbols: [XAUUSD], timeframe: M15, tz: Europe/Zurich, treat_hour: 12, treat_minute: 0, base_hour: 14, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H169_tyo11_fade_jpy
+    enabled: false
+    name: Fade USDJPY at 11:00 Tokyo last-morning vs 14:00
+    why: >
+      11:00 JST is the last full hour of Tokyo morning cash before lunch.
+      Exporters fade the morning into that print, so fading the signed M15
+      at 11:00 Tokyo should beat fading 14:00 (afternoon already two-way).
+      Daily weekday. Distinct from H39 (12:00 lunch fade vs follow of 3 H1),
+      H42 (15:00 close vs lunch), H65 (09:00 TSE open follow), and H154
+      (13:00 reopen follow vs 11:00). USDJPY M15, 1:1 ATR, 8 bars. Frozen
+      fx_m15. Do not move to 12:00. Do not move to 13:00. Do not move to
+      15:00. Do not flip to follow.
+    params: {symbols: [USDJPY], timeframe: M15, tz: Asia/Tokyo, treat_hour: 11, treat_minute: 0, base_hour: 14, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H170_tyo11_fade_eur
+    enabled: false
+    name: Fade EURUSD at 11:00 Tokyo last-morning vs 14:00
+    why: >
+      Same 11:00 Tokyo last-morning fade as H169, on EURUSD. Frozen fx_m15.
+      Do not move to 12:00. Do not move to 13:00. Do not flip.
+    params: {symbols: [EURUSD], timeframe: M15, tz: Asia/Tokyo, treat_hour: 11, treat_minute: 0, base_hour: 14, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H171_tyo11_fade_gold
+    enabled: false
+    name: Fade gold at 11:00 Tokyo last-morning vs 14:00
+    why: >
+      Same 11:00 Tokyo last-morning fade as H169, on XAUUSD (Asia loco).
+      Frozen gold_m15. Do not move to 12:00. Do not move to 13:00. Do not
+      flip.
+    params: {symbols: [XAUUSD], timeframe: M15, tz: Asia/Tokyo, treat_hour: 11, treat_minute: 0, base_hour: 14, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H172_lbma_am_gold
+    enabled: false
+    name: Fade gold at 10:30 London LBMA AM vs 12:30
+    why: >
+      10:30 London is the LBMA AM gold auction. The pre-fix squeeze is leftover
+      inventory after the match, so fading the signed M15 at 10:30 should beat
+      fading 12:30 (lunch, no auction). Daily weekday. Distinct from H23
+      (LBMA PM run), H145 (10:00 G10 option cut on EUR/GBP/JPY), H117
+      (Wednesday 10:30 NY EIA, do not mix), and H47 (12:00 lunch). XAUUSD
+      M15, 1:1 ATR, 8 bars. Frozen gold_m15. Do not move to 10:00. Do not
+      move to 15:00. Do not move to 10:30 NY. Do not add EUR/GBP/JPY. Do
+      not flip to follow.
+    params: {symbols: [XAUUSD], timeframe: M15, tz: Europe/London, treat_hour: 10, treat_minute: 30, base_hour: 12, base_minute: 30, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H173_lbma_am_aud
+    enabled: false
+    name: Fade AUDUSD at 10:30 London LBMA AM vs 12:30
+    why: >
+      Same 10:30 London LBMA AM fade as H172, on AUDUSD (gold-producer FX).
+      Frozen fx_m15. Do not move to 10:00. Do not move to 15:00. Do not add
+      EUR/GBP/JPY. Do not flip.
+    params: {symbols: [AUDUSD], timeframe: M15, tz: Europe/London, treat_hour: 10, treat_minute: 30, base_hour: 12, base_minute: 30, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H174_lbma_am_nzd
+    enabled: false
+    name: Fade NZDUSD at 10:30 London LBMA AM vs 12:30
+    why: >
+      Same 10:30 London LBMA AM fade as H172, on NZDUSD (gold-producer FX).
+      Frozen fx_m15. Do not move to 10:00. Do not move to 15:00. Do not add
+      EUR/GBP/JPY. Do not flip.
+    params: {symbols: [NZDUSD], timeframe: M15, tz: Europe/London, treat_hour: 10, treat_minute: 30, base_hour: 12, base_minute: 30, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H175_sge15_fade_gold
+    enabled: false
+    name: Fade gold at 15:00 Shanghai SGE day close vs 11:00
+    why: >
+      15:00 Shanghai is the SGE day-session close. Chinese banks and jewelers
+      flatten loco gold into that print, so fading the signed M15 at 15:00
+      should beat fading 11:00 (last morning hour, still two-way). Daily
+      weekday. Distinct from H57 (09:00 SGE open follow), H73 (21:00 night
+      follow), H56 (COMEX 13:30 NY close), and H23 (LBMA PM 15:00 London).
+      XAUUSD M15, 1:1 ATR, 8 bars. Frozen gold_m15. Do not move to 09:00.
+      Do not move to 21:00. Do not move to 15:30. Do not flip to follow.
+    params: {symbols: [XAUUSD], timeframe: M15, tz: Asia/Shanghai, treat_hour: 15, treat_minute: 0, base_hour: 11, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H176_sge15_fade_aud
+    enabled: false
+    name: Fade AUDUSD at 15:00 Shanghai SGE day close vs 11:00
+    why: >
+      Same 15:00 Shanghai SGE day-close fade as H175, on AUDUSD (gold-producer
+      FX). Frozen fx_m15. Do not move to 09:00. Do not move to 21:00. Do not
+      flip.
+    params: {symbols: [AUDUSD], timeframe: M15, tz: Asia/Shanghai, treat_hour: 15, treat_minute: 0, base_hour: 11, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H177_sge15_fade_jpy
+    enabled: false
+    name: Fade USDJPY at 15:00 Shanghai SGE day close vs 11:00
+    why: >
+      Same 15:00 Shanghai SGE day-close fade as H175, on USDJPY (Asia gold
+      hedge). Frozen fx_m15. Do not move to 09:00. Do not move to 21:00. Do
+      not flip.
+    params: {symbols: [USDJPY], timeframe: M15, tz: Asia/Shanghai, treat_hour: 15, treat_minute: 0, base_hour: 11, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H178_mcx09_fade_gold
+    enabled: false
+    name: Fade gold at 09:00 IST MCX open vs 11:00
+    why: >
+      09:00 IST is the MCX gold open. Indian banks and jewelers hedge overnight
+      dollar gold into the rupee book at that open, so fading the signed M15
+      at 09:00 IST should beat fading 11:00 (India already two-way). Daily
+      weekday. Distinct from H48/H49 (12:30 IST London-open second-close
+      follow), H57 (09:00 SGE Shanghai follow), H54 (COMEX 08:20 follow),
+      and H142 (09:00 Sydney pre-ASX). XAUUSD M15, 1:1 ATR, 8 bars. Frozen
+      gold_m15. Do not move to 12:30. Do not move to 09:15. Do not flip to
+      follow.
+    params: {symbols: [XAUUSD], timeframe: M15, tz: Asia/Kolkata, treat_hour: 9, treat_minute: 0, base_hour: 11, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H179_mcx09_fade_aud
+    enabled: false
+    name: Fade AUDUSD at 09:00 IST MCX open vs 11:00
+    why: >
+      Same 09:00 IST MCX gold-open fade as H178, on AUDUSD (gold-producer FX).
+      Frozen fx_m15. Do not move to 12:30. Do not move to 09:15. Do not flip.
+    params: {symbols: [AUDUSD], timeframe: M15, tz: Asia/Kolkata, treat_hour: 9, treat_minute: 0, base_hour: 11, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H180_mcx09_fade_jpy
+    enabled: false
+    name: Fade USDJPY at 09:00 IST MCX open vs 11:00
+    why: >
+      Same 09:00 IST MCX gold-open fade as H178, on USDJPY (Asia gold hedge).
+      Frozen fx_m15. Do not move to 12:30. Do not move to 09:15. Do not flip.
+    params: {symbols: [USDJPY], timeframe: M15, tz: Asia/Kolkata, treat_hour: 9, treat_minute: 0, base_hour: 11, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H181_nybox_pm_eur
+    enabled: false
+    name: Fade first NY afternoon tag of NY AM high/low vs tag of that mid
+    why: >
+      NY 08:00-12:00 cash builds a completed morning range. Stops sit beyond
+      that high and low. After the US lunch gap, the first NY 13:00-16:00 M15
+      tag of that extreme is a stop run, so fading it should beat fading the
+      first afternoon tag of the NY AM mid (no pool). Daily weekday. Distinct
+      from H160 (London AM tagged in NY morning), H22 (9:00-9:30 box), H118
+      (London ORB), H47/H166 (clock lunch flatten, not a range tag), and H106
+      (FVG follow). EURUSD M15, 1:1 ATR, 8 bars. Frozen fx_m15. Do not shrink
+      the box to 08:00-08:30. Do not hunt London. Do not move hunt to 14:00
+      only. Do not flip to follow.
+    params: {symbols: [EURUSD], timeframe: M15, source_tz: America/New_York, source_start_hour: 8, source_end_hour: 12, hunt_tz: America/New_York, hunt_start_hour: 13, hunt_end_hour: 16, skip_weekend: true, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H182_nybox_pm_gbp
+    enabled: false
+    name: Fade first NY afternoon tag of NY AM high/low vs tag of that mid
+    why: >
+      Same NY-AM range tagged in NY afternoon as H181, on GBPUSD. Frozen
+      fx_m15. Do not shrink the box. Do not hunt London. Do not flip.
+    params: {symbols: [GBPUSD], timeframe: M15, source_tz: America/New_York, source_start_hour: 8, source_end_hour: 12, hunt_tz: America/New_York, hunt_start_hour: 13, hunt_end_hour: 16, skip_weekend: true, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H183_nybox_pm_gold
+    enabled: false
+    name: Fade first NY afternoon tag of NY AM high/low vs tag of that mid
+    why: >
+      Same NY-AM range tagged in NY afternoon as H181, on XAUUSD. Frozen
+      gold_m15. Do not shrink the box. Do not hunt London. Do not flip.
+    params: {symbols: [XAUUSD], timeframe: M15, source_tz: America/New_York, source_start_hour: 8, source_end_hour: 12, hunt_tz: America/New_York, hunt_start_hour: 13, hunt_end_hour: 16, skip_weekend: true, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H184_dxb14_fade_gold
+    enabled: false
+    name: Fade gold at 14:00 Dubai DGCX afternoon vs 11:00
+    why: >
+      14:00 Dubai is the DGCX / DMCC afternoon loco-gold dealing window.
+      Gulf banks and jewelers flatten overnight dollar gold into that print,
+      so fading the signed M15 at 14:00 Dubai should beat fading 11:00
+      (morning still two-way). Daily weekday. Distinct from H172 (LBMA AM
+      10:30 London), H175 (SGE 15:00 Shanghai), H178 (MCX 09:00 IST), H56
+      (COMEX 13:30 NY), and H23 (LBMA PM London). XAUUSD M15, 1:1 ATR, 8
+      bars. Frozen gold_m15. Do not move to 10:00. Do not move to 16:00.
+      Do not move to 14:00 London. Do not flip to follow.
+    params: {symbols: [XAUUSD], timeframe: M15, tz: Asia/Dubai, treat_hour: 14, treat_minute: 0, base_hour: 11, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H185_dxb14_fade_aud
+    enabled: false
+    name: Fade AUDUSD at 14:00 Dubai DGCX afternoon vs 11:00
+    why: >
+      Same 14:00 Dubai DGCX afternoon fade as H184, on AUDUSD (gold-producer
+      FX). Frozen fx_m15. Do not move to 10:00. Do not move to 16:00. Do not
+      flip.
+    params: {symbols: [AUDUSD], timeframe: M15, tz: Asia/Dubai, treat_hour: 14, treat_minute: 0, base_hour: 11, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H186_dxb14_fade_jpy
+    enabled: false
+    name: Fade USDJPY at 14:00 Dubai DGCX afternoon vs 11:00
+    why: >
+      Same 14:00 Dubai DGCX afternoon fade as H184, on USDJPY (Asia gold
+      hedge). Frozen fx_m15. Do not move to 10:00. Do not move to 16:00. Do
+      not flip.
+    params: {symbols: [USDJPY], timeframe: M15, tz: Asia/Dubai, treat_hour: 14, treat_minute: 0, base_hour: 11, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H187_sgx17_fade_aud
+    enabled: false
+    name: Fade AUDUSD at 17:00 Singapore cash close vs 14:00
+    why: >
+      17:00 Singapore is the Asia FX hub cash close. Regional USD desks
+      flatten AUD books into that print before London afternoon, so fading
+      the signed M15 at 17:00 Singapore should beat fading 14:00 (still
+      two-way Asia afternoon). Daily weekday. Distinct from H109 (ASX 16:00
+      Sydney close), H76 (HKEX 09:30 open follow), H175 (SGE 15:00 Shanghai),
+      H42 (Tokyo 15:00), and H151 (TARGET2 18:00 CET). AUDUSD M15, 1:1 ATR,
+      8 bars. Frozen fx_m15. Do not move to 16:00. Do not move to 17:00
+      Tokyo. Do not move to 09:00. Do not flip to follow.
+    params: {symbols: [AUDUSD], timeframe: M15, tz: Asia/Singapore, treat_hour: 17, treat_minute: 0, base_hour: 14, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H188_sgx17_fade_jpy
+    enabled: false
+    name: Fade USDJPY at 17:00 Singapore cash close vs 14:00
+    why: >
+      Same 17:00 Singapore cash-close fade as H187, on USDJPY (Asia USD hub).
+      Frozen fx_m15. Do not move to 16:00. Do not move to 17:00 Tokyo. Do not
+      flip.
+    params: {symbols: [USDJPY], timeframe: M15, tz: Asia/Singapore, treat_hour: 17, treat_minute: 0, base_hour: 14, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H189_sgx17_fade_gold
+    enabled: false
+    name: Fade gold at 17:00 Singapore cash close vs 14:00
+    why: >
+      Same 17:00 Singapore cash-close fade as H187, on XAUUSD (Asia loco).
+      Frozen gold_m15. Do not move to 16:00. Do not move to 17:00 Tokyo. Do
+      not flip.
+    params: {symbols: [XAUUSD], timeframe: M15, tz: Asia/Singapore, treat_hour: 17, treat_minute: 0, base_hour: 14, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H190_xetra1730_fade_eur
+    enabled: false
+    name: Fade EURUSD at 17:30 Berlin Xetra close vs 14:00
+    why: >
+      17:30 Berlin is the Xetra cash close. German equity desks flatten EUR
+      hedges into that print, so fading the signed M15 at 17:30 Berlin should
+      beat fading 14:00 (afternoon still two-way). Daily weekday. Distinct
+      from H70 (09:00 Xetra open follow), H71 (LSE 16:30 GBP), H151 (TARGET2
+      18:00 CET), H67 (16:00 NY gold), and H187 (17:00 Singapore). EURUSD
+      M15, 1:1 ATR, 8 bars. Frozen fx_m15. Do not move to 09:00. Do not move
+      to 16:30. Do not move to 18:00. Do not flip to follow.
+    params: {symbols: [EURUSD], timeframe: M15, tz: Europe/Berlin, treat_hour: 17, treat_minute: 30, base_hour: 14, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H191_xetra1730_fade_gbp
+    enabled: false
+    name: Fade GBPUSD at 17:30 Berlin Xetra close vs 14:00
+    why: >
+      Same 17:30 Berlin Xetra close fade as H190, on GBPUSD (European equity
+      hedge). Frozen fx_m15. Do not move to 09:00. Do not move to 16:30. Do
+      not flip.
+    params: {symbols: [GBPUSD], timeframe: M15, tz: Europe/Berlin, treat_hour: 17, treat_minute: 30, base_hour: 14, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H192_xetra1730_fade_gold
+    enabled: false
+    name: Fade gold at 17:30 Berlin Xetra close vs 14:00
+    why: >
+      Same 17:30 Berlin Xetra close fade as H190, on XAUUSD (European metal
+      hedge into equity close). Frozen gold_m15. Do not move to 09:00. Do not
+      move to 16:30. Do not flip.
+    params: {symbols: [XAUUSD], timeframe: M15, tz: Europe/Berlin, treat_hour: 17, treat_minute: 30, base_hour: 14, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H193_ovn_intraday_fade_eur
+    enabled: false
+    name: Fade EURUSD overnight return at London 08:00 vs follow it
+    why: >
+      Lou-Polk-Skouras overnight/intraday tug-of-war: Asia overnight inventory
+      is worked off in the London cash day, so fading the 21:00-08:00 London
+      overnight return at 08:00 should beat following that same overnight
+      return (continuation). Distinct from rejected H40 (fade NY-day at Asia
+      open), H79 (unconditional overnight short), H102 (cross-section fade).
+      EURUSD H1, 1:1 ATR, 8 bars. Weekend gaps skipped (max 14h). Frozen
+      fx_h1. Family ovn_intraday with H194. Do not retune hours or flip.
+    params:
+      symbols: [EURUSD]
+      timeframe: H1
+      overnight_hour_london: 21
+      signal_hour_london: 8
+      signal_minute: 0
+      max_gap_hours: 14
+      min_prior_atr: 0.25
+      horizon_bars: 8
+      stop_atr: 1.0
+      target_atr: 1.0
+
+  - id: H194_ovn_intraday_fade_gold
+    enabled: false
+    name: Fade gold overnight return at London 08:00 vs follow it
+    why: >
+      Same overnight/intraday inventory fade as H193 on XAUUSD M15 (London
+      cash digests Asia metal inventory). Frozen gold_m15. Family ovn_intraday
+      with H193. Do not retune hours. Do not flip. Do not add EMA filters.
+    params:
+      symbols: [XAUUSD]
+      timeframe: M15
+      overnight_hour_london: 21
+      signal_hour_london: 8
+      signal_minute: 0
+      max_gap_hours: 14
+      min_prior_atr: 0.25
+      horizon_bars: 8
+      stop_atr: 1.0
+      target_atr: 1.0
+
+  - id: H195_gold_h1_tsmom
+    enabled: false
+    name: Follow gold 5-day return at 16:00 London vs fade it
+    why: >
+      Time-series momentum (Moskowitz/Ooi/Pedersen): a 5-day gold imbalance is
+      unfinished risk-on/off flow, so following it for the next 24 H1 should
+      beat fading it. Same frozen 5-day/16:00/24-bar shape as rejected H31 on
+      EURUSD — new symbol only (XAUUSD), not a retune. Raw gold is M15;
+      resampled to H1 inside the handler. Frozen gold_m15 splits. Do not
+      retune lookback. Do not add SMA/EMA filters.
+    params:
+      symbols: [XAUUSD]
+      timeframe: M15
+      lookback_bars: 120
+      signal_hour_london: 16
+      horizon_bars: 24
+      stop_atr: 1.0
+      target_atr: 1.0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
