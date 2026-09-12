@@ -87,6 +87,143 @@ def split_book_for(hypothesis_id: str) -> str:
         return "gold_m5"
     if key == "H30":
         return "fx_m5"
+    if key in {"H48", "H50"}:
+        return "fx_m15"
+    if key == "H49":
+        return "gold_m15"
+    if key in {"H51", "H54", "H56"}:
+        return "gold_m15"
+    if key in {"H53", "H55"}:
+        return "fx_m15"
+    num = int(key[1:]) if key[1:].isdigit() else -1
+    if num in {57, 67, 73}:
+        return "gold_m15"
+    if 57 <= num <= 76:
+        return "fx_m15"
+    if 90 <= num <= 95:
+        return "fx_m15"
+    if num == 96:
+        return "gold_m15"
+    if 97 <= num <= 101:
+        return "fx_m15"
+    if 103 <= num <= 105:
+        return "fx_m15"
+    if num in {106, 107}:
+        return "fx_m15"
+    if num == 108:
+        return "gold_m15"
+    if 109 <= num <= 111:
+        return "fx_m15"
+    if num in {112, 113}:
+        return "fx_m15"
+    if num == 114:
+        return "gold_m15"
+    if num in {115, 116}:
+        return "fx_m15"
+    if num == 117:
+        return "gold_m15"
+    if num in {118, 119}:
+        return "fx_m15"
+    if num == 120:
+        return "gold_m15"
+    if num in {121, 122}:
+        return "fx_m15"
+    if num == 123:
+        return "gold_m15"
+    if num in {124, 125}:
+        return "fx_m15"
+    if num == 126:
+        return "gold_m15"
+    if num in {127, 128}:
+        return "fx_m15"
+    if num == 129:
+        return "gold_m15"
+    if num in {130, 131}:
+        return "fx_m15"
+    if num == 132:
+        return "gold_m15"
+    if num in {133, 134}:
+        return "fx_m15"
+    if num == 135:
+        return "gold_m15"
+    if num in {136, 137}:
+        return "fx_m15"
+    if num == 138:
+        return "gold_m15"
+    if num in {139, 140}:
+        return "fx_m15"
+    if num == 141:
+        return "gold_m15"
+    if num in {142, 143}:
+        return "fx_m15"
+    if num == 144:
+        return "gold_m15"
+    if 145 <= num <= 147:
+        return "fx_m15"
+    if num in {148, 149}:
+        return "fx_m15"
+    if num == 150:
+        return "gold_m15"
+    if num in {151, 152}:
+        return "fx_m15"
+    if num == 153:
+        return "gold_m15"
+    if num in {154, 155}:
+        return "fx_m15"
+    if num == 156:
+        return "gold_m15"
+    if num in {157, 158}:
+        return "fx_m15"
+    if num == 159:
+        return "gold_m15"
+    if num in {160, 161}:
+        return "fx_m15"
+    if num == 162:
+        return "gold_m15"
+    if num in {163, 164}:
+        return "fx_m15"
+    if num == 165:
+        return "gold_m15"
+    if num in {166, 167}:
+        return "fx_m15"
+    if num == 168:
+        return "gold_m15"
+    if num in {169, 170}:
+        return "fx_m15"
+    if num == 171:
+        return "gold_m15"
+    if num == 172:
+        return "gold_m15"
+    if num in {173, 174}:
+        return "fx_m15"
+    if num == 175:
+        return "gold_m15"
+    if num in {176, 177}:
+        return "fx_m15"
+    if num == 178:
+        return "gold_m15"
+    if num in {179, 180}:
+        return "fx_m15"
+    if num in {181, 182}:
+        return "fx_m15"
+    if num == 183:
+        return "gold_m15"
+    if num == 184:
+        return "gold_m15"
+    if num in {185, 186}:
+        return "fx_m15"
+    if num in {187, 188}:
+        return "fx_m15"
+    if num == 189:
+        return "gold_m15"
+    if num in {190, 191}:
+        return "fx_m15"
+    if num == 192:
+        return "gold_m15"
+    if num == 193:
+        return "fx_h1"
+    if num in {194, 195}:
+        return "gold_m15"
     return "fx_h1"
 
 

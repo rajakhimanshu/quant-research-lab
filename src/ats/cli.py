@@ -101,10 +101,31 @@ def cmd_ledger(_: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_audit_h86(_: argparse.Namespace) -> int:
+    from ats.research.h86_audit import print_audit, run_audit
+
+    print_audit(run_audit())
+    return 0
+
+
+def cmd_deep_h86(_: argparse.Namespace) -> int:
+    from ats.research.h86_deep import print_deep, run_deep
+
+    print_deep(run_deep())
+    return 0
+
+
 def cmd_audit_h5(_: argparse.Namespace) -> int:
     from ats.research.h5_audit import print_audit, run_audit
 
     print_audit(run_audit())
+    return 0
+
+
+def cmd_paper_h86(_: argparse.Namespace) -> int:
+    from ats.paper.h86_run import print_paper, run_paper
+
+    print_paper(run_paper())
     return 0
 
 
@@ -240,6 +261,18 @@ def build_parser() -> argparse.ArgumentParser:
     )
     ah.set_defaults(func=cmd_audit_h5)
 
+    a86 = sub.add_parser(
+        "audit-h86",
+        help="H86 frozen battery: splits, walk-forward, cost, delay, invert, bootstrap",
+    )
+    a86.set_defaults(func=cmd_audit_h86)
+
+    d86 = sub.add_parser(
+        "deep-h86",
+        help="H86 last-level: bar spread, M5 path, LOO, weekend cluster. Not an EA.",
+    )
+    d86.set_defaults(func=cmd_deep_h86)
+
     ph = sub.add_parser(
         "paper-h5",
         help="H5 paper book on OOS with frozen 0.5% risk / max-4 / 12% DD halt, plus current scan",
@@ -258,6 +291,12 @@ def build_parser() -> argparse.ArgumentParser:
         help="Log a next-open paper SELL (reason: sma5|rsi_exit|time_stop|hard_stop)",
     )
     ph.set_defaults(func=cmd_paper_h5)
+
+    p86 = sub.add_parser(
+        "paper-h86",
+        help="H86 weekend-gap paper scan (GBP/JPY/AUD). Not live. Not an EA.",
+    )
+    p86.set_defaults(func=cmd_paper_h86)
 
     ideas = sub.add_parser(
         "ideas",
