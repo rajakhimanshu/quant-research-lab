@@ -4,9 +4,9 @@ import zipfile
 import numpy as np
 import pandas as pd
 
-from ats.hypotheses.cot_spec_fade import cot_spec_fade_events, rolling_last_pct
+from ats.hypotheses.cot_spec_fade import cot_spec_fade_events, rolling_last_pct, _fade_crowded_side
 from ats.ideas.arxiv import parse_arxiv_xml
-from ats.ideas.cot import _find_col, _parse_annual, gold_series
+from ats.ideas.cot import _find_col, _parse_annual, gold_series, named_series
 from ats.ideas.inbox import list_rows
 from ats.ideas.sentiment import load_sentiment_csv
 from ats.timeutil import split_book_for
@@ -22,6 +22,7 @@ def test_inbox_lists_cot_lead():
 def test_split_books():
     assert split_book_for("H8_atr_momentum") == "fx_h1"
     assert split_book_for("H9_cot_spec_fade") == "gold_m15"
+    assert split_book_for("H83_eur_cot_fade") == "fx_h1"
 
 
 def test_parse_arxiv_atom():
@@ -62,6 +63,31 @@ def test_cot_column_and_gold_filter():
     assert len(gold) == 1
     assert "MICRO" not in gold.iloc[0]["market"].upper()
     assert gold.iloc[0]["nc_net"] == 40000
+
+
+def test_named_series_exact_market():
+    cot = pd.DataFrame(
+        {
+            "market": [
+                "EURO FX - CHICAGO MERCANTILE EXCHANGE",
+                "EURO FX/JAPANESE YEN XRATE - CHICAGO MERCANTILE EXCHANGE",
+            ],
+            "asof": ["2024-01-02", "2024-01-02"],
+            "oi": [100.0, 50.0],
+            "nc_long": [80.0, 10.0],
+            "nc_short": [20.0, 5.0],
+        }
+    )
+    g = named_series(cot, "EURO FX - CHICAGO MERCANTILE EXCHANGE")
+    assert len(g) == 1
+    assert g.iloc[0]["nc_net"] == 60.0
+
+
+def test_fade_crowded_side_quote_convention():
+    assert _fade_crowded_side("XAUUSD", 1.0) == "short"
+    assert _fade_crowded_side("EURUSD", 1.0) == "short"
+    assert _fade_crowded_side("USDJPY", 1.0) == "long"
+    assert _fade_crowded_side("USDJPY", -1.0) == "short"
 
 
 def test_rolling_last_pct_ends_at_one_for_max():

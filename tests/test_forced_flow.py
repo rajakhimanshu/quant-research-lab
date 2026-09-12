@@ -4,6 +4,7 @@ from ats.hypotheses.forced_flow import (
     streak_inventory_fade_events,
     weekend_gap_fade_events,
     wm_fix_follow_events,
+    comex_session_run_events,
 )
 from ats.research.ledger import ledger_rows
 from ats.config import load_hypotheses
@@ -22,6 +23,8 @@ def test_ledger_covers_every_closed_id():
     assert decisions["H9_cot_spec_fade"] == "NEEDS_MORE_DATA"
     assert decisions["H27_wm_fix_follow"] == "REJECT"
     assert decisions["H37_weekend_gap_fx"] == "NEEDS_MORE_DATA"
+    assert decisions["H86_weekend_gap_g10"] == "PAPER_CANDIDATE"
+    assert decisions["H192_xetra1730_fade_gold"] == "PAPER_CANDIDATE"
 
 
 def _gold(n: int = 500, seed: int = 2, freq: str = "15min") -> pd.DataFrame:
@@ -51,6 +54,7 @@ def test_forced_flow_handlers_run():
         (streak_inventory_fade_events, m15),
         (weekend_gap_fade_events, m15),
         (wm_fix_follow_events, h1),
+        (comex_session_run_events, m15),
     ):
         ev = fn(df, "XAUUSD" if fn is not wm_fix_follow_events else "GBPUSD", params, 200, 20)
         assert ev is not None

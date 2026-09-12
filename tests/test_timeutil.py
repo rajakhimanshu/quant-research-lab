@@ -54,6 +54,18 @@ def test_split_book_for_h8_fx_h9_gold():
     assert split_book_for("H28_postfix_usd_fade") == "fx_h1"
     assert split_book_for("H30_london_asia_break") == "fx_m5"
     assert split_book_for("H31_h1_tsmom") == "fx_h1"
+    assert split_book_for("H48_london_ist_break") == "fx_m15"
+    assert split_book_for("H49_london_ist_break_gold") == "gold_m15"
+    assert split_book_for("H50_london_fib_bounce") == "fx_m15"
+    assert split_book_for("H51_ny_sweep_follow") == "gold_m15"
+    assert split_book_for("H52_carry_roll") == "fx_h1"
+    assert split_book_for("H53_tokyo_fix_follow") == "fx_m15"
+    assert split_book_for("H54_comex_open_follow") == "gold_m15"
+    assert split_book_for("H55_nyse_open_eur") == "fx_m15"
+    assert split_book_for("H56_comex_close_fade") == "gold_m15"
+    assert split_book_for("H193_ovn_intraday_fade_eur") == "fx_h1"
+    assert split_book_for("H194_ovn_intraday_fade_gold") == "gold_m15"
+    assert split_book_for("H195_gold_h1_tsmom") == "gold_m15"
 
 
 def test_hyp_key_does_not_confuse_h17_with_h1():
