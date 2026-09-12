@@ -205,3 +205,45 @@ def wm_fix_follow_events(df, symbol, params, spread_pips=1.5, slippage_pips=0.2)
         if row:
             rows.append(row)
     return pd.DataFrame(rows)
+
+
+def comex_session_run_events(df, symbol, params, spread_pips=200, slippage_pips=20) -> pd.DataFrame:
+    """Signed M15 run at a NY COMEX clock vs the same run at a control hour.
+
+    fade=False follows into the print (H54 8:20 open). fade=True fades into it (H56 13:30 close).
+    """
+    work = df.dropna(subset=["atr"]).copy().reset_index(drop=True)
+    if work.empty:
+        return pd.DataFrame()
+    horizon, stop_atr, target_atr, cost = _params(params, symbol, spread_pips, slippage_pips)
+    min_prior = float(params.get("min_prior_atr", 0.25))
+    fade = bool(params.get("fade", False))
+    treat_h, treat_m = int(params.get("treat_hour", 8)), int(params.get("treat_minute", 0))
+    base_h, base_m = int(params.get("base_hour", 6)), int(params.get("base_minute", 0))
+    ny = pd.to_datetime(work["time"], utc=True).dt.tz_convert(NY)
+    work["nh"] = ny.dt.hour
+    work["nm"] = ny.dt.minute
+    work["ndate"] = ny.dt.date
+    rows = []
+    for _, g in work.groupby("ndate", sort=True):
+        for treat, hour, minute in (True, treat_h, treat_m), (False, base_h, base_m):
+            hit = g[(g["nh"] == hour) & (g["nm"] == minute)]
+            if hit.empty:
+                continue
+            i = int(hit.index[-1])
+            earlier = g[g.index < i]
+            if earlier.empty:
+                continue
+            j = int(earlier.index[-1])
+            atr = float(work.at[i, "atr"])
+            if not np.isfinite(atr) or atr <= 0:
+                continue
+            prior = float(work.at[i, "close"]) - float(work.at[j, "open"])
+            if abs(prior) < min_prior * atr:
+                continue
+            follow = "long" if prior > 0 else "short"
+            side = ("short" if follow == "long" else "long") if fade else follow
+            row = _trade(work, i, side, treat, symbol, cost, horizon, stop_atr, target_atr)
+            if row:
+                rows.append(row)
+    return pd.DataFrame(rows)

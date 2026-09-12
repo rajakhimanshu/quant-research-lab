@@ -121,3 +121,18 @@ def gold_series(cot: pd.DataFrame) -> pd.DataFrame:
         g["nc_net_oi"] = g["nc_net"] / g["oi"].replace(0, pd.NA)
     g = g.sort_values("asof").drop_duplicates("asof")
     return g.reset_index(drop=True)
+
+
+def named_series(cot: pd.DataFrame, market: str) -> pd.DataFrame:
+    """Exact CFTC market name. Do not fuzzy-match MICRO/XRATE books."""
+    target = str(market).upper().strip()
+    m = cot["market"].astype(str).str.upper().str.strip()
+    g = cot.loc[m == target].copy()
+    if g.empty:
+        return g
+    if "nc_net" not in g.columns and {"nc_long", "nc_short"} <= set(g.columns):
+        g["nc_net"] = g["nc_long"] - g["nc_short"]
+    if "nc_net_oi" not in g.columns and "oi" in g.columns and "nc_net" in g.columns:
+        g["nc_net_oi"] = g["nc_net"] / g["oi"].replace(0, pd.NA)
+    g = g.sort_values("asof").drop_duplicates("asof")
+    return g.reset_index(drop=True)

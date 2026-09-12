@@ -5,7 +5,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from ats.ideas.cot import gold_series, load_combined
+from ats.ideas.cot import gold_series, load_combined, named_series
 from ats.timeutil import cost_price
 
 
@@ -64,6 +64,14 @@ def _forward(
     return r_mult > 0, r_mult
 
 
+def _fade_crowded_side(symbol: str, net: float) -> str:
+    """Fade the COT market's currency. Specs long yen → long USDJPY."""
+    base = "".join(ch for ch in symbol.upper() if ch.isalpha())[:6]
+    long_foreign = "short" if base.startswith("USD") else "long"
+    short_foreign = "short" if long_foreign == "long" else "long"
+    return short_foreign if net > 0 else long_foreign
+
+
 def cot_spec_fade_events(
     df: pd.DataFrame,
     symbol: str,
@@ -77,7 +85,15 @@ def cot_spec_fade_events(
         combined = load_combined()
         if combined is None or combined.empty:
             return pd.DataFrame()
-        cot_df = gold_series(combined)
+        market = params.get("cot_market")
+        if isinstance(market, list):
+            parts = [named_series(combined, str(m)) for m in market]
+            parts = [p for p in parts if p is not None and not p.empty]
+            cot_df = pd.concat(parts, ignore_index=True) if parts else pd.DataFrame()
+            if not cot_df.empty:
+                cot_df = cot_df.sort_values("asof").drop_duplicates("asof")
+        else:
+            cot_df = named_series(combined, str(market)) if market else gold_series(combined)
     if cot_df is None or cot_df.empty or df.empty:
         return pd.DataFrame()
 
@@ -119,7 +135,7 @@ def cot_spec_fade_events(
         if not np.isfinite(atr) or atr <= 0:
             continue
         net = float(row["nc_net"])
-        side = "short" if net > 0 else "long"
+        side = _fade_crowded_side(symbol, net)
         raw_open = float(bar["open"])
         if side == "long":
             entry = raw_open + cost
