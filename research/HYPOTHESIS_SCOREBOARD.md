@@ -1,7 +1,7 @@
-# GrowEdge / Algo Trading System — Hypothesis Scoreboard
+# Proofbook — Hypothesis Scoreboard
 
 **As of:** 2026-09-15  
-**Lab:** Retail FX majors + XAUUSD research (Python). Not live trading. Not an EA.  
+**Lab:** Proofbook — individual FX majors + XAUUSD research (Python). Not live. Not an EA.  
 **Rule:** Each `H` is a frozen causal hypothesis tested after spread+slippage on locked train/validation. OOS unlocked only for survivors. REJECT is closed — no retune.
 
 ## Summary
