@@ -1,6 +1,8 @@
-# GrowEdge — Algo Trading System
+# Proofbook
 
-Retail **FX majors + XAUUSD** research lab. You propose a causal hypothesis. This repo freezes it, costs it, and scores it. It does **not** invent profitable EAs.
+Individual **FX majors + XAUUSD** hypothesis lab. You propose a causal idea. This repo freezes it, costs it, and scores it into a permanent closed book. It does **not** invent profitable EAs or chase quick money.
+
+CLI package: `ats` (`python -m ats …`).
 
 **Status (honest):** **195 hypotheses (H1–H195). No FX/gold survivor. No MT5 EA yet.**
 
