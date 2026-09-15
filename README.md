@@ -1,36 +1,68 @@
 # Proofbook
 
-Individual **FX majors + XAUUSD** hypothesis lab. You propose a causal idea. This repo freezes it, costs it, and scores it into a permanent closed book. It does **not** invent profitable EAs or chase quick money.
+**Individual FX & gold hypothesis lab.**  
+Not a company. Not a signal service. Not a quick-money project.
 
-CLI package: `ats` (`python -m ats …`).
+You bring a causal **why**. Proofbook freezes it as `H###`, runs it after spread + slippage on locked train/validation, and writes the verdict into a permanent **closed book**. Rejects stay closed. No EA until a real survivor exists.
 
-**Status (honest):** **195 hypotheses (H1–H195). No FX/gold survivor. No MT5 EA yet.**
+| | |
+|---|---|
+| **Name** | Proofbook |
+| **CLI** | `ats` → `python -m ats …` |
+| **Universe** | FX majors + **XAUUSD** only (M5 / M15 / H1) |
+| **Stack** | Python **3.12** + MetaTrader 5 data |
+| **Repo** | https://github.com/rajakhimanshu/algo-trading-system |
 
-## Records (every test is logged)
+## Status (honest)
+
+- **195** frozen hypotheses (**H1–H195**)
+- **186 REJECT** · **7 NEEDS_MORE_DATA** · **2 PAPER labels that are not FX go-live**
+- **No FX/gold survivor** → **no MT5 EA**
+- H5 equity RSI is **archived** (out of universe)
+- H86 weekend gap: last-level **FAIL** (Sunday fill spread)
+- H192 Xetra gold fade: **OOS REJECT**
+
+Full table: [`research/HYPOTHESIS_SCOREBOARD.md`](research/HYPOTHESIS_SCOREBOARD.md)
+
+## What Proofbook is for
+
+1. Force every idea through the same gates (costs, baseline, Bonferroni, train/val gap).  
+2. Keep memory so we never retest noise.  
+3. Stay retail-realistic: one symbol, simple rules, paper → small live → EA only after proof.
+
+Aspiration (~5%/month, ~1% risk) is a **goal**, not something we curve-fit in a backtest.
+
+## How a test works
+
+1. Write the **why** (who pays you).  
+2. Freeze rules + baseline in `config/hypotheses.yaml` **before** results.  
+3. `python -m ats test --id Hxxx`  
+4. Decide from the report (you decide; the lab does not declare “profitable”).  
+5. Update ledger → journal → scoreboard (see checklist below).  
+6. OOS stays **locked** until an explicit survivor unlock.
+
+Details: [`research/HOW_WE_TEST.md`](research/HOW_WE_TEST.md)
+
+**Refused without a new causal why:** indicator stacks (EMA 13/50/200, S/R folklore), multi-TF fishing, “find me an edge,” reopening a REJECT.
+
+## Records (every H is logged)
 
 | Record | Path |
 |---|---|
-| Frozen specs | `config/hypotheses.yaml` |
-| Closed book | `research/ledger.yaml` |
-| Dated log | `research/journal.md` |
-| Shareable table | `research/HYPOTHESIS_SCOREBOARD.md` |
-| How we test / reject | `research/HOW_WE_TEST.md` |
-| After-each-test checklist | `research/AFTER_EACH_TEST.md` |
-| External AI brief | `research/PERPLEXITY_RESEARCH_BRIEF.md` |
+| Frozen specs | [`config/hypotheses.yaml`](config/hypotheses.yaml) |
+| Closed book | [`research/ledger.yaml`](research/ledger.yaml) |
+| Dated log | [`research/journal.md`](research/journal.md) |
+| Shareable scoreboard | [`research/HYPOTHESIS_SCOREBOARD.md`](research/HYPOTHESIS_SCOREBOARD.md) |
+| After each test | [`research/AFTER_EACH_TEST.md`](research/AFTER_EACH_TEST.md) |
+| External AI brief | [`research/PERPLEXITY_RESEARCH_BRIEF.md`](research/PERPLEXITY_RESEARCH_BRIEF.md) |
+| Name note | [`docs/PROJECT_NAME.md`](docs/PROJECT_NAME.md) |
 
 ```powershell
 python -m ats ledger
 python -m ats scoreboard
 ```
 
-## You vs the lab
-
-**You:** bring a `why` → accept/reject from the report → paper only after a survivor.  
-**Lab:** pull MT5 data → code the frozen H → train/val (OOS locked) → print decision.
-
-If you ask “find an edge” or “EMA 13/50/200 on M15,” the answer is **no** without a new causal why (and EMA stacks are already REJECT).
-
-## Setup (Python 3.12 only)
+## Setup (once)
 
 ```powershell
 cd "W:\Currently Working\Algo Trading System"
@@ -40,7 +72,7 @@ pip install -e ".[dev]"
 copy .env.example .env
 ```
 
-Open one MT5 terminal, then:
+Open **one** MT5 terminal (logged in), then:
 
 ```powershell
 python -m ats doctor
@@ -48,26 +80,33 @@ python -m ats pull
 python -m ats test --id H9_cot_spec_fade
 ```
 
-Do **not** pass `--unlock-oos` until train+val survivor + you choose to unlock.
+Do **not** pass `--unlock-oos` until train+val clears and you choose to unlock.
 
 ## Retail path (locked)
 
-Python lab → paper on this broker → several **$100–$200** accounts (execution) → **$1,000–$2,000** (~1% risk possible) → EA.  
-Exness min lot 0.01. No grid / martingale. One symbol until a survivor.
+Python lab → paper on this broker → several **$100–$200** accounts (execution / fills) → **$1,000–$2,000** (where ~1% risk on a ~15–20 pip stop is realistic with 0.01 lot) → EA.
 
-## Goals
+No grid. No martingale. One symbol until a survivor.
 
-- Find a cost-adjusted edge on FX or gold with a clear payer.  
-- Aspiration ~5%/month at ~1% risk **when account size allows** — not a curve-fit target.  
-- Keep a permanent reject book so we never retest noise.
+## Useful commands
+
+| Command | Purpose |
+|---|---|
+| `python -m ats doctor` | Python 3.12 + MT5 check |
+| `python -m ats pull` | OHLC into `data/raw` |
+| `python -m ats test --id H…` | Costed train/val (OOS locked) |
+| `python -m ats ledger` | Print closed book |
+| `python -m ats scoreboard` | Rebuild scoreboard markdown |
+| `python -m ats ideas …` | Idea inbox (not an edge finder) |
 
 ## Docs map
 
-- Protocol rule: `.cursor/rules/research-protocol.mdc`  
-- Research index: `research/README.md`  
-- Ideas inbox: `config/ideas.yaml` (`python -m ats ideas …`)
+- Research index: [`research/README.md`](research/README.md)  
+- Repo layout: [`docs/REPO_LAYOUT.md`](docs/REPO_LAYOUT.md)  
+- Contributing / tiny commits: [`CONTRIBUTING.md`](CONTRIBUTING.md)  
+- Agent protocol: [`.cursor/rules/research-protocol.mdc`](.cursor/rules/research-protocol.mdc)  
 
-## GitHub
+## Git hygiene
 
-Remote: `https://github.com/rajakhimanshu/algo-trading-system`  
-Update the ledger/journal/scoreboard after **every** test and commit in small slices (see `research/AFTER_EACH_TEST.md`).
+After **every** test: update ledger + journal + scoreboard, prefer **small commits**, push.  
+No Cursor co-author trailers on purpose — commits should read as the owner’s lab history.
