@@ -1,6 +1,6 @@
 # How We Test — Parameters, Gates, and Why We Reject
 
-**Lab:** GrowEdge / `ats` (Python 3.12). FX majors + XAUUSD only.  
+**Lab:** **Proofbook** (`ats`, Python 3.12) — individual FX majors + XAUUSD research.  
 **We do not test “strategies to make profitable.”** We test **frozen hypotheses** with a causal `why`.
 
 ---
