@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "ats"
 version = "0.1.0"
-description = "Retail forex research lab: constrained hypothesis tests on MT5 data."
+description = "Proofbook: individual FX and gold hypothesis lab on MT5 data."
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
 dependencies = [
