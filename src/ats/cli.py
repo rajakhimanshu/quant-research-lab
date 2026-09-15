@@ -101,6 +101,13 @@ def cmd_ledger(_: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_scoreboard(_: argparse.Namespace) -> int:
+    from ats.research.scoreboard import write_scoreboard
+
+    print(f"Wrote {write_scoreboard()}")
+    return 0
+
+
 def cmd_audit_h86(_: argparse.Namespace) -> int:
     from ats.research.h86_audit import print_audit, run_audit
 
@@ -254,6 +261,12 @@ def build_parser() -> argparse.ArgumentParser:
 
     lg = sub.add_parser("ledger", help="Print the closed book (rejects, why, do-not-retune)")
     lg.set_defaults(func=cmd_ledger)
+
+    sb = sub.add_parser(
+        "scoreboard",
+        help="Rebuild research/HYPOTHESIS_SCOREBOARD.md from the ledger",
+    )
+    sb.set_defaults(func=cmd_scoreboard)
 
     ah = sub.add_parser(
         "audit-h5",
