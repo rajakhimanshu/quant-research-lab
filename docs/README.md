@@ -1,5 +1,6 @@
 # Docs
 
+- Project name: [`PROJECT_NAME.md`](PROJECT_NAME.md) — **Proofbook**
 - Lab testing rules: [`../research/HOW_WE_TEST.md`](../research/HOW_WE_TEST.md)
 - Records & checklist: [`../research/README.md`](../research/README.md)
 - Repo folders: [`REPO_LAYOUT.md`](REPO_LAYOUT.md)

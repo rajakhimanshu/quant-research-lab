@@ -1,6 +1,6 @@
-# Contributing to this lab
+# Contributing to Proofbook
 
-This is a **personal research lab**, not an open strategy farm.
+This is a **personal research lab**, not an open strategy farm and not a company product.
 
 ## Rules
 

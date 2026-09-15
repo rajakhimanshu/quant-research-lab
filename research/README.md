@@ -1,4 +1,4 @@
-# Research records
+# Research records (Proofbook)
 
 Every hypothesis we test is recorded. Nothing is “try and forget.”
 
