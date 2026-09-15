@@ -1,6 +1,6 @@
 # GrowEdge / Algo Trading System — Hypothesis Scoreboard
 
-**As of:** 2026-09-08  
+**As of:** 2026-09-15  
 **Lab:** Retail FX majors + XAUUSD research (Python). Not live trading. Not an EA.  
 **Rule:** Each `H` is a frozen causal hypothesis tested after spread+slippage on locked train/validation. OOS unlocked only for survivors. REJECT is closed — no retune.
 
@@ -8,32 +8,24 @@
 
 | Decision | Count | Meaning |
 |---|---:|---|
-| **REJECT** | 183 | Failed train/val gates, negative R, or OOS fail. Closed. |
+| **REJECT** | 186 | Failed train/val gates, negative R, or OOS fail. Closed. |
 | **NEEDS_MORE_DATA** | 7 | Spec frozen; sample too thin. Do not loosen. |
-| **PAPER_CANDIDATE** | 2 | Lab label only — see status notes below. |
-| **Total tested** | 192 | H1–H192 |
+| **PAPER_CANDIDATE** | 2 | Lab label only — see status notes. |
+| **Total tested** | 195 | Through `H195_gold_h1_tsmom` |
 
 ### Current status (honest)
 
 - **No FX/gold live survivor.** Do not start an MT5 EA.
-- **H5** PAPER_CANDIDATE on equities only — **archived / out of scope** (universe is FX+gold).
-- **H86** weekend G10 gap: lab PAPER_CANDIDATE but **last-level FAIL** on Sunday fill-bar spread — not paperable without override.
-- **H192** Xetra 17:30 gold fade: lab cleared last-level, then **OOS REJECT** (2026-09-08) — rate below baseline, mean R negative.
-- Still thin (NEEDS_MORE_DATA): H9 COT, H37 weekend FX gap, H68 opex Friday, H77 IMM, H80 NFP/CPI, H81 FOMC, H85 GBP COT.
+- **H5** PAPER_CANDIDATE on equities only — archived / out of FX+gold universe.
+- **H86** weekend G10 gap: last-level FAIL on Sunday fill spread.
+- **H192** Xetra 17:30 gold: OOS REJECT after lab clear.
+- Thin open: H9, H37, H68, H77, H80, H81, H85.
 
 ## Protocol
 
 An edge is who pays you, after spread+slippage, on a frozen spec, with a baseline, on locked train/val, Bonferroni if a family, OOS locked until a survivor. Indicator combos are not a why. Do not reopen a REJECT because costs got cheaper or a knob looks unused.
 
-## Not survivors (do not trade)
-
-| ID | Label on ledger | Reality |
-|---|---|---|
-| H5_equity_rsi2 | PAPER_CANDIDATE | Equity RSI(2) — archived; out of FX/gold universe. |
-| H86_weekend_gap_g10 | PAPER_CANDIDATE | Last-level FAIL (Sunday fill spread). |
-| H192_xetra1730_fade_gold | REJECT (was PAPER) | OOS fail 2026-09-08; mean R −0.08. |
-
-## Full list (H1–H192)
+## Full list
 
 | # | ID | Decision | Book | Mechanism | Key result |
 |---:|---|---|---|---|---|
@@ -229,16 +221,12 @@ An edge is who pays you, after spread+slippage, on a frozen spec, with a baselin
 | 190 | `H190_xetra1730_fade_eur` | **REJECT** | fx_m15/xetra1730 | Fade EURUSD signed M15 at 17:30 Berlin Xetra close vs 14:00. 1:1 ATR, 8 bars. | 43.6% vs 38.5% n=429 p=0.057, R -0.10; val 48.4% vs 39.3% R -0.03 — Train p=0.057 not < 0.0167. Mean R negative. Do not move to 09:00. Do not move ... |
 | 191 | `H191_xetra1730_fade_gbp` | **REJECT** | fx_m15/xetra1730 | Same 17:30 Berlin Xetra close fade on GBPUSD. | 42.7% vs 40.9% n=450 p=0.29, R -0.14; val R -0.16 — Train p=0.29 not < 0.0167. Mean R negative. Do not flip. |
 | 192 | `H192_xetra1730_fade_gold` | **REJECT** | gold_m15/xetra1730 | Fade gold signed M15 at 17:30 Berlin Xetra close vs 14:00. 1:1 ATR, 8 bars. | 51.3% vs 39.6% n=431 p=0.00017, R +0.019; val 52.2% vs 44.3% R +0.024 / OOS: 47.6% vs 48.9% n=147 p=0.59, mean R -0.081; econ R/y -14.1, $/y@0.0... |
-
-## How to read decisions
-
-- **REJECT** — closed. Do not retune knobs, flip direction, or reopen because costs changed.
-- **NEEDS_MORE_DATA** — frozen spec; wait for more history. Do not loosen filters to inflate n.
-- **PAPER_CANDIDATE** — lab label only; check last-level / OOS / universe notes before any paper.
+| 193 | `H193_ovn_intraday_fade_eur` | **REJECT** | fx_h1/lit_abc | Fade EURUSD 21:00-08:00 London overnight at 08:00 vs follow. 1:1 ATR, 8 H1. | 43.4% vs 43.7% n=1191 p=0.55, R -0.13; val 48.1% vs 38.9% R -0.04 — Train not above baseline. Mean R negative. Do not retune hours. Do not flip. |
+| 194 | `H194_ovn_intraday_fade_gold` | **REJECT** | gold_m15/lit_abc | Same overnight/intraday fade on XAUUSD M15. | 44.7% vs 42.5% n=454 p=0.25, R -0.11; val lost to follow R -0.10 — Train p=0.25 not < 0.0167. Mean R negative. Do not retune. Do not flip. |
+| 195 | `H195_gold_h1_tsmom` | **REJECT** | gold_m15/lit_abc | Follow gold 5-day return at 16:00 London vs fade (H31 shape on XAUUSD H1 resample). | 48.8% vs 45.4% n=648 p=0.11, R -0.023; val 49.8% vs 44.7% R -0.005 — Train p=0.11 not < 0.0167. Mean R negative. Do not retune lookback. Do not add... |
 
 ## Source of truth
 
 - Ledger: `research/ledger.yaml`
 - Dated log: `research/journal.md`
-- Reprint CLI: `python -m ats ledger`
-
+- Reprint: `python -m ats ledger` · `python -m ats scoreboard`
