@@ -1,47 +1,34 @@
-# Algo Trading System
+# GrowEdge — Algo Trading System
 
-Python research lab for **one retail forex system**. You propose hypotheses. This repo tests them. It will not invent a profitable EA.
+Retail **FX majors + XAUUSD** research lab. You propose a causal hypothesis. This repo freezes it, costs it, and scores it. It does **not** invent profitable EAs.
 
-MT5 is the data source (and later, execution). Python is the research stack. Those are parallel tracks, not a rewrite of your C++/DSA interview prep.
+**Status (honest):** **195 hypotheses (H1–H195). No FX/gold survivor. No MT5 EA yet.**
 
-## What you do vs what Cursor does
+## Records (every test is logged)
 
-You:
-1. Bring a hypothesis with a reason (`why` this should exist in the market).
-2. Read the report and decide: reject, needs more data, or candidate.
-3. Paper trade survivors yourself. Do not skip that.
-
-Cursor / this repo:
-1. Pull and clean MT5 data.
-2. Turn your hypothesis into a test.
-3. Run train / validation (out-of-sample stays locked until you unlock it).
-4. Print reject / candidate with the numbers in front of you.
-
-If you type "find me an edge" or "make a profitable strategy", the correct response is: **no**. Give a testable statement instead.
-
-## GitHub repo to create
-
-Name: **`algo-trading-system`**  
-Visibility: **private**  
-Do **not** tick "Add a README" (this folder already has the files).
-
-Then connect it (after this repo has its first commit):
+| Record | Path |
+|---|---|
+| Frozen specs | `config/hypotheses.yaml` |
+| Closed book | `research/ledger.yaml` |
+| Dated log | `research/journal.md` |
+| Shareable table | `research/HYPOTHESIS_SCOREBOARD.md` |
+| How we test / reject | `research/HOW_WE_TEST.md` |
+| After-each-test checklist | `research/AFTER_EACH_TEST.md` |
+| External AI brief | `research/PERPLEXITY_RESEARCH_BRIEF.md` |
 
 ```powershell
-gh auth login
-gh repo create algo-trading-system --private --source=. --remote=origin --push
+python -m ats ledger
+python -m ats scoreboard
 ```
 
-If you create the empty repo in the GitHub UI instead:
+## You vs the lab
 
-```powershell
-git remote add origin https://github.com/YOUR_USER/algo-trading-system.git
-git push -u origin main
-```
+**You:** bring a `why` → accept/reject from the report → paper only after a survivor.  
+**Lab:** pull MT5 data → code the frozen H → train/val (OOS locked) → print decision.
 
-## Setup (once)
+If you ask “find an edge” or “EMA 13/50/200 on M15,” the answer is **no** without a new causal why (and EMA stacks are already REJECT).
 
-Use **Python 3.12**. The MetaTrader5 package has no 3.14 wheel. You already have 3.12 installed.
+## Setup (Python 3.12 only)
 
 ```powershell
 cd "W:\Currently Working\Algo Trading System"
@@ -51,57 +38,34 @@ pip install -e ".[dev]"
 copy .env.example .env
 ```
 
-Open **one** MT5 terminal, log in, enable AutoTrading / Algo Trading.
+Open one MT5 terminal, then:
 
 ```powershell
 python -m ats doctor
 python -m ats pull
-```
-
-H1 needs a calendar CSV at `data/calendar/high_impact.csv` (see that folder's README). H2 does not.
-
-```powershell
-python -m ats test --id H1_event_reversal
-python -m ats test --id H2_tap_breakout
-```
-
-Do not pass `--unlock-oos` until a hypothesis is a survivor on train+validation.
-
-## Current hypotheses
-
-Defined in `config/hypotheses.yaml`:
-
-- **H1** — large candle inside a high-impact news window retraces more than equally large candles with no news (overreaction / inventory unwind).
-- **H2** — third tap of a level, after hold then fail, breaks more often than tap 1 or 2 (order absorption).
-
-Thresholds live in `config/settings.yaml` and `config/hypotheses.yaml`. Change numbers there, not by sprinkling magic constants into detectors.
-
-## Idea intake (not an edge finder)
-
-Sources feed an inbox. You still write the `why` and freeze a spec before `python -m ats test`. The lab will not auto-code papers into EAs or scrape broker logins.
-
-```powershell
-python -m ats ideas list
-python -m ats ideas arxiv
-python -m ats ideas blogs
-python -m ats ideas cot
-python -m ats ideas cross
-python -m ats ideas sentiment
 python -m ats test --id H9_cot_spec_fade
 ```
 
-| Command | What it is | What it is not |
-|---|---|---|
-| `ideas arxiv` | arXiv q-fin paper leads | A trade rule |
-| `ideas blogs` | Methodology reading list | Signals |
-| `ideas cot` | Official CFTC weekly files | A buy/sell |
-| `ideas cross` | Gold–DXY (and yields–JPY) correlation snapshot | A mean-reversion EA |
-| `ideas sentiment` | CSV you drop under `data/sentiment/` | An IG scrape |
+Do **not** pass `--unlock-oos` until train+val survivor + you choose to unlock.
 
-Inbox: `config/ideas.yaml`. Same discipline as H1/H2: precise definition, causal why, frozen params, costed train/val, OOS locked.
+## Retail path (locked)
 
-## Honest expectations
+Python lab → paper on this broker → several **$100–$200** accounts (execution) → **$1,000–$2,000** (~1% risk possible) → EA.  
+Exness min lot 0.01. No grid / martingale. One symbol until a survivor.
 
-Most hypotheses die in the quick-reject step. That is the system working. A candidate is not a live strategy. Paper trade comes after a survivor, then tiny size.
+## Goals
 
-There is no MQL5 EA in this repo yet on purpose. Automation of a rejected idea is how the last EA lost money.
+- Find a cost-adjusted edge on FX or gold with a clear payer.  
+- Aspiration ~5%/month at ~1% risk **when account size allows** — not a curve-fit target.  
+- Keep a permanent reject book so we never retest noise.
+
+## Docs map
+
+- Protocol rule: `.cursor/rules/research-protocol.mdc`  
+- Research index: `research/README.md`  
+- Ideas inbox: `config/ideas.yaml` (`python -m ats ideas …`)
+
+## GitHub
+
+Remote: `https://github.com/rajakhimanshu/algo-trading-system`  
+Update the ledger/journal/scoreboard after **every** test and commit in small slices (see `research/AFTER_EACH_TEST.md`).
