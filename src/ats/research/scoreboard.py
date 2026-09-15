@@ -25,10 +25,10 @@ def build_scoreboard_markdown() -> str:
     last_id = str(tests[-1]["id"]) if tests else "—"
 
     lines: list[str] = [
-        "# GrowEdge / Algo Trading System — Hypothesis Scoreboard",
+        "# Proofbook — Hypothesis Scoreboard",
         "",
         f"**As of:** {today}  ",
-        "**Lab:** Retail FX majors + XAUUSD research (Python). Not live trading. Not an EA.  ",
+        "**Lab:** Proofbook — individual FX majors + XAUUSD research (Python). Not live. Not an EA.  ",
         "**Rule:** Each `H` is a frozen causal hypothesis tested after spread+slippage on locked "
         "train/validation. OOS unlocked only for survivors. REJECT is closed — no retune.",
         "",
