@@ -1,6 +1,6 @@
 # Proofbook — Hypothesis Scoreboard
 
-**As of:** 2026-09-15  
+**As of:** 2026-09-16  
 **Lab:** Proofbook — individual FX majors + XAUUSD research (Python). Not live. Not an EA.  
 **Rule:** Each `H` is a frozen causal hypothesis tested after spread+slippage on locked train/validation. OOS unlocked only for survivors. REJECT is closed — no retune.
 
@@ -8,10 +8,10 @@
 
 | Decision | Count | Meaning |
 |---|---:|---|
-| **REJECT** | 186 | Failed train/val gates, negative R, or OOS fail. Closed. |
+| **REJECT** | 198 | Failed train/val gates, negative R, or OOS fail. Closed. |
 | **NEEDS_MORE_DATA** | 7 | Spec frozen; sample too thin. Do not loosen. |
 | **PAPER_CANDIDATE** | 2 | Lab label only — see status notes. |
-| **Total tested** | 195 | Through `H195_gold_h1_tsmom` |
+| **Total tested** | 207 | Through `H207_hk12_fade_gold` |
 
 ### Current status (honest)
 
@@ -224,6 +224,18 @@ An edge is who pays you, after spread+slippage, on a frozen spec, with a baselin
 | 193 | `H193_ovn_intraday_fade_eur` | **REJECT** | fx_h1/lit_abc | Fade EURUSD 21:00-08:00 London overnight at 08:00 vs follow. 1:1 ATR, 8 H1. | 43.4% vs 43.7% n=1191 p=0.55, R -0.13; val 48.1% vs 38.9% R -0.04 — Train not above baseline. Mean R negative. Do not retune hours. Do not flip. |
 | 194 | `H194_ovn_intraday_fade_gold` | **REJECT** | gold_m15/lit_abc | Same overnight/intraday fade on XAUUSD M15. | 44.7% vs 42.5% n=454 p=0.25, R -0.11; val lost to follow R -0.10 — Train p=0.25 not < 0.0167. Mean R negative. Do not retune. Do not flip. |
 | 195 | `H195_gold_h1_tsmom` | **REJECT** | gold_m15/lit_abc | Follow gold 5-day return at 16:00 London vs fade (H31 shape on XAUUSD H1 resample). | 48.8% vs 45.4% n=648 p=0.11, R -0.023; val 49.8% vs 44.7% R -0.005 — Train p=0.11 not < 0.0167. Mean R negative. Do not retune lookback. Do not add... |
+| 196 | `H196_fedwire18_fade_eur` | **REJECT** | fx_m15/fedwire18 | Fade EURUSD at 18:00 NY Fedwire/CHIPS window vs 15:00. 1:1 ATR, 8 bars. | 39.4% vs 43.3% n=383 p=0.87, R -0.23; val R -0.21 — Train not above baseline. Mean R negative. Do not move to 17:00. Do not flip. |
+| 197 | `H197_fedwire18_fade_gbp` | **REJECT** | fx_m15/fedwire18 | Same 18:00 NY fade on GBPUSD. | 38.9% vs 43.5% n=396, R -0.25; val R -0.29 — Train not above baseline. Mean R negative. Do not flip. |
+| 198 | `H198_fedwire18_fade_gold` | **REJECT** | gold_m15/fedwire18 | Same 18:00 NY fade on XAUUSD. | 41.3% vs 48.4% n=373, R -0.16; val R -0.05 — Train not above baseline. Mean R negative. Do not flip. |
+| 199 | `H199_sgx09_follow_aud` | **REJECT** | fx_m15/sgx09 | Follow AUDUSD at 09:00 Singapore cash open vs 07:00. 1:1 ATR, 8 bars. | p=0.030 not < 0.0167, R -0.29 n=513; val R -0.45 — Train p fails Bonferroni. Mean R negative. Do not move to 17:00. Do not flip to fade. |
+| 200 | `H200_sgx09_follow_jpy` | **REJECT** | fx_m15/sgx09 | Same 09:00 Singapore follow on USDJPY. | not above baseline, R -0.20 n=530; val R -0.12 — Train not above baseline. Mean R negative. Do not flip to fade. |
+| 201 | `H201_sgx09_follow_gold` | **REJECT** | gold_m15/sgx09 | Same 09:00 Singapore follow on XAUUSD. | not above baseline, R -0.19 n=560; val R -0.10 — Train not above baseline. Mean R negative. Do not flip to fade. |
+| 202 | `H202_cme14_fade_eur` | **REJECT** | fx_m15/cme14 | Fade EURUSD at 14:00 Chicago vs 11:00. 1:1 ATR, 8 bars. | not above baseline, R -0.15 n=460; val R -0.17 — Train not above baseline. Mean R negative. Do not move to 08:00. Do not flip. |
+| 203 | `H203_cme14_fade_gbp` | **REJECT** | fx_m15/cme14 | Same 14:00 Chicago fade on GBPUSD. | not above baseline, R -0.12 n=430; val R -0.08 — Train not above baseline. Mean R negative. Do not flip. |
+| 204 | `H204_cme14_fade_gold` | **REJECT** | gold_m15/cme14 | Same 14:00 Chicago fade on XAUUSD. | p=0.37 not < 0.0167, R -0.06 n=463; val R -0.12 — Train p fails Bonferroni. Mean R negative. Do not flip. |
+| 205 | `H205_hk12_fade_aud` | **REJECT** | fx_m15/hk12 | Fade AUDUSD at 12:00 Hong Kong lunch vs 10:00. 1:1 ATR, 8 bars. | p=0.098 not < 0.0167, R -0.20 n=447; val R -0.23 — Train p fails Bonferroni. Mean R negative. Do not move to 09:30. Do not flip. |
+| 206 | `H206_hk12_fade_jpy` | **REJECT** | fx_m15/hk12 | Same 12:00 Hong Kong lunch fade on USDJPY. | not above baseline, R -0.19 n=446; val R -0.06 — Train not above baseline. Mean R negative. Do not flip. |
+| 207 | `H207_hk12_fade_gold` | **REJECT** | gold_m15/hk12 | Same 12:00 Hong Kong lunch fade on XAUUSD. | above baseline but R -0.022 n=456; val not above baseline R -0.07 — Validation not above baseline. Mean R negative. Do not flip. |
 
 ## Source of truth
 
