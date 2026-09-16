@@ -2586,6 +2586,120 @@ hypotheses:
       stop_atr: 1.0
       target_atr: 1.0
 
+  # --- Family fedwire18 (H196-H198): late NY USD settlement inventory fade ---
+  - id: H196_fedwire18_fade_eur
+    enabled: false
+    name: Fade EURUSD at 18:00 NY Fedwire/CHIPS window vs 15:00
+    why: >
+      Late NY USD settlement (Fedwire/CHIPS style cuts near 18:00 ET) forces
+      dealers to flatten residual USD inventory after the equity day, so fading
+      the signed M15 run at 18:00 America/New_York should beat the same fade at
+      15:00 (post-cash but pre-settlement). Distinct from rejected H66 (15:00
+      fade), H139 (17:00 tom-next), and H151 (TARGET2 18:00 CET). EURUSD M15,
+      1:1 ATR, 8 bars. Frozen fx_m15. Family of 3. Do not move to 17:00. Do not flip.
+    params: {symbols: [EURUSD], timeframe: M15, tz: America/New_York, treat_hour: 18, treat_minute: 0, base_hour: 15, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H197_fedwire18_fade_gbp
+    enabled: false
+    name: Fade GBPUSD at 18:00 NY Fedwire/CHIPS window vs 15:00
+    why: >
+      Same 18:00 NY settlement inventory fade as H196 on GBPUSD. Frozen fx_m15.
+      Family fedwire18. Do not move to 17:00. Do not flip.
+    params: {symbols: [GBPUSD], timeframe: M15, tz: America/New_York, treat_hour: 18, treat_minute: 0, base_hour: 15, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H198_fedwire18_fade_gold
+    enabled: false
+    name: Fade gold at 18:00 NY Fedwire/CHIPS window vs 15:00
+    why: >
+      Same 18:00 NY settlement inventory fade as H196 on XAUUSD (USD metal book).
+      Frozen gold_m15. Family fedwire18. Do not move to 17:00. Do not flip.
+    params: {symbols: [XAUUSD], timeframe: M15, tz: America/New_York, treat_hour: 18, treat_minute: 0, base_hour: 15, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  # --- Family sgx09 (H199-H201): Singapore cash open follow ---
+  - id: H199_sgx09_follow_aud
+    enabled: false
+    name: Follow AUDUSD at 09:00 Singapore cash open vs 07:00
+    why: >
+      Singapore cash open concentrates Asia AUD hedges and regional risk-on
+      flow, so following the signed M15 run at 09:00 Asia/Singapore should beat
+      the same follow at 07:00 (pre-open). Distinct from rejected H187 (17:00
+      Singapore close fade) and H60 (ASX 10:00). AUDUSD M15, 1:1 ATR, 8 bars.
+      Frozen fx_m15. Family of 3. Do not move to 17:00. Do not flip to fade.
+    params: {symbols: [AUDUSD], timeframe: M15, tz: Asia/Singapore, treat_hour: 9, treat_minute: 0, base_hour: 7, base_minute: 0, mode: follow, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H200_sgx09_follow_jpy
+    enabled: false
+    name: Follow USDJPY at 09:00 Singapore cash open vs 07:00
+    why: >
+      Same 09:00 Singapore open follow as H199 on USDJPY. Frozen fx_m15.
+      Family sgx09. Do not flip to fade.
+    params: {symbols: [USDJPY], timeframe: M15, tz: Asia/Singapore, treat_hour: 9, treat_minute: 0, base_hour: 7, base_minute: 0, mode: follow, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H201_sgx09_follow_gold
+    enabled: false
+    name: Follow gold at 09:00 Singapore cash open vs 07:00
+    why: >
+      Same 09:00 Singapore open follow as H199 on XAUUSD. Frozen gold_m15.
+      Family sgx09. Do not flip to fade.
+    params: {symbols: [XAUUSD], timeframe: M15, tz: Asia/Singapore, treat_hour: 9, treat_minute: 0, base_hour: 7, base_minute: 0, mode: follow, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  # --- Family cme14 (H202-H204): Chicago afternoon rates/liquidity fade ---
+  - id: H202_cme14_fade_eur
+    enabled: false
+    name: Fade EURUSD at 14:00 Chicago vs 11:00
+    why: >
+      US rates and FX futures afternoon liquidity in Chicago concentrates
+      inventory after the US morning data block, so fading the signed M15 run
+      at 14:00 America/Chicago should beat the same fade at 11:00. Distinct
+      from rejected H69 (CME 08:00 follow), H115 (EIA 10:30), and H133 (08:30
+      print). EURUSD M15, 1:1 ATR, 8 bars. Frozen fx_m15. Family of 3. Do not
+      move to 08:00. Do not flip to follow.
+    params: {symbols: [EURUSD], timeframe: M15, tz: America/Chicago, treat_hour: 14, treat_minute: 0, base_hour: 11, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H203_cme14_fade_gbp
+    enabled: false
+    name: Fade GBPUSD at 14:00 Chicago vs 11:00
+    why: >
+      Same 14:00 Chicago afternoon fade as H202 on GBPUSD. Frozen fx_m15.
+      Family cme14. Do not flip to follow.
+    params: {symbols: [GBPUSD], timeframe: M15, tz: America/Chicago, treat_hour: 14, treat_minute: 0, base_hour: 11, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H204_cme14_fade_gold
+    enabled: false
+    name: Fade gold at 14:00 Chicago vs 11:00
+    why: >
+      Same 14:00 Chicago afternoon fade as H202 on XAUUSD. Frozen gold_m15.
+      Family cme14. Do not flip to follow.
+    params: {symbols: [XAUUSD], timeframe: M15, tz: America/Chicago, treat_hour: 14, treat_minute: 0, base_hour: 11, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  # --- Family hk12 (H205-H207): Hong Kong lunch inventory fade ---
+  - id: H205_hk12_fade_aud
+    enabled: false
+    name: Fade AUDUSD at 12:00 Hong Kong lunch vs 10:00
+    why: >
+      Hong Kong lunch thins the Asia book and dealers fade morning inventory,
+      so fading the signed M15 run at 12:00 Asia/Hong_Kong should beat the same
+      fade at 10:00 (still two-way). Distinct from rejected H76 (HKEX 09:30
+      follow), H39 (Tokyo lunch), and H166 (Zurich 12:00). AUDUSD M15, 1:1 ATR,
+      8 bars. Frozen fx_m15. Family of 3. Do not move to 09:30. Do not flip.
+    params: {symbols: [AUDUSD], timeframe: M15, tz: Asia/Hong_Kong, treat_hour: 12, treat_minute: 0, base_hour: 10, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H206_hk12_fade_jpy
+    enabled: false
+    name: Fade USDJPY at 12:00 Hong Kong lunch vs 10:00
+    why: >
+      Same 12:00 Hong Kong lunch fade as H205 on USDJPY. Frozen fx_m15.
+      Family hk12. Do not flip.
+    params: {symbols: [USDJPY], timeframe: M15, tz: Asia/Hong_Kong, treat_hour: 12, treat_minute: 0, base_hour: 10, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H207_hk12_fade_gold
+    enabled: false
+    name: Fade gold at 12:00 Hong Kong lunch vs 10:00
+    why: >
+      Same 12:00 Hong Kong lunch fade as H205 on XAUUSD. Frozen gold_m15.
+      Family hk12. Do not flip.
+    params: {symbols: [XAUUSD], timeframe: M15, tz: Asia/Hong_Kong, treat_hour: 12, treat_minute: 0, base_hour: 10, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
 
 
 
