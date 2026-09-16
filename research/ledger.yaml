@@ -92,6 +92,10 @@ do_not_reopen:
   - H80 NFP/CPI 8:00 fade (n=62; do not add PPI/claims; do not move val_end)
   - H81 FOMC 14:00 fade (n=20; do not add Powell/minutes)
   - H82 month-start USD bid (do not retune to quarter-start)
+  - H196–H198 Fedwire 18:00 NY fade (do not move to 17:00; do not flip)
+  - H199–H201 Singapore 09:00 open follow (do not move to 17:00; do not flip to fade)
+  - H202–H204 Chicago 14:00 fade (do not move to 08:00; do not flip)
+  - H205–H207 Hong Kong 12:00 lunch fade (do not move to 09:30; do not flip)
   - H83 EURO FX COT fade (do not widen 80/20)
   - H84 JPY COT fade (do not rerun n_tests=1; do not widen 80/20)
   - H85 GBP COT fade (n=92; do not widen 80/20)
@@ -2050,6 +2054,128 @@ tests:
     train: 48.8% vs 45.4% n=648 p=0.11, R -0.023; val 49.8% vs 44.7% R -0.005
     why_closed: Train p=0.11 not < 0.0167. Mean R negative. Do not retune lookback. Do not add EMA.
 
+  - id: H196_fedwire18_fade_eur
+    date: 2026-09-16
+    book: fx_m15
+    family: fedwire18
+    decision: REJECT
+    mechanism: Fade EURUSD at 18:00 NY Fedwire/CHIPS window vs 15:00. 1:1 ATR, 8 bars.
+    baseline: Same fade at 15:00 NY.
+    train: 39.4% vs 43.3% n=383 p=0.87, R -0.23; val R -0.21
+    why_closed: Train not above baseline. Mean R negative. Do not move to 17:00. Do not flip.
+
+  - id: H197_fedwire18_fade_gbp
+    date: 2026-09-16
+    book: fx_m15
+    family: fedwire18
+    decision: REJECT
+    mechanism: Same 18:00 NY fade on GBPUSD.
+    baseline: Same fade at 15:00 NY.
+    train: 38.9% vs 43.5% n=396, R -0.25; val R -0.29
+    why_closed: Train not above baseline. Mean R negative. Do not flip.
+
+  - id: H198_fedwire18_fade_gold
+    date: 2026-09-16
+    book: gold_m15
+    family: fedwire18
+    decision: REJECT
+    mechanism: Same 18:00 NY fade on XAUUSD.
+    baseline: Same fade at 15:00 NY.
+    train: 41.3% vs 48.4% n=373, R -0.16; val R -0.05
+    why_closed: Train not above baseline. Mean R negative. Do not flip.
+
+  - id: H199_sgx09_follow_aud
+    date: 2026-09-16
+    book: fx_m15
+    family: sgx09
+    decision: REJECT
+    mechanism: Follow AUDUSD at 09:00 Singapore cash open vs 07:00. 1:1 ATR, 8 bars.
+    baseline: Same follow at 07:00 Singapore.
+    train: p=0.030 not < 0.0167, R -0.29 n=513; val R -0.45
+    why_closed: Train p fails Bonferroni. Mean R negative. Do not move to 17:00. Do not flip to fade.
+
+  - id: H200_sgx09_follow_jpy
+    date: 2026-09-16
+    book: fx_m15
+    family: sgx09
+    decision: REJECT
+    mechanism: Same 09:00 Singapore follow on USDJPY.
+    baseline: Same follow at 07:00 Singapore.
+    train: not above baseline, R -0.20 n=530; val R -0.12
+    why_closed: Train not above baseline. Mean R negative. Do not flip to fade.
+
+  - id: H201_sgx09_follow_gold
+    date: 2026-09-16
+    book: gold_m15
+    family: sgx09
+    decision: REJECT
+    mechanism: Same 09:00 Singapore follow on XAUUSD.
+    baseline: Same follow at 07:00 Singapore.
+    train: not above baseline, R -0.19 n=560; val R -0.10
+    why_closed: Train not above baseline. Mean R negative. Do not flip to fade.
+
+  - id: H202_cme14_fade_eur
+    date: 2026-09-16
+    book: fx_m15
+    family: cme14
+    decision: REJECT
+    mechanism: Fade EURUSD at 14:00 Chicago vs 11:00. 1:1 ATR, 8 bars.
+    baseline: Same fade at 11:00 Chicago.
+    train: not above baseline, R -0.15 n=460; val R -0.17
+    why_closed: Train not above baseline. Mean R negative. Do not move to 08:00. Do not flip.
+
+  - id: H203_cme14_fade_gbp
+    date: 2026-09-16
+    book: fx_m15
+    family: cme14
+    decision: REJECT
+    mechanism: Same 14:00 Chicago fade on GBPUSD.
+    baseline: Same fade at 11:00 Chicago.
+    train: not above baseline, R -0.12 n=430; val R -0.08
+    why_closed: Train not above baseline. Mean R negative. Do not flip.
+
+  - id: H204_cme14_fade_gold
+    date: 2026-09-16
+    book: gold_m15
+    family: cme14
+    decision: REJECT
+    mechanism: Same 14:00 Chicago fade on XAUUSD.
+    baseline: Same fade at 11:00 Chicago.
+    train: p=0.37 not < 0.0167, R -0.06 n=463; val R -0.12
+    why_closed: Train p fails Bonferroni. Mean R negative. Do not flip.
+
+  - id: H205_hk12_fade_aud
+    date: 2026-09-16
+    book: fx_m15
+    family: hk12
+    decision: REJECT
+    mechanism: Fade AUDUSD at 12:00 Hong Kong lunch vs 10:00. 1:1 ATR, 8 bars.
+    baseline: Same fade at 10:00 Hong Kong.
+    train: p=0.098 not < 0.0167, R -0.20 n=447; val R -0.23
+    why_closed: Train p fails Bonferroni. Mean R negative. Do not move to 09:30. Do not flip.
+
+  - id: H206_hk12_fade_jpy
+    date: 2026-09-16
+    book: fx_m15
+    family: hk12
+    decision: REJECT
+    mechanism: Same 12:00 Hong Kong lunch fade on USDJPY.
+    baseline: Same fade at 10:00 Hong Kong.
+    train: not above baseline, R -0.19 n=446; val R -0.06
+    why_closed: Train not above baseline. Mean R negative. Do not flip.
+
+  - id: H207_hk12_fade_gold
+    date: 2026-09-16
+    book: gold_m15
+    family: hk12
+    decision: REJECT
+    mechanism: Same 12:00 Hong Kong lunch fade on XAUUSD.
+    baseline: Same fade at 10:00 Hong Kong.
+    train: above baseline but R -0.022 n=456; val not above baseline R -0.07
+    why_closed: Validation not above baseline. Mean R negative. Do not flip.
+
+
+
 
 
 
@@ -2110,4 +2236,5 @@ open:
   - H190–H191 Xetra 17:30 EUR/GBP fade REJECT. R negative. Do not move to 09:00/16:30/18:00. Do not flip.
   - H192_xetra1730_fade_gold REJECT after OOS (2026-09-08). Do not last-level again. Do not retune. Do not flip. Do not paper. Search loop remains STOP until a new causal why.
   - H193–H195 lit_abc family REJECT (2026-09-11). Overnight/intraday fade EUR+gold and gold 5-day TSMOM all fail after costs. Do not retune hours/lookback. Do not flip. Do not add EMA.
+  - H196–H207 clock batch REJECT (2026-09-16). fedwire18, sgx09, cme14, hk12 — all mean R negative after costs. Do not retune hours. Do not flip. Do not reopen as equity/H5 list.
   - No MT5 EA. No paper book. No survivor yet.
