@@ -66,6 +66,9 @@ def test_split_book_for_h8_fx_h9_gold():
     assert split_book_for("H193_ovn_intraday_fade_eur") == "fx_h1"
     assert split_book_for("H194_ovn_intraday_fade_gold") == "gold_m15"
     assert split_book_for("H195_gold_h1_tsmom") == "gold_m15"
+    assert split_book_for("H196_fedwire18_fade_eur") == "fx_m15"
+    assert split_book_for("H198_fedwire18_fade_gold") == "gold_m15"
+    assert split_book_for("H207_hk12_fade_gold") == "gold_m15"
 
 
 def test_hyp_key_does_not_confuse_h17_with_h1():
