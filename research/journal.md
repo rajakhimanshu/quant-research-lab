@@ -241,3 +241,16 @@
 | 2026-09-11 | H194 | Same overnight/intraday fade on gold M15. Family lit_abc. | REJECT | Train 44.7% vs 42.5% p=0.25, R −0.11; val lost to follow. Do not flip. OOS locked. |
 | 2026-09-11 | H195 | Follow gold 5-day return at 16:00 London vs fade (H31 shape, XAUUSD H1 resample). Family lit_abc. | REJECT | Train 48.8% vs 45.4% p=0.11, R −0.023. Do not retune lookback. Do not add EMA. OOS locked. |
 | 2026-09-11 | lit_abc | H193–H195 closed. Academic overnight/intraday MR + gold TSMOM do not clear costs. | WAIT | D still open thin only: H9 COT, H37 weekend FX gap (and H68/H77/H80/H81/H85). |
+| 2026-09-16 | H196 | Fade EURUSD at 18:00 NY Fedwire/CHIPS vs 15:00. Family fedwire18 α=0.0167. | REJECT | Train 39.4% vs 43.3% R −0.23. Do not move to 17:00. Do not flip. OOS locked. |
+| 2026-09-16 | H197 | Same 18:00 NY fade on GBPUSD. | REJECT | Train below baseline, R −0.25. Do not flip. OOS locked. |
+| 2026-09-16 | H198 | Same 18:00 NY fade on gold. | REJECT | Train below baseline, R −0.16. Do not flip. OOS locked. |
+| 2026-09-16 | H199 | Follow AUDUSD at 09:00 Singapore open vs 07:00. Family sgx09. | REJECT | Train p=0.030 not < 0.0167, R −0.29. Do not flip to fade. OOS locked. |
+| 2026-09-16 | H200 | Same Singapore open follow on USDJPY. | REJECT | Train below baseline, R −0.20. Do not flip. OOS locked. |
+| 2026-09-16 | H201 | Same Singapore open follow on gold. | REJECT | Train below baseline, R −0.19. Do not flip. OOS locked. |
+| 2026-09-16 | H202 | Fade EURUSD at 14:00 Chicago vs 11:00. Family cme14. | REJECT | Train below baseline, R −0.15. Do not flip. OOS locked. |
+| 2026-09-16 | H203 | Same Chicago 14:00 fade on GBPUSD. | REJECT | Train below baseline, R −0.12. Do not flip. OOS locked. |
+| 2026-09-16 | H204 | Same Chicago 14:00 fade on gold. | REJECT | Train p=0.37, R −0.06. Do not flip. OOS locked. |
+| 2026-09-16 | H205 | Fade AUDUSD at 12:00 Hong Kong lunch vs 10:00. Family hk12. | REJECT | Train p=0.098, R −0.20. Do not flip. OOS locked. |
+| 2026-09-16 | H206 | Same HK lunch fade on USDJPY. | REJECT | Train below baseline, R −0.19. Do not flip. OOS locked. |
+| 2026-09-16 | H207 | Same HK lunch fade on gold. | REJECT | Val not above baseline, R −0.07. Do not flip. OOS locked. |
+| 2026-09-16 | batch | H196–H207 closed (12 tests, 4 families). All REJECT after costs; all mean R−. | WAIT | Still no FX/gold survivor. Thin open only: H9/H37/H68/H77/H80/H81/H85. |
