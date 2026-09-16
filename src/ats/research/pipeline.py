@@ -306,6 +306,8 @@ def _events_for(hyp: dict, frames: dict[str, pd.DataFrame], settings: dict) -> p
             # Gold has M15 history only in raw/; resample to H1 for Moskowitz-style TSMOM.
             h1 = m15_to_h1(df)
             ev = h1_tsmom_events(h1, symbol, merged_params, spread, slip)
+        elif key in {f"H{i}" for i in range(196, 208)}:
+            ev = clock_run_events(df, symbol, merged_params, spread, slip)
         else:
             raise ValueError(f"Unknown hypothesis {hid}")
         if ev is not None and not ev.empty:

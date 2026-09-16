@@ -224,6 +224,22 @@ def split_book_for(hypothesis_id: str) -> str:
         return "fx_h1"
     if num in {194, 195}:
         return "gold_m15"
+    if num in {196, 197}:
+        return "fx_m15"
+    if num == 198:
+        return "gold_m15"
+    if num in {199, 200}:
+        return "fx_m15"
+    if num == 201:
+        return "gold_m15"
+    if num in {202, 203}:
+        return "fx_m15"
+    if num == 204:
+        return "gold_m15"
+    if num in {205, 206}:
+        return "fx_m15"
+    if num == 207:
+        return "gold_m15"
     return "fx_h1"
 
 
