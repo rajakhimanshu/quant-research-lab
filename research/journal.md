@@ -254,3 +254,10 @@
 | 2026-09-16 | H206 | Same HK lunch fade on USDJPY. | REJECT | Train below baseline, R −0.19. Do not flip. OOS locked. |
 | 2026-09-16 | H207 | Same HK lunch fade on gold. | REJECT | Val not above baseline, R −0.07. Do not flip. OOS locked. |
 | 2026-09-16 | batch | H196–H207 closed (12 tests, 4 families). All REJECT after costs; all mean R−. | WAIT | Still no FX/gold survivor. Thin open only: H9/H37/H68/H77/H80/H81/H85. |
+| 2026-09-17 | H208 | Follow USDJPY at 08:00 Tokyo pre-cash vs 06:00. Family tokyo08 α=0.0167. | REJECT | Train p=0.28, R −0.18. Do not move to 09:00. Do not flip. OOS locked. |
+| 2026-09-17 | H209 | Same Tokyo 08:00 follow on EURUSD. | REJECT | Rate CANDIDATE (38% vs 22%) but train/val R −0.24/−0.22. Hit-rate mirage. Do not last-level. Do not unlock OOS. Do not flip. |
+| 2026-09-17 | H210 | Same Tokyo 08:00 follow on gold. | REJECT | Train p=0.41, R −0.16. Do not flip. OOS locked. |
+| 2026-09-17 | H211 | Fade EURUSD at 19:00 NY Asia handover vs 16:00. Family ny19. | REJECT | Train below baseline, R −0.35. Do not move to 18:00/21:00. Do not flip. OOS locked. |
+| 2026-09-17 | H212 | Same 19:00 NY fade on GBPUSD. | REJECT | Train below baseline, R −0.30. Do not flip. OOS locked. |
+| 2026-09-17 | H213 | Same 19:00 NY fade on gold. | REJECT | Train below baseline, R −0.32. Do not flip. OOS locked. |
+| 2026-09-17 | batch | H208–H213 closed (6 tests). All REJECT; H209 mirage only. | WAIT | No FX/gold survivor. |
