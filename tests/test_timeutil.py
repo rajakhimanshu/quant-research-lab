@@ -69,6 +69,8 @@ def test_split_book_for_h8_fx_h9_gold():
     assert split_book_for("H196_fedwire18_fade_eur") == "fx_m15"
     assert split_book_for("H198_fedwire18_fade_gold") == "gold_m15"
     assert split_book_for("H207_hk12_fade_gold") == "gold_m15"
+    assert split_book_for("H208_tokyo08_follow_jpy") == "fx_m15"
+    assert split_book_for("H213_ny19_fade_gold") == "gold_m15"
 
 
 def test_hyp_key_does_not_confuse_h17_with_h1():

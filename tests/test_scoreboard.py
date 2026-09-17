@@ -6,7 +6,7 @@ from ats.research.scoreboard import build_scoreboard_markdown, write_scoreboard
 def test_scoreboard_contains_latest_ids():
     text = build_scoreboard_markdown()
     assert "H1_event_reversal" in text
-    assert "H207_hk12_fade_gold" in text
+    assert "H213_ny19_fade_gold" in text
     assert "REJECT" in text
 
 

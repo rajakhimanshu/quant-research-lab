@@ -188,3 +188,5 @@ def test_hypotheses_file_lists_h1_and_h2():
     assert "H195_gold_h1_tsmom" in ids
     assert "H196_fedwire18_fade_eur" in ids
     assert "H207_hk12_fade_gold" in ids
+    assert "H208_tokyo08_follow_jpy" in ids
+    assert "H213_ny19_fade_gold" in ids
