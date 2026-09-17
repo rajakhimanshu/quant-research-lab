@@ -2758,6 +2758,32 @@ hypotheses:
       Family ny19. Do not flip to follow.
     params: {symbols: [XAUUSD], timeframe: M15, tz: America/New_York, treat_hour: 19, treat_minute: 0, base_hour: 16, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
 
+  - id: H214_gulf_dual_liq_fade
+    enabled: false
+    name: Fade gold when 09:00 Gulf takes both 05:00 and 08:00 hour extremes
+    why: >
+      Asia/Dubai (UTC+4) 05:00 and 08:00 hours leave stop clusters above the
+      joint high and below the joint low. Gulf desks into 09:00 often raid that
+      dual-hour liquidity then reverse, so fading the first M5 take of
+      max(H05,H08) / min(L05,L08) during 09:00 should beat the same dual-level
+      fade at 11:00 (open raid is done). High taken -> short; low taken -> long.
+      Distinct from rejected H3/H6 (NY overnight reclaim), H148 (05:00 London
+      signed fade), and H184 (Dubai 14:00 signed fade). XAUUSD M5. Fill next
+      open, SL beyond sweep extreme, RR 1:2, 36-bar horizon. Frozen gold_m5.
+      Do not drop the 05:00 filter. Do not move to 10:00. Do not flip to follow.
+      Do not retune RR.
+    params:
+      symbols: [XAUUSD]
+      timeframe: M5
+      ref_hour_a: 5
+      ref_hour_b: 8
+      treat_hour: 9
+      base_hour: 11
+      rr: 2.0
+      sweep_atr: 0.05
+      horizon_bars: 36
+      skip_weekend: true
+
 
 
 

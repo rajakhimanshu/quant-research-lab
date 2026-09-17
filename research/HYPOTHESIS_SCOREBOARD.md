@@ -8,10 +8,10 @@
 
 | Decision | Count | Meaning |
 |---|---:|---|
-| **REJECT** | 206 | Failed train/val gates, negative R, or OOS fail. Closed. |
+| **REJECT** | 207 | Failed train/val gates, negative R, or OOS fail. Closed. |
 | **NEEDS_MORE_DATA** | 6 | Spec frozen; sample too thin. Do not loosen. |
 | **PAPER_CANDIDATE** | 1 | Lab label only — see status notes. |
-| **Total tested** | 213 | Through `H213_ny19_fade_gold` |
+| **Total tested** | 214 | Through `H214_gulf_dual_liq_fade` |
 
 ### Current status (honest)
 
@@ -19,6 +19,7 @@
 - **H5** PAPER_CANDIDATE on equities only — archived / out of FX+gold universe.
 - **H86** weekend G10 gap: REJECT after last-level FAIL on Sunday fill spread.
 - **H192** Xetra 17:30 gold: OOS REJECT after lab clear.
+- **H214** Gulf 05+08→09 dual-hour liq fade: REJECT (train below 11:00 baseline, R−).
 - Still thin (NEEDS_MORE_DATA): H37, H68, H77, H80, H81, H85.
 
 ## Protocol
@@ -242,6 +243,7 @@ An edge is who pays you, after spread+slippage, on a frozen spec, with a baselin
 | 211 | `H211_ny19_fade_eur` | **REJECT** | fx_m15/ny19 | Fade EURUSD at 19:00 NY Asia handover vs 16:00. 1:1 ATR, 8 bars. | not above baseline, R -0.35 n=401; val R -0.24 — Train not above baseline. Mean R negative. Do not move to 18:00/21:00. Do not flip. |
 | 212 | `H212_ny19_fade_gbp` | **REJECT** | fx_m15/ny19 | Same 19:00 NY fade on GBPUSD. | not above baseline, R -0.30 n=379; val R -0.26 — Train not above baseline. Mean R negative. Do not flip. |
 | 213 | `H213_ny19_fade_gold` | **REJECT** | gold_m15/ny19 | Same 19:00 NY fade on XAUUSD. | not above baseline, R -0.32 n=370; val R +0.01 — Train not above baseline. Mean R negative on train. Do not flip. |
+| 214 | `H214_gulf_dual_liq_fade` | **REJECT** | gold_m5 | Fade first XAUUSD M5 take of max(H05,H08)/min(L05,L08) Asia/Dubai during 09:00 vs same dual-level fade at 1... | 15.8% vs 25.9% baseline n=146, R -0.53; val 30.6% vs 29.8% R -0.10 — Train success not above baseline. Mean R negative. Do not drop the 05:00 filte... |
 
 ## Source of truth
 

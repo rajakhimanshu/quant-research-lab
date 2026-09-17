@@ -15,12 +15,13 @@ You bring a causal **why**. Proofbook freezes it as `H###`, runs it after spread
 
 ## Status (honest)
 
-- **213** frozen hypotheses (**H1–H213**)
-- **206 REJECT** · **6 NEEDS_MORE_DATA** · **1 PAPER label (H5 equity archived only)**
+- **214** frozen hypotheses (**H1–H214**)
+- **207 REJECT** · **6 NEEDS_MORE_DATA** · **1 PAPER label (H5 equity archived only)**
 - **No FX/gold survivor** → **no MT5 EA**
 - H5 equity RSI is **archived** (out of universe)
 - H86 weekend gap: **REJECT** after last-level FAIL (Sunday fill spread)
 - H192 Xetra gold fade: **OOS REJECT**
+- H214 Gulf 05+08→09 liq fade: **REJECT** (below 11:00 baseline, R−)
 - Still thin: H37, H68, H77, H80, H81, H85
 
 Full table: [`research/HYPOTHESIS_SCOREBOARD.md`](research/HYPOTHESIS_SCOREBOARD.md)

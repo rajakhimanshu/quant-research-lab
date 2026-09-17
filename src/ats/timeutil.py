@@ -248,6 +248,8 @@ def split_book_for(hypothesis_id: str) -> str:
         return "fx_m15"
     if num == 213:
         return "gold_m15"
+    if num == 214:
+        return "gold_m5"
     return "fx_h1"
 
 

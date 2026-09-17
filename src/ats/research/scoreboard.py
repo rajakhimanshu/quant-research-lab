@@ -47,6 +47,7 @@ def build_scoreboard_markdown() -> str:
         "- **H5** PAPER_CANDIDATE on equities only — archived / out of FX+gold universe.",
         "- **H86** weekend G10 gap: REJECT after last-level FAIL on Sunday fill spread.",
         "- **H192** Xetra 17:30 gold: OOS REJECT after lab clear.",
+        "- **H214** Gulf 05+08→09 dual-hour liq fade: REJECT (train below 11:00 baseline, R−).",
         "- Still thin (NEEDS_MORE_DATA): H37, H68, H77, H80, H81, H85.",
         "",
         "## Protocol",

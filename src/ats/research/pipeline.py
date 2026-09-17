@@ -78,6 +78,7 @@ from ats.hypotheses.m15_micro import (
     volume_spike_cont_events,
     vwap_extreme_fade_events,
 )
+from ats.hypotheses.gulf_dual_liq import gulf_dual_liq_fade_events
 from ats.hypotheses.ny_open_sweep import ny_open_sweep_events, ny_sweep_follow_events
 from ats.hypotheses.session_orb import session_orb_events
 from ats.hypotheses.tap_breakout import tap_events
@@ -308,6 +309,8 @@ def _events_for(hyp: dict, frames: dict[str, pd.DataFrame], settings: dict) -> p
             ev = h1_tsmom_events(h1, symbol, merged_params, spread, slip)
         elif key in {f"H{i}" for i in range(196, 214)}:
             ev = clock_run_events(df, symbol, merged_params, spread, slip)
+        elif key == "H214":
+            ev = gulf_dual_liq_fade_events(df, symbol, merged_params, spread, slip)
         else:
             raise ValueError(f"Unknown hypothesis {hid}")
         if ev is not None and not ev.empty:

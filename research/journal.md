@@ -262,3 +262,4 @@
 | 2026-09-17 | H213 | Same 19:00 NY fade on gold. | REJECT | Train below baseline, R −0.32. Do not flip. OOS locked. |
 | 2026-09-17 | batch | H208–H213 closed (6 tests). All REJECT; H209 mirage only. | WAIT | No FX/gold survivor. |
 | 2026-09-17 | open | Re-ran all non-REJECT FX/gold opens on current data (no knob loosen). | UPDATE | H9 → REJECT (longer COT; train not above baseline). H86 → REJECT (last-level FAIL closed). Still NMD: H37, H68, H77, H80, H81, H85. H5 archived only. |
+| 2026-09-17 | H214 | Fade gold M5 when 09:00 Dubai takes both 05:00+08:00 hour extremes vs 11:00. SL beyond sweep, RR 1:2, 36 bars. Frozen gold_m5. | REJECT | Train 15.8% vs 25.9% baseline, R −0.53 n=146. Val R −0.10. Do not drop 05:00. Do not move to 10:00. Do not flip. Do not retune RR. OOS locked. |

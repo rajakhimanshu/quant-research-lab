@@ -99,6 +99,7 @@ do_not_reopen:
   - H205–H207 Hong Kong 12:00 lunch fade (do not move to 09:30; do not flip)
   - H208–H210 Tokyo 08:00 pre-cash follow (do not move to 09:00; do not flip; H209 hit-rate mirage)
   - H211–H213 NY 19:00 Asia-handover fade (do not move to 18:00/21:00; do not flip)
+  - H214 Gulf 05+08 dual-hour liq fade at 09:00 Dubai (do not drop 05:00; do not move to 10:00; do not flip; do not retune RR)
   - H83 EURO FX COT fade (do not widen 80/20)
   - H84 JPY COT fade (do not rerun n_tests=1; do not widen 80/20)
   - H85 GBP COT fade (n=92; do not widen 80/20)
@@ -2251,6 +2252,19 @@ tests:
     train: not above baseline, R -0.32 n=370; val R +0.01
     why_closed: Train not above baseline. Mean R negative on train. Do not flip.
 
+  - id: H214_gulf_dual_liq_fade
+    date: 2026-09-17
+    book: gold_m5
+    decision: REJECT
+    mechanism: >
+      Fade first XAUUSD M5 take of max(H05,H08)/min(L05,L08) Asia/Dubai during
+      09:00 vs same dual-level fade at 11:00. SL beyond sweep, RR 1:2, 36 bars.
+    baseline: Same dual-level fade at 11:00 Dubai.
+    train: 15.8% vs 25.9% baseline n=146, R -0.53; val 30.6% vs 29.8% R -0.10
+    why_closed: >
+      Train success not above baseline. Mean R negative. Do not drop the 05:00
+      filter. Do not move to 10:00. Do not flip to follow. Do not retune RR.
+
 
 
 
@@ -2320,4 +2334,5 @@ open:
   - H193–H195 lit_abc family REJECT (2026-09-11). Overnight/intraday fade EUR+gold and gold 5-day TSMOM all fail after costs. Do not retune hours/lookback. Do not flip. Do not add EMA.
   - H196–H207 clock batch REJECT (2026-09-16). fedwire18, sgx09, cme14, hk12 — all mean R negative after costs. Do not retune hours. Do not flip. Do not reopen as equity/H5 list.
   - H208–H213 tokyo08 + ny19 REJECT (2026-09-17). H209 hit-rate CANDIDATE but R− (mirage). Do not last-level. Do not unlock OOS. Do not flip.
+  - H214_gulf_dual_liq_fade REJECT (2026-09-17). Train below 11:00 baseline; R−. Do not drop 05:00. Do not move to 10:00. Do not flip. Do not retune RR.
   - No MT5 EA. No paper book. No survivor yet.
