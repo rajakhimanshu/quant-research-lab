@@ -2700,6 +2700,64 @@ hypotheses:
       Family hk12. Do not flip.
     params: {symbols: [XAUUSD], timeframe: M15, tz: Asia/Hong_Kong, treat_hour: 12, treat_minute: 0, base_hour: 10, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
 
+  # --- Family tokyo08 (H208-H210): pre-Tokyo cash open follow ---
+  - id: H208_tokyo08_follow_jpy
+    enabled: false
+    name: Follow USDJPY at 08:00 Tokyo pre-cash vs 06:00
+    why: >
+      Into the Tokyo cash morning, local accounts position before the 09:00
+      equity open, so following the signed M15 run at 08:00 Asia/Tokyo should
+      beat the same follow at 06:00 (still Asia quiet). Distinct from rejected
+      H65 (TSE 09:00), H53 (9:55 fix), and H121 (09:00-09:30 ORB). USDJPY M15,
+      1:1 ATR, 8 bars. Frozen fx_m15. Family of 3. Do not move to 09:00. Do not
+      flip to fade.
+    params: {symbols: [USDJPY], timeframe: M15, tz: Asia/Tokyo, treat_hour: 8, treat_minute: 0, base_hour: 6, base_minute: 0, mode: follow, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H209_tokyo08_follow_eur
+    enabled: false
+    name: Follow EURUSD at 08:00 Tokyo pre-cash vs 06:00
+    why: >
+      Same 08:00 Tokyo pre-cash follow as H208 on EURUSD (EURJPY cross hedges
+      print in EURUSD). Frozen fx_m15. Family tokyo08. Do not flip to fade.
+    params: {symbols: [EURUSD], timeframe: M15, tz: Asia/Tokyo, treat_hour: 8, treat_minute: 0, base_hour: 6, base_minute: 0, mode: follow, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H210_tokyo08_follow_gold
+    enabled: false
+    name: Follow gold at 08:00 Tokyo pre-cash vs 06:00
+    why: >
+      Same 08:00 Tokyo pre-cash follow as H208 on XAUUSD. Frozen gold_m15.
+      Family tokyo08. Do not flip to fade.
+    params: {symbols: [XAUUSD], timeframe: M15, tz: Asia/Tokyo, treat_hour: 8, treat_minute: 0, base_hour: 6, base_minute: 0, mode: follow, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  # --- Family ny19 (H211-H213): late NY to Asia handover fade ---
+  - id: H211_ny19_fade_eur
+    enabled: false
+    name: Fade EURUSD at 19:00 NY Asia handover vs 16:00
+    why: >
+      After the US afternoon, residual NY inventory is handed to Asia; dealers
+      fade that one-way book at 19:00 America/New_York more than at 16:00 (still
+      US cash/futures two-way). Distinct from rejected H40 (21:00 fade of NY
+      day), H79 (21:00 London overnight short), and H196 (18:00 Fedwire fade).
+      EURUSD M15, 1:1 ATR, 8 bars. Frozen fx_m15. Family of 3. Do not move to
+      18:00 or 21:00. Do not flip to follow.
+    params: {symbols: [EURUSD], timeframe: M15, tz: America/New_York, treat_hour: 19, treat_minute: 0, base_hour: 16, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H212_ny19_fade_gbp
+    enabled: false
+    name: Fade GBPUSD at 19:00 NY Asia handover vs 16:00
+    why: >
+      Same 19:00 NY Asia-handover fade as H211 on GBPUSD. Frozen fx_m15.
+      Family ny19. Do not flip to follow.
+    params: {symbols: [GBPUSD], timeframe: M15, tz: America/New_York, treat_hour: 19, treat_minute: 0, base_hour: 16, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
+  - id: H213_ny19_fade_gold
+    enabled: false
+    name: Fade gold at 19:00 NY Asia handover vs 16:00
+    why: >
+      Same 19:00 NY Asia-handover fade as H211 on XAUUSD. Frozen gold_m15.
+      Family ny19. Do not flip to follow.
+    params: {symbols: [XAUUSD], timeframe: M15, tz: America/New_York, treat_hour: 19, treat_minute: 0, base_hour: 16, base_minute: 0, mode: fade, skip_weekend: true, min_prior_atr: 0.25, horizon_bars: 8, stop_atr: 1.0, target_atr: 1.0}
+
 
 
 
