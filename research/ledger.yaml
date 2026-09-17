@@ -96,6 +96,8 @@ do_not_reopen:
   - H199–H201 Singapore 09:00 open follow (do not move to 17:00; do not flip to fade)
   - H202–H204 Chicago 14:00 fade (do not move to 08:00; do not flip)
   - H205–H207 Hong Kong 12:00 lunch fade (do not move to 09:30; do not flip)
+  - H208–H210 Tokyo 08:00 pre-cash follow (do not move to 09:00; do not flip; H209 hit-rate mirage)
+  - H211–H213 NY 19:00 Asia-handover fade (do not move to 18:00/21:00; do not flip)
   - H83 EURO FX COT fade (do not widen 80/20)
   - H84 JPY COT fade (do not rerun n_tests=1; do not widen 80/20)
   - H85 GBP COT fade (n=92; do not widen 80/20)
@@ -2174,6 +2176,67 @@ tests:
     train: above baseline but R -0.022 n=456; val not above baseline R -0.07
     why_closed: Validation not above baseline. Mean R negative. Do not flip.
 
+  - id: H208_tokyo08_follow_jpy
+    date: 2026-09-17
+    book: fx_m15
+    family: tokyo08
+    decision: REJECT
+    mechanism: Follow USDJPY at 08:00 Tokyo pre-cash vs 06:00. 1:1 ATR, 8 bars.
+    baseline: Same follow at 06:00 Tokyo.
+    train: p=0.28 not < 0.0167, R -0.18 n=516; val R -0.23
+    why_closed: Train p fails Bonferroni. Mean R negative. Do not move to 09:00. Do not flip.
+
+  - id: H209_tokyo08_follow_eur
+    date: 2026-09-17
+    book: fx_m15
+    family: tokyo08
+    decision: REJECT
+    mechanism: Same 08:00 Tokyo pre-cash follow on EURUSD.
+    baseline: Same follow at 06:00 Tokyo.
+    train: 38.0% vs 21.5% n=484 p~0 (rate CANDIDATE), R -0.24; val 38.9% vs 18.9% R -0.22
+    why_closed: Hit-rate mirage. Mean R negative train and val. Do not last-level. Do not unlock OOS. Do not flip.
+
+  - id: H210_tokyo08_follow_gold
+    date: 2026-09-17
+    book: gold_m15
+    family: tokyo08
+    decision: REJECT
+    mechanism: Same 08:00 Tokyo pre-cash follow on XAUUSD.
+    baseline: Same follow at 06:00 Tokyo.
+    train: p=0.41 not < 0.0167, R -0.16 n=460; val R -0.19
+    why_closed: Train p fails Bonferroni. Mean R negative. Do not flip.
+
+  - id: H211_ny19_fade_eur
+    date: 2026-09-17
+    book: fx_m15
+    family: ny19
+    decision: REJECT
+    mechanism: Fade EURUSD at 19:00 NY Asia handover vs 16:00. 1:1 ATR, 8 bars.
+    baseline: Same fade at 16:00 NY.
+    train: not above baseline, R -0.35 n=401; val R -0.24
+    why_closed: Train not above baseline. Mean R negative. Do not move to 18:00/21:00. Do not flip.
+
+  - id: H212_ny19_fade_gbp
+    date: 2026-09-17
+    book: fx_m15
+    family: ny19
+    decision: REJECT
+    mechanism: Same 19:00 NY fade on GBPUSD.
+    baseline: Same fade at 16:00 NY.
+    train: not above baseline, R -0.30 n=379; val R -0.26
+    why_closed: Train not above baseline. Mean R negative. Do not flip.
+
+  - id: H213_ny19_fade_gold
+    date: 2026-09-17
+    book: gold_m15
+    family: ny19
+    decision: REJECT
+    mechanism: Same 19:00 NY fade on XAUUSD.
+    baseline: Same fade at 16:00 NY.
+    train: not above baseline, R -0.32 n=370; val R +0.01
+    why_closed: Train not above baseline. Mean R negative on train. Do not flip.
+
+
 
 
 
@@ -2237,4 +2300,5 @@ open:
   - H192_xetra1730_fade_gold REJECT after OOS (2026-09-08). Do not last-level again. Do not retune. Do not flip. Do not paper. Search loop remains STOP until a new causal why.
   - H193–H195 lit_abc family REJECT (2026-09-11). Overnight/intraday fade EUR+gold and gold 5-day TSMOM all fail after costs. Do not retune hours/lookback. Do not flip. Do not add EMA.
   - H196–H207 clock batch REJECT (2026-09-16). fedwire18, sgx09, cme14, hk12 — all mean R negative after costs. Do not retune hours. Do not flip. Do not reopen as equity/H5 list.
+  - H208–H213 tokyo08 + ny19 REJECT (2026-09-17). H209 hit-rate CANDIDATE but R− (mirage). Do not last-level. Do not unlock OOS. Do not flip.
   - No MT5 EA. No paper book. No survivor yet.
