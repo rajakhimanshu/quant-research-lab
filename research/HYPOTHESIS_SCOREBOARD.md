@@ -8,18 +8,18 @@
 
 | Decision | Count | Meaning |
 |---|---:|---|
-| **REJECT** | 204 | Failed train/val gates, negative R, or OOS fail. Closed. |
-| **NEEDS_MORE_DATA** | 7 | Spec frozen; sample too thin. Do not loosen. |
-| **PAPER_CANDIDATE** | 2 | Lab label only — see status notes. |
+| **REJECT** | 206 | Failed train/val gates, negative R, or OOS fail. Closed. |
+| **NEEDS_MORE_DATA** | 6 | Spec frozen; sample too thin. Do not loosen. |
+| **PAPER_CANDIDATE** | 1 | Lab label only — see status notes. |
 | **Total tested** | 213 | Through `H213_ny19_fade_gold` |
 
 ### Current status (honest)
 
 - **No FX/gold live survivor.** Do not start an MT5 EA.
 - **H5** PAPER_CANDIDATE on equities only — archived / out of FX+gold universe.
-- **H86** weekend G10 gap: last-level FAIL on Sunday fill spread.
+- **H86** weekend G10 gap: REJECT after last-level FAIL on Sunday fill spread.
 - **H192** Xetra 17:30 gold: OOS REJECT after lab clear.
-- Thin open: H9, H37, H68, H77, H80, H81, H85.
+- Still thin (NEEDS_MORE_DATA): H37, H68, H77, H80, H81, H85.
 
 ## Protocol
 
@@ -37,7 +37,7 @@ An edge is who pays you, after spread+slippage, on a frozen spec, with a baselin
 | 6 | `H6_london_sweep` | **REJECT** | gold_m15 | Same as H3 with London 03-08 NY as the stop pool. | 62.9% vs 52.5%, p=0.006, mean R -0.08 — Hit rate up, expectancy negative. Do not retune RR. |
 | 7 | `H7_asia_fade` | **REJECT** | gold_m15 | Fade first Asia ORB vs fade first NY ORB. | both sides lose — Breakout and fade both lose. Journal is not this rule. |
 | 8 | `H8_atr_momentum` | **REJECT** | fx_h1 | Large H1 candle, close in outer 20%, continuation vs same-size mid-close. | 33.7% vs 32.6%, p=0.13, mean R +0.012 — 1:2 coin flip. Do not retune to ATR SL/TP. |
-| 9 | `H9_cot_spec_fade` | **NEEDS_MORE_DATA** | gold_m15 | Fade crowded CFTC spec gold vs mid-percentile fade. 6-day publish lag. | n=87 < 100; 63% vs 52%, p=0.16; val 36% vs 29%, gap 27.5%, val R -0.29 — Under min_trades. Do not widen percentiles to chase n. OOS locked. |
+| 9 | `H9_cot_spec_fade` | **REJECT** | gold_m15 | Fade crowded CFTC spec gold vs mid-percentile fade. 6-day publish lag. | 90.9% vs 92.4% n=461 p=0.72, R +0.81; val 35.7% vs 28.6% n=14 R -0.29 — Re-run 2026-09-17 with longer COT history cleared min_trades but train rate... |
 | 10 | `H10_rapid_bullet` | **REJECT** | fx_h1 | M5 buy/sell-stop at nearest intact 5-bar swing vs 20-bar Donchian. | 50.6% vs 51.0%, p=0.56 — Pivot is not better than a raw extreme. Do not turn trailing on. |
 | 11 | `H11_gold_dxy_relink` | **REJECT** | gold_m15 | Restore gold-dollar inverse beta after 60d corr_z >= 1. | 56.9% vs 39.6% p=0.004; val 53.5% vs 64.7% — Train lift died in val. Do not retune z. |
 | 12 | `H12_london_close_fade` | **REJECT** | fx_h1 | Fade prior 7 H1 bars at 15:00 London vs same fade at 08:00. | 43.5% vs 41.1% p=0.009; val 36.5% vs 36.9%; R -0.14/-0.25 — 2.5pp mirage. Do not move the hours. |
@@ -108,13 +108,13 @@ An edge is who pays you, after spread+slippage, on a frozen spec, with a baselin
 | 77 | `H77_imm_usd_bid` | **NEEDS_MORE_DATA** | fx_h1/loop_swing | Short EURUSD 16:00 London on IMM 3rd Wednesday vs other Wednesdays, 1:1 ATR. | 36.0% vs 45.9% n=25, R -0.31 — Train n=25. Mean R negative. Do not expand to quarter-end week. Do not peek OOS. |
 | 78 | `H78_two_day_fade` | **REJECT** | fx_h1/loop_swing | Fade 2-session EURUSD close streak at 16:00 vs fade a 1-session close. | 46.1% vs 42.2% p=0.056, R -0.08 — Bonferroni fail, negative R. Do not retune to 3-day. Do not rerun as n_tests=1. |
 | 79 | `H79_overnight_usd` | **REJECT** | fx_h1/loop_swing | Short EURUSD 21:00 London overnight 12 H1 vs 08:00, Mon-Thu. | 39.7% vs 43.8%, R -0.20 — Overnight USD bid is worse than the London day. Do not move 21:00. |
-| 80 | `H80_nfp_cpi_fade` | **NEEDS_MORE_DATA** | fx_h1/loop_print | Fade EURUSD 8:00 NY bar on NFP or CPI vs blank 8:00, 1:1 ATR. | 58.1% vs 44.1% p=0.015 n=62, R +0.16 — Train n=62. Val n=0 because calendar ends 2025-04-04. Do not add PPI/claims. Do not mov... |
-| 81 | `H81_fomc_fade` | **NEEDS_MORE_DATA** | fx_h1/loop_print | Fade EURUSD 14:00 NY on FOMC Statement vs other Wednesdays, 1:1 ATR. | 55.0% vs 51.7% n=20, R +0.16 — Train n=20. Val n=0 same calendar cutoff. Do not add Powell or minutes. |
+| 80 | `H80_nfp_cpi_fade` | **NEEDS_MORE_DATA** | fx_h1/loop_print | Fade EURUSD 8:00 NY bar on NFP or CPI vs blank 8:00, 1:1 ATR. | n=137 R +0.05; val n=0 — Re-run 2026-09-17: train n cleared 100 but validation n=0 (calendar ends 2025-04-04 bef... |
+| 81 | `H81_fomc_fade` | **NEEDS_MORE_DATA** | fx_h1/loop_print | Fade EURUSD 14:00 NY on FOMC Statement vs other Wednesdays, 1:1 ATR. | n=40 R +0.09 — Re-run 2026-09-17: train n=40 still < 100. Same calendar cutoff. Do not add Powell or m... |
 | 82 | `H82_month_start_usd` | **REJECT** | fx_h1/loop_print | Short EURUSD first 2 London sessions of the month vs days 10-12, 1:1 ATR. | 45.6% vs 43.0% p=0.32, R -0.09 — No lift after costs. Do not retune to quarter-start. Do not rerun as n_tests=1. |
 | 83 | `H83_eur_cot_fade` | **REJECT** | fx_h1/loop_cot | Fade crowded CFTC spec EURO FX vs mid-percentile fade, 52w, 6d lag, 1:1 ATR. | 42.9% vs 73.7%, R -0.10 — Crowded EUR specs lose to mid. Do not widen 80/20. |
 | 84 | `H84_jpy_cot_fade` | **REJECT** | fx_h1/loop_cot | Fade crowded CFTC spec JPY (long USDJPY when specs long yen) vs mid, 52w, 6d lag. | 45.2% vs 28.6% p=0.12, R -0.10 — Bonferroni fail, negative R. Do not rerun as n_tests=1. Do not widen 80/20. |
-| 85 | `H85_gbp_cot_fade` | **NEEDS_MORE_DATA** | fx_h1/loop_cot | Fade crowded CFTC spec GBP vs mid-percentile fade, 52w, 6d lag, 1:1 ATR. | 56.5% vs 53.3% n=92, R +0.10 — Train n=92. Val R +0.14 n=21. Do not widen 80/20. Do not peek OOS. |
-| 86 | `H86_weekend_gap_g10` | **PAPER_CANDIDATE** | fx_h1/h37_replication | Fade >=36h weekend halt on GBPUSD, USDJPY, AUDUSD vs Wednesday overnight, 1:1 ATR, 8 H1. | 66.1% vs 44.9% p=2.8e-11, R +0.31 n=446; val 73.1% vs 43.7% R +0.42 n=93; oos 61.9% vs ... — OOS_PASS after survivor unlock. Paper via python -m at... |
+| 85 | `H85_gbp_cot_fade` | **NEEDS_MORE_DATA** | fx_h1/loop_cot | Fade crowded CFTC spec GBP vs mid-percentile fade, 52w, 6d lag, 1:1 ATR. | n=503 R -0.22; val n=21 R +0.14 — Re-run 2026-09-17: train n cleared 100 but validation n=21 still too small. Train mean ... |
+| 86 | `H86_weekend_gap_g10` | **REJECT** | fx_h1/h37_replication | Fade >=36h weekend halt on GBPUSD, USDJPY, AUDUSD vs Wednesday overnight, 1:1 ATR, 8 H1. | 66.1% vs 44.9% p=2.8e-11, R +0.31 n=446; val 73.1% vs 43.7% R +0.42 n=93; oos 61.9% vs ... — Was PAPER_CANDIDATE after OOS_PASS. Audit ECONOMIC_FAI... |
 | 87 | `H87_monday_cash_gbp` | **REJECT** | fx_h1/monday_cash | Fade GBPUSD Friday-close to Monday 08:00 London vs Tuesday-to-Wednesday 08:00, 0.15 ATR, 1:1, 8 H1. | 48.5% vs 49.7% n=163, R −0.03 — Train not above baseline. Val R −0.23. Do not move to Sunday. Do not flip to follow. Do... |
 | 88 | `H88_monday_cash_jpy` | **REJECT** | fx_h1/monday_cash | Fade USDJPY Friday-close to Monday 08:00 London vs Tuesday-to-Wednesday 08:00. | 47.5% vs 45.2% n=162 p=0.33, R −0.05 — Train p=0.33 not < 0.0167. Mean R negative. Do not rerun as n_tests=1. Do not flip. Do ... |
 | 89 | `H89_monday_cash_aud` | **REJECT** | fx_h1/monday_cash | Fade AUDUSD Friday-close to Monday 08:00 London vs Tuesday-to-Wednesday 08:00. | 43.2% vs 36.7% n=162 p=0.12, R −0.13 — Train p=0.12 not < 0.0167. Mean R negative. Do not rerun as n_tests=1. Do not move to S... |

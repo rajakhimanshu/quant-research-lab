@@ -20,7 +20,8 @@ do_not_reopen:
   - H3/H6 NY or London sweep-reclaim
   - H4/H7 Asia vs NY ORB
   - H8 ATR momentum continuation
-  - H9 COT percentile width (n too small; do not widen)
+  - H9 COT gold fade REJECT after longer COT pull (2026-09-17; train not above baseline)
+  - H9 COT percentile width (do not widen)
   - H10 Rapid Bullet swings
   - H11 gold-DXY z
   - H12 London-close fade of prior 7 H1
@@ -101,7 +102,7 @@ do_not_reopen:
   - H83 EURO FX COT fade (do not widen 80/20)
   - H84 JPY COT fade (do not rerun n_tests=1; do not widen 80/20)
   - H85 GBP COT fade (n=92; do not widen 80/20)
-  - H86 weekend-gap G10 (do not add NZD/CAD/CHF; do not loosen 36h; OOS locked)
+  - H86 weekend-gap G10 REJECT after last-level FAIL on Sunday fill spread (2026-09-17 close)
   - H102 overnight XS fade at 08:00 (do not flip to follow; do not expand to 7 pairs; do not move to 16:00)
   - H103–H105 CLS 07:00 CET fade (do not move to London 08:00; do not flip)
   - H106–H108 NY AM Silver Bullet FVG follow (do not add Judas/MSS/OTE; do not move to London 03:00 or NY 14:00; do not flip to fade)
@@ -191,13 +192,16 @@ tests:
     why_closed: 1:2 coin flip. Do not retune to ATR SL/TP.
 
   - id: H9_cot_spec_fade
-    date: 2026-09-03
+    date: 2026-09-17
     book: gold_m15
-    decision: NEEDS_MORE_DATA
+    decision: REJECT
     mechanism: Fade crowded CFTC spec gold vs mid-percentile fade. 6-day publish lag.
     baseline: Mid-percentile spec fade.
-    train: n=87 < 100; 63% vs 52%, p=0.16; val 36% vs 29%, gap 27.5%, val R -0.29
-    why_closed: Under min_trades. Do not widen percentiles to chase n. OOS locked.
+    train: 90.9% vs 92.4% n=461 p=0.72, R +0.81; val 35.7% vs 28.6% n=14 R -0.29
+    why_closed: >
+      Re-run 2026-09-17 with longer COT history cleared min_trades but train
+      rate not above baseline. Val still thin and R negative. Do not widen
+      percentiles. Do not peek OOS.
 
   - id: H10_rapid_bullet
     date: 2026-09-03
@@ -893,24 +897,29 @@ tests:
     why_closed: Overnight USD bid is worse than the London day. Do not move 21:00.
 
   - id: H80_nfp_cpi_fade
-    date: 2026-09-05
+    date: 2026-09-17
     book: fx_h1
     family: loop_print
     decision: NEEDS_MORE_DATA
     mechanism: Fade EURUSD 8:00 NY bar on NFP or CPI vs blank 8:00, 1:1 ATR.
     baseline: Same fade at 8:00 NY with no USD high-impact in the hour.
-    train: 58.1% vs 44.1% p=0.015 n=62, R +0.16
-    why_closed: Train n=62. Val n=0 because calendar ends 2025-04-04. Do not add PPI/claims. Do not move val_end. Do not peek OOS.
+    train: n=137 R +0.05; val n=0
+    why_closed: >
+      Re-run 2026-09-17: train n cleared 100 but validation n=0 (calendar
+      ends 2025-04-04 before val window prints). Do not add PPI/claims. Do not
+      move val_end. Do not peek OOS.
 
   - id: H81_fomc_fade
-    date: 2026-09-05
+    date: 2026-09-17
     book: fx_h1
     family: loop_print
     decision: NEEDS_MORE_DATA
     mechanism: Fade EURUSD 14:00 NY on FOMC Statement vs other Wednesdays, 1:1 ATR.
     baseline: Same fade at 14:00 on other Wednesdays with no USD high-impact.
-    train: 55.0% vs 51.7% n=20, R +0.16
-    why_closed: Train n=20. Val n=0 same calendar cutoff. Do not add Powell or minutes.
+    train: n=40 R +0.09
+    why_closed: >
+      Re-run 2026-09-17: train n=40 still < 100. Same calendar cutoff. Do not
+      add Powell or minutes.
 
   - id: H82_month_start_usd
     date: 2026-09-05
@@ -943,24 +952,30 @@ tests:
     why_closed: Bonferroni fail, negative R. Do not rerun as n_tests=1. Do not widen 80/20.
 
   - id: H85_gbp_cot_fade
-    date: 2026-09-05
+    date: 2026-09-17
     book: fx_h1
     family: loop_cot
     decision: NEEDS_MORE_DATA
     mechanism: Fade crowded CFTC spec GBP vs mid-percentile fade, 52w, 6d lag, 1:1 ATR.
     baseline: Same fade when specs sit in the 40-60 percentile band.
-    train: 56.5% vs 53.3% n=92, R +0.10
-    why_closed: Train n=92. Val R +0.14 n=21. Do not widen 80/20. Do not peek OOS.
+    train: n=503 R -0.22; val n=21 R +0.14
+    why_closed: >
+      Re-run 2026-09-17: train n cleared 100 but validation n=21 still too
+      small. Train mean R negative. Do not widen 80/20. Do not peek OOS.
 
   - id: H86_weekend_gap_g10
-    date: 2026-09-05
+    date: 2026-09-17
     book: fx_h1
     family: h37_replication
-    decision: PAPER_CANDIDATE
+    decision: REJECT
     mechanism: Fade >=36h weekend halt on GBPUSD, USDJPY, AUDUSD vs Wednesday overnight, 1:1 ATR, 8 H1.
     baseline: Same fade of Wednesday London-open overnight on those pairs.
     train: 66.1% vs 44.9% p=2.8e-11, R +0.31 n=446; val 73.1% vs 43.7% R +0.42 n=93; oos 61.9% vs 48.4% p=0.036 R +0.22 n=84
-    why_closed: "OOS_PASS after survivor unlock. Paper via python -m ats paper-h86. Audit ECONOMIC_FAIL (cost x3 OOS). Last-level FAIL on fill-bar Sunday spread OOS R -0.10; M5 open haircut OOS R -0.33. Path is real; venue cost eats it. Not live. Not an EA. Do not add EURUSD/NZD/CAD/CHF. Do not loosen 36h."
+    why_closed: >
+      Was PAPER_CANDIDATE after OOS_PASS. Audit ECONOMIC_FAIL (cost x3 OOS).
+      Last-level FAIL on Sunday fill-bar spread (OOS R -0.10; M5 open haircut
+      OOS R -0.33). Closed 2026-09-17 as REJECT — path real, venue cost eats it.
+      Do not add pairs. Do not loosen 36h. Not an EA.
 
   - id: H87_monday_cash_gbp
     date: 2026-09-05
@@ -2256,11 +2271,15 @@ open:
   - "Working universe: FX majors + XAUUSD, intraday (M5/M15) and swing (H1). No stocks."
   - "Retail path: paper -> $100-200 live x several (execution) -> $1000-2000 -> EA. No grid. One symbol until a survivor."
   - H5_equity_rsi2 archived (equity-only paper). Out of scope. Do not port to gold/FX.
-  - H9_cot_spec_fade still NEEDS_MORE_DATA (do not widen percentiles)
+  - H9_cot_spec_fade REJECT (2026-09-17 longer COT). Do not widen percentiles.
   - H37_weekend_gap_fx still NEEDS_MORE_DATA (val n=23; do not loosen 36h gap; do not peek OOS)
-  - H86_weekend_gap_g10 PAPER_CANDIDATE on lab costs. Last-level FAIL on Sunday fill-bar spread (python -m ats deep-h86). Not live. Not an EA unless user overrides.
-  - H192_xetra1730_fade_gold REJECT after OOS unlock (2026-09-08). Lab mirage: train/val +R, OOS mean R -0.08. Do not retune. Do not flip. Do not paper.
-  - H68_opex_friday_fade still NEEDS_MORE_DATA (train n=26; do not widen to every Friday; do not peek OOS)
+  - H68_opex_friday_fade still NEEDS_MORE_DATA (train n=26; do not widen to every Friday)
+  - H77_imm_usd_bid still NEEDS_MORE_DATA (train n=25; do not expand to quarter-end week)
+  - H80_nfp_cpi_fade still NEEDS_MORE_DATA (val n=0 calendar ends 2025-04-04; do not move val_end)
+  - H81_fomc_fade still NEEDS_MORE_DATA (train n=40; do not add Powell/minutes)
+  - H85_gbp_cot_fade still NEEDS_MORE_DATA (val n=21; train R negative; do not widen 80/20)
+  - H86_weekend_gap_g10 REJECT (2026-09-17). Last-level FAIL on Sunday fill spread. Not an EA.
+  - H192_xetra1730_fade_gold REJECT after OOS unlock (2026-09-08). Do not retune. Do not flip. Do not paper.
   - H87–H89 monday-cash family REJECT. Do not flip to follow. Do not move fill to Sunday.
   - H90–H92 NY 10:00 option-cut fade REJECT. Do not add Friday. Do not flip to follow.
   - H93–H95 post-WM 16:15 fade REJECT. Do not move to 16:00. Do not flip to follow.
