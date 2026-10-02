@@ -1,0 +1,271 @@
+intake:
+- source: paper
+  source_ref: https://arxiv.org/abs/2603.07752v1
+  name: Dynamic slippage control and rejection feedback in spot FX market making
+  title: Dynamic slippage control and rejection feedback in spot FX market making
+  summary_excerpt: We study an OTC FX market-making problem, built on the Avellaneda-Stoikov
+    tradition, in which a dealer streams size-dependent quotes on a discrete ladder
+    and manages inventory risk over a finite horizon under Poisson arrivals of trade
+    requests. Adverse selection is modelled through latency-driven pr
+  published: '2026-03-08'
+  causal_category: ''
+  causal_actor: ''
+  timeframe_tier: ''
+  instrument: ''
+  timeframe: ''
+  expected_holding_bars: null
+  expected_trades_month: null
+  dedup_check: []
+  status: rejected_at_intake
+  id: INTAKE_001
+  created: '2026-09-26'
+  reviewed: '2026-09-26'
+  rejection_reason: Pipeline smoke-test record ("test actor"). Dealer market-making
+    model, no retail-feasible clock or payer; routed to mechanism library reading.
+- source: paper
+  source_ref: https://arxiv.org/abs/2207.04100v4
+  name: Dealing with multi-currency inventory risk in FX cash markets
+  title: Dealing with multi-currency inventory risk in FX cash markets
+  summary_excerpt: In FX cash markets, market makers provide liquidity to clients
+    for a wide variety of currency pairs. Because of flow uncertainty and market volatility,
+    they face inventory risk. To mitigate this risk, they typically skew their prices
+    to attract or divert the flow and trade with their peers on the de
+  published: '2022-07-08'
+  causal_category: ''
+  causal_actor: ''
+  timeframe_tier: ''
+  instrument: ''
+  timeframe: ''
+  expected_holding_bars: null
+  expected_trades_month: null
+  dedup_check: []
+  status: rejected_at_intake
+  id: INTAKE_002
+  created: '2026-09-26'
+  rejection_reason: Routed to mechanism library as MECH_013 (academic paper, not a
+    direct hypothesis)
+- source: paper
+  source_ref: https://arxiv.org/abs/2112.02269v3
+  name: 'Market making by an FX dealer: tiers, pricing ladders and hedging rates for
+    opti'
+  title: 'Market making by an FX dealer: tiers, pricing ladders and hedging rates
+    for optimal risk control'
+  summary_excerpt: Dealers make money by providing liquidity to clients but face flow
+    uncertainty and thus price risk. They can efficiently skew their prices and wait
+    for clients to mitigate risk (internalization), or trade with other dealers in
+    the open market to hedge their position and reduce their inventory (exter
+  published: '2021-12-04'
+  causal_category: ''
+  causal_actor: ''
+  timeframe_tier: ''
+  instrument: ''
+  timeframe: ''
+  expected_holding_bars: null
+  expected_trades_month: null
+  dedup_check: []
+  status: rejected_at_intake
+  id: INTAKE_003
+  created: '2026-09-26'
+  rejection_reason: Routed to mechanism library as MECH_014 (academic paper, not a
+    direct hypothesis)
+- source: paper
+  source_ref: https://arxiv.org/abs/1706.07590v1
+  name: Effect of Isopropanol on Gold Assisted Chemical Etching of Silicon Microstructur
+  title: Effect of Isopropanol on Gold Assisted Chemical Etching of Silicon Microstructures
+  summary_excerpt: Wet etching is an essential and complex step in semiconductor device
+    processing. Metal-Assisted Chemical Etching (MacEtch) is fundamentally a wet but
+    anisotropic etching method. In the MacEtch technique, there are still a number
+    of unresolved challenges preventing the optimal fabrication of high-asp
+  published: '2017-06-23'
+  causal_category: ''
+  causal_actor: ''
+  timeframe_tier: ''
+  instrument: ''
+  timeframe: ''
+  expected_holding_bars: null
+  expected_trades_month: null
+  dedup_check: []
+  status: rejected_at_intake
+  id: INTAKE_004
+  created: '2026-09-26'
+  rejection_reason: Chemistry paper, keyword collision on Gold
+- source: llm_brainstorm
+  source_ref: groq_forced_flow
+  name: Post‑Tokyo Auction Drift on USDJPY
+  causal_category: forced_flow
+  causal_actor: Japanese banks are forced to trade immediately after the 9:55 Tokyo
+    auction because they must unwind the net imbalance created by client orders they
+    could not fill during the auction.
+  timeframe_tier: ''
+  instrument: USDJPY
+  timeframe: M5
+  expected_holding_bars: 6
+  expected_trades_month: 120
+  dedup_check:
+  - H53_tokyo_fix_follow
+  - H65_tse_open_follow
+  notes: Uses the daily Tokyo auction imbalance, not the WM London fix or LBMA benchmarks,
+    and targets the forced‑post‑auction rebalancing rather than any EMA/VWAP or news‑fade
+    patterns that have been rejected.
+  status: rejected_at_intake
+  id: INTAKE_005
+  created: '2026-09-26'
+  rejection_reason: Already tested as H53_tokyo_fix_follow and H65_tse_open_follow
+- source: llm_brainstorm
+  source_ref: groq_forced_flow
+  name: Swap Roll Unwind at 00:00 GMT
+  causal_category: forced_flow
+  causal_actor: Major banks are forced to unwind their 1‑day FX swap positions at
+    the 00:00 GMT roll, regardless of price.
+  timeframe_tier: retail_feasible
+  instrument: EURUSD
+  timeframe: M5
+  expected_holding_bars: 8
+  expected_trades_month: 35
+  dedup_check: []
+  notes: Targets the mandatory 1‑day swap roll rather than the previously rejected
+    tom‑next fade; it exploits the forced‑flow pressure from banks needing to close
+    swap legs at the roll time.
+  status: rejected_at_intake
+  id: INTAKE_006
+  created: '2026-09-26'
+  reviewed: '2026-09-27'
+  rejection_reason: Impossible trade count (daily roll cannot yield 35 trades/month
+    for a single pair) and failed manual review
+- source: llm_brainstorm
+  source_ref: groq_inventory_pressure
+  name: Cross-pair EURUSD‑GBPUSD lag trade
+  causal_category: inventory_pressure
+  causal_actor: A major liquidity-providing dealer builds a long EURUSD inventory
+    during a strong directional 15-minute momentum bar in the London session, and
+    offloads the offsetting short GBPUSD exposure 2-3 M5 bars later as GBPUSD tracks.
+  timeframe_tier: retail_feasible
+  instrument: GBPUSD
+  timeframe: M15
+  expected_holding_bars: 3
+  expected_trades_month: 60
+  dedup_check:
+  - H28_postfix_usd_fade
+  - H29_pre_ecb_usd
+  - H32_ranaldo_local_hours
+  - H38_xs_momentum
+  - H43_month_end_usd
+  - H55_nyse_open_eur
+  - H75_ust_open_usd
+  - H77_imm_usd_bid
+  - H79_overnight_usd
+  - H82_month_start_usd
+  notes: Uses a 1‑3 M5‑bar lag between EURUSD and GBPUSD, not a simple fade; leverages
+    dealer inventory rebalancing rather than retail volume spikes, avoiding previously
+    rejected patterns.
+  status: promoted
+  id: INTAKE_007
+  created: '2026-09-26'
+  reviewed: '2026-09-27'
+  promoted_to: H237_cross_pair_eurusd_gbpusd_lag
+  outcome: REJECT 2026-10-02 (sept_batch family; tested on M5 with 3-bar lag; train R -0.20)
+- source: llm_brainstorm
+  source_ref: groq_structural_liquidity
+  name: Sydney Close Liquidity Vacuum Fade
+  causal_category: structural_liquidity
+  causal_actor: When the Sydney session ends around 02:00 GMT, Australian market‑makers
+    pull back and the order book thins before Tokyo liquidity fully ramps up, creating
+    a short‑lived vacuum.
+  timeframe_tier: ''
+  instrument: USDJPY
+  timeframe: M5
+  expected_holding_bars: 6
+  expected_trades_month: 150
+  dedup_check:
+  - H42_tokyo_close_flatten
+  - H89_monday_cash_aud
+  - H121_tokyo_orb_jpy
+  - H187_sgx17_fade_aud
+  notes: Targets the Sydney‑to‑Tokyo transition, a structural liquidity dip not covered
+    by the rejected Tokyo lunch, London lunch, or NY‑close Asia fades, and differs
+    from other session‑clock ideas by focusing on the early‑morning GMT window before
+    Tokyo activity spikes.
+  status: rejected_at_intake
+  id: INTAKE_008
+  created: '2026-09-26'
+  rejection_reason: Already tested sub-family of AUD session boundary ideas (H42,
+    H89, H121, H187)
+- source: llm_brainstorm
+  source_ref: groq_forced_flow
+  name: London Close EURUSD Forward Settlement Sell Pressure
+  causal_category: forced_flow
+  causal_actor: European corporates are forced to sell EUR for USD at 17:00 London
+    to settle their expiring USD‑denominated forward contracts, leaving them no choice.
+  timeframe_tier: ''
+  instrument: EURUSD
+  timeframe: M15
+  expected_holding_bars: 10
+  expected_trades_month: 120
+  dedup_check:
+  - H36_overlap_continuation
+  - H87_monday_cash_gbp
+  - H118_london_orb_eur
+  - H130_hour_gap_eur
+  - H136_pdc_tag_eur
+  - H139_tnext_roll_eur
+  - H145_ldn10_cut_eur
+  - H151_tgt18_fade_eur
+  notes: Differs from rejected WM 16:00 follow by targeting the 17:00 settlement of
+    expiring forward contracts rather than the WM benchmark; it exploits forced settlement
+    flow, not a price‑based fade.
+  status: rejected_at_intake
+  id: INTAKE_009
+  created: '2026-09-27'
+  rejection_reason: Clock-based event (17:00 London) happens max 22 times a month,
+    fails >30/month floor
+  reopen_note: Floor lowered to 8/month on 2026-10-02. Eligible for owner re-review;
+    check against H139/H145/H151 before promoting.
+- source: llm_brainstorm
+  source_ref: groq_inventory_pressure
+  name: EURUSD lead‑lag inventory unwind on GBPUSD
+  causal_category: inventory_pressure
+  causal_actor: A major FX dealer builds a short GBPUSD inventory after a rapid EURUSD
+    rally and then offloads that inventory within the next 2‑3 M5 bars as the lagged
+    GBPUSD move aligns.
+  timeframe_tier: retail_feasible
+  instrument: GBPUSD
+  timeframe: M15
+  expected_holding_bars: 3
+  expected_trades_month: 50
+  dedup_check:
+  - H55_nyse_open_eur
+  - H79_overnight_usd
+  - H87_monday_cash_gbp
+  notes: Uses cross‑pair lead‑lag inventory pressure (EURUSD → GBPUSD) rather than
+    single‑pair fades; avoids rejected EMA/volume‑spike concepts and fits retail MT5
+    M5‑M30 constraints.
+  status: promoted
+  id: INTAKE_010
+  created: '2026-09-27'
+  reviewed: '2026-09-27'
+  promoted_to: H238_cross_pair_lag_dup
+  outcome: VOID 2026-10-02 (same mechanism, module and params as H237; not re-run)
+- source: llm_brainstorm
+  source_ref: groq_structural_liquidity
+  name: UTC Midnight Settlement Reversal
+  causal_category: structural_liquidity
+  causal_actor: The daily settlement of Tokyo banks at 00:00 GMT pulls liquidity from
+    the USDJPY book as positions are rolled, creating a temporary vacuum.
+  timeframe_tier: ''
+  instrument: USDJPY
+  timeframe: M5
+  expected_holding_bars: 8
+  expected_trades_month: 140
+  dedup_check:
+  - H99_tokyo_roll_jpy
+  notes: Differs from rejected ideas by targeting the exact UTC midnight settlement
+    point rather than broader session transitions or lunch breaks; it exploits the
+    predictable drop in depth right after the Tokyo settlement, not a generic opening‑range
+    fade.
+  status: rejected_at_intake
+  id: INTAKE_011
+  created: '2026-09-27'
+  rejection_reason: Clock-based event (00:00 GMT) happens max 22 times a month, fails
+    >30/month floor
+  reopen_note: Floor lowered to 8/month on 2026-10-02. Eligible for owner re-review;
+    check against H99_tokyo_roll_jpy before promoting.
