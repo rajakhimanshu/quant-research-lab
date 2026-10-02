@@ -39,6 +39,7 @@ def build_scoreboard_markdown() -> str:
         f"| **REJECT** | {counts.get('REJECT', 0)} | Failed train/val gates, negative R, or OOS fail. Closed. |",
         f"| **NEEDS_MORE_DATA** | {counts.get('NEEDS_MORE_DATA', 0)} | Spec frozen; sample too thin. Do not loosen. |",
         f"| **PAPER_CANDIDATE** | {counts.get('PAPER_CANDIDATE', 0)} | Lab label only — see status notes. |",
+        f"| **VOID** | {counts.get('VOID', 0)} | Not a result: no why, snooped spec, duplicate, or out of universe. |",
         f"| **Total tested** | {n} | Through `{last_id}` |",
         "",
         "### Current status (honest)",
@@ -48,7 +49,12 @@ def build_scoreboard_markdown() -> str:
         "- **H86** weekend G10 gap: REJECT after last-level FAIL on Sunday fill spread.",
         "- **H192** Xetra 17:30 gold: OOS REJECT after lab clear.",
         "- **H214** Gulf 05+08→09 dual-hour liq fade: REJECT (train below 11:00 baseline, R−).",
-        "- Still thin (NEEDS_MORE_DATA): H37, H68, H77, H80, H81, H85.",
+        "- **H219–H248** September batch: audited, fills fixed (next open + cost, net R, "
+        "baseline arm, one position at a time), re-frozen and re-run as one family of 29 "
+        "(α=0.0017). 0 CANDIDATE. H215–H218 not reproducible; H238/H249–H255 VOID.",
+        "- Still thin (NEEDS_MORE_DATA): "
+        + ", ".join(str(t["id"]).split("_")[0] for t in tests if t.get("decision") == "NEEDS_MORE_DATA")
+        + ".",
         "",
         "## Protocol",
         "",

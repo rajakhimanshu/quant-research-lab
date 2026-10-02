@@ -1,6 +1,6 @@
 # Proofbook — Hypothesis Scoreboard
 
-**As of:** 2026-09-17  
+**As of:** 2026-10-02  
 **Lab:** Proofbook — individual FX majors + XAUUSD research (Python). Not live. Not an EA.  
 **Rule:** Each `H` is a frozen causal hypothesis tested after spread+slippage on locked train/validation. OOS unlocked only for survivors. REJECT is closed — no retune.
 
@@ -8,10 +8,11 @@
 
 | Decision | Count | Meaning |
 |---|---:|---|
-| **REJECT** | 207 | Failed train/val gates, negative R, or OOS fail. Closed. |
-| **NEEDS_MORE_DATA** | 6 | Spec frozen; sample too thin. Do not loosen. |
+| **REJECT** | 233 | Failed train/val gates, negative R, or OOS fail. Closed. |
+| **NEEDS_MORE_DATA** | 13 | Spec frozen; sample too thin. Do not loosen. |
 | **PAPER_CANDIDATE** | 1 | Lab label only — see status notes. |
-| **Total tested** | 214 | Through `H214_gulf_dual_liq_fade` |
+| **VOID** | 3 | Not a result: no why, snooped spec, duplicate, or out of universe. |
+| **Total tested** | 250 | Through `H255_time_scan_gold` |
 
 ### Current status (honest)
 
@@ -20,7 +21,8 @@
 - **H86** weekend G10 gap: REJECT after last-level FAIL on Sunday fill spread.
 - **H192** Xetra 17:30 gold: OOS REJECT after lab clear.
 - **H214** Gulf 05+08→09 dual-hour liq fade: REJECT (train below 11:00 baseline, R−).
-- Still thin (NEEDS_MORE_DATA): H37, H68, H77, H80, H81, H85.
+- **H219–H248** September batch: audited, fills fixed (next open + cost, net R, baseline arm, one position at a time), re-frozen and re-run as one family of 29 (α=0.0017). 0 CANDIDATE. H215–H218 not reproducible; H238/H249–H255 VOID.
+- Still thin (NEEDS_MORE_DATA): H37, H68, H77, H80, H81, H85, H225, H226, H227, H228, H231, H236, H243.
 
 ## Protocol
 
@@ -244,6 +246,42 @@ An edge is who pays you, after spread+slippage, on a frozen spec, with a baselin
 | 212 | `H212_ny19_fade_gbp` | **REJECT** | fx_m15/ny19 | Same 19:00 NY fade on GBPUSD. | not above baseline, R -0.30 n=379; val R -0.26 — Train not above baseline. Mean R negative. Do not flip. |
 | 213 | `H213_ny19_fade_gold` | **REJECT** | gold_m15/ny19 | Same 19:00 NY fade on XAUUSD. | not above baseline, R -0.32 n=370; val R +0.01 — Train not above baseline. Mean R negative on train. Do not flip. |
 | 214 | `H214_gulf_dual_liq_fade` | **REJECT** | gold_m5 | Fade first XAUUSD M5 take of max(H05,H08)/min(L05,L08) Asia/Dubai during 09:00 vs same dual-level fade at 1... | 15.8% vs 25.9% baseline n=146, R -0.53; val 30.6% vs 29.8% R -0.10 — Train success not above baseline. Mean R negative. Do not drop the 05:00 filte... |
+| 215 | `H219_london_close_gold` | **REJECT** | fx_h1/sept_batch |  | 37.6% vs 34.7% n=213, R -0.06; val 28.9% vs 50.0% n=38, R -0.28 — Re-frozen retest (29-test family, alpha 0.0017). train p=0.2726 not < 0.0017 (mul... |
+| 216 | `H220_bb_squeeze_gold` | **REJECT** | fx_h1/sept_batch |  | 33.5% vs 30.8% n=164, R +0.00; val 17.6% vs 35.9% n=34, R -0.47 — Re-frozen retest (29-test family, alpha 0.0017). train p=0.2592 not < 0.0017 (mul... |
+| 217 | `H221_london_breakout_gold` | **REJECT** | fx_h1/sept_batch |  | 29.0% vs 29.0% n=221, R -0.16; val 19.4% vs 41.9% n=31, R -0.42 — Re-frozen retest (29-test family, alpha 0.0017). train success is not above basel... |
+| 218 | `H222_london_breakout_fade_gold` | **REJECT** | fx_h1/sept_batch |  | 44.8% vs 48.9% n=221, R -0.10; val 61.3% vs 35.5% n=31, R +0.23 — Re-frozen retest (29-test family, alpha 0.0017). train success is not above basel... |
+| 219 | `H223_tuesday_turnaround_gold` | **REJECT** | fx_h1/sept_batch |  | 38.6% vs 43.5% n=184, R -0.10; val 35.5% vs 44.8% n=31, R -0.17 — Re-frozen retest (29-test family, alpha 0.0017). train success is not above basel... |
+| 220 | `H224_rsi_extreme_fade_gold` | **REJECT** | fx_h1/sept_batch |  | 44.6% vs 52.4% n=233, R -0.12; val 37.5% vs 60.0% n=40, R -0.24 — Re-frozen retest (29-test family, alpha 0.0017). train success is not above basel... |
+| 221 | `H225_trend_pullback_gold` | **NEEDS_MORE_DATA** | fx_h1/sept_batch |  | 42.6% vs 43.4% n=94, R -0.04; val 36.4% vs 45.5% n=11, R -0.15 — Re-frozen retest (29-test family, alpha 0.0017). train treatment n=94 < 100. Do no... |
+| 222 | `H226_bb_exhaustion_eur` | **NEEDS_MORE_DATA** | fx_h1/sept_batch |  | 30.1% vs 29.3% n=83, R -0.17; val 7.1% vs 29.9% n=14, R -0.84 — Re-frozen retest (29-test family, alpha 0.0017). train treatment n=83 < 100. OOS al... |
+| 223 | `H227_engulfing_pullback_gold` | **NEEDS_MORE_DATA** | fx_h1/sept_batch |  | 41.4% vs 32.9% n=29, R +0.24; val 33.3% vs 35.6% n=3, R +0.00 — Re-frozen retest (29-test family, alpha 0.0017). train treatment n=29 < 100. Do not... |
+| 224 | `H228_mtf_pullback_gold` | **NEEDS_MORE_DATA** | fx_h1/sept_batch |  | 37.5% vs 38.4% n=56, R +0.06; val 37.5% vs 37.3% n=8, R +0.12 — Re-frozen retest (29-test family, alpha 0.0017). train treatment n=56 < 100. Do not... |
+| 225 | `H229_pure_momentum_gold` | **REJECT** | fx_h1/sept_batch |  | 35.5% vs 26.3% n=200, R +0.06; val 23.9% vs 41.2% n=46, R -0.28 — Re-frozen retest (29-test family, alpha 0.0017). train p=0.0331 not < 0.0017 (mul... |
+| 226 | `H230_london_close_reversal_gbp` | **REJECT** | fx_h1/sept_batch |  | 42.1% vs 33.5% n=197, R +0.05; val 42.1% vs 28.9% n=38, R +0.05 — Re-frozen retest (29-test family, alpha 0.0017). train p=0.0387 not < 0.0017 (mul... |
+| 227 | `H231_daily_engulfing_gold` | **NEEDS_MORE_DATA** | fx_h1/sept_batch |  | 16.7% vs 27.8% n=6, R -0.50; val 50.0% vs 24.0% n=2, R +0.50 — Re-frozen retest (29-test family, alpha 0.0017). train treatment n=6 < 100. Do not r... |
+| 228 | `H232_pdhl_sweep_gold` | **REJECT** | fx_h1/sept_batch |  | 38.7% vs 35.5% n=287, R -0.03; val 52.3% vs 31.7% n=44, R +0.41 — Re-frozen retest (29-test family, alpha 0.0017). train p=0.2012 not < 0.0017 (mul... |
+| 229 | `H233_rsi_divergence_gold` | **REJECT** | fx_h1/sept_batch |  | 32.2% vs 32.1% n=115, R -0.03; val 31.8% vs 25.6% n=22, R -0.05 — Re-frozen retest (29-test family, alpha 0.0017). train p=0.4914 not < 0.0017 (mul... |
+| 230 | `H234_trend_continuation_gold` | **REJECT** | fx_h1/sept_batch |  | 33.7% vs 28.7% n=199, R +0.01; val 41.9% vs 21.9% n=31, R +0.26 — Re-frozen retest (29-test family, alpha 0.0017). train p=0.1500 not < 0.0017 (mul... |
+| 231 | `H235_strong_trend_gold` | **REJECT** | fx_h1/sept_batch |  | 39.5% vs 28.7% n=124, R +0.18; val 34.6% vs 50.0% n=26, R -0.01 — Re-frozen retest (29-test family, alpha 0.0017). train p=0.0392 not < 0.0017 (mul... |
+| 232 | `H236_rsi_extreme_gold` | **NEEDS_MORE_DATA** | fx_h1/sept_batch |  | 43.1% vs 47.1% n=72, R -0.13; val 28.6% vs 48.3% n=14, R -0.43 — Re-frozen retest (29-test family, alpha 0.0017). train treatment n=72 < 100. Do no... |
+| 233 | `H237_cross_pair_eurusd_gbpusd_lag` | **REJECT** | fx_m5/sept_batch |  | 40.1% vs 39.4% n=1644, R -0.20; val 37.9% vs 42.1% n=570, R -0.23 — Re-frozen retest (29-test family, alpha 0.0017). train p=0.3216 not < 0.0017 (m... |
+| 234 | `H239_three_bar_exhaustion` | **REJECT** | gold_m5/sept_batch |  | 40.6% vs 51.5% n=165, R -0.17; val 49.1% vs 45.5% n=55, R -0.07 — Re-frozen retest (29-test family, alpha 0.0017). train success is not above basel... |
+| 235 | `H240_stop_cascade_absorption` | **REJECT** | gold_m5/sept_batch |  | 42.7% vs 47.4% n=852, R -0.14; val 45.3% vs 50.7% n=371, R -0.06 — Re-frozen retest (29-test family, alpha 0.0017). train success is not above base... |
+| 236 | `H241_post_ny_drift_reversion` | **REJECT** | gold_m15/sept_batch |  | 41.9% vs 38.3% n=540, R -0.17; val 45.9% vs 48.6% n=183, R -0.09 — Re-frozen retest (29-test family, alpha 0.0017). train p=0.1191 not < 0.0017 (mu... |
+| 237 | `H242_eur_gbp_divergence_fade` | **REJECT** | fx_m5/sept_batch |  | 36.2% vs 28.4% n=1871, R -0.27; val 33.8% vs 26.7% n=423, R -0.33 — Re-frozen retest (29-test family, alpha 0.0017). hit-rate mirage: mean R train=... |
+| 238 | `H243_div_filtered_london_asia_fade` | **NEEDS_MORE_DATA** | fx_m5/sept_batch |  | 49.4% vs 33.7% n=83, R -0.01; val 40.0% vs 30.0% n=20, R -0.20 — Re-frozen retest (29-test family, alpha 0.0017). train treatment n=83 < 100. Do no... |
+| 239 | `H244_div_filtered_rsi_extreme` | **REJECT** | fx_m5/sept_batch |  | 38.4% vs 27.6% n=380, R -0.22; val 26.7% vs 33.7% n=86, R -0.45 — Re-frozen retest (29-test family, alpha 0.0017). validation success is not above ... |
+| 240 | `H245_eur_gbp_div_m15` | **REJECT** | fx_m15/sept_batch |  | 40.6% vs 37.0% n=2235, R -0.19; val 43.5% vs 38.9% n=561, R -0.13 — Re-frozen retest (29-test family, alpha 0.0017). train p=0.0070 not < 0.0017 (m... |
+| 241 | `H246_h1_vol_exhaustion` | **REJECT** | fx_h1/sept_batch |  | 33.0% vs 40.0% n=215, R -0.18; val 42.4% vs 42.4% n=33, R +0.06 — Re-frozen retest (29-test family, alpha 0.0017). train success is not above basel... |
+| 242 | `H247_asia_mean_reversion` | **REJECT** | gold_m15/sept_batch |  | 40.3% vs 40.9% n=771, R -0.19; val 42.5% vs 48.4% n=285, R -0.15 — Re-frozen retest (29-test family, alpha 0.0017). train success is not above base... |
+| 243 | `H248_h1_weekly_reversal` | **REJECT** | fx_h1/sept_batch |  | 43.8% vs 34.7% n=144, R -0.12; val 26.1% vs 73.9% n=23, R -0.48 — Re-frozen retest (29-test family, alpha 0.0017). train p=0.0583 not < 0.0017 (mul... |
+| 244 | `H215_drd_sma9_gold` | **REJECT** | fx_h1/drd |  | first run only; module was a stub, result not reproducible — Dr.D/SMA family is closed (H14-H16). Code lost in audit. Not reproducible. Do not reopen. |
+| 245 | `H216_weekly_trap` | **REJECT** | fx_h1 |  | first run used unlogged params; module removed in audit — No causal payer beyond weekly-high folklore. Removed with scratch code. Do not reopen. |
+| 246 | `H217_sma_cross` | **REJECT** | fx_h1 |  | first run used unlogged params; module removed in audit — Moving-average cross is an indicator combo, not a why. Do not reopen. |
+| 247 | `H218_drd_mtf` | **REJECT** | fx_h1/drd |  | first run only; module was a stub, result not reproducible — Dr.D family closed. OOS was unlocked on a stub. Not reproducible. Do not reopen. |
+| 248 | `H238_cross_pair_lag_dup` | **VOID** | fx_m5/sept_batch |  | same module and params as H237 — Duplicate of H237. Not counted in the family. |
+| 249 | `H249_H254_ema_batch` | **VOID** | gold_m5 |  | all six ran on XAUUSD M5 by config fallback; H252-H254 identical numbers — why was "testing" (no causal payer). EMA family closed. H253 was M30 and... |
+| 250 | `H255_time_scan_gold` | **VOID** | gold_m5 |  | entry hour picked by a full-sample scan including OOS — Snooped. OOS used to choose the spec. Void, not a result. Do not re-freeze. |
 
 ## Source of truth
 
