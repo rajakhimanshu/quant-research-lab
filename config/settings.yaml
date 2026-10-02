@@ -6,16 +6,15 @@ broker:
   # Broker symbol suffix if needed, e.g. "m" or ".a". Empty = exact / fuzzy match.
   symbol_suffix: ""
 
-# Retail path. Not a live go. Do not size lab tests as if this is a fund.
+# Retail framing. Informational only; nothing here is a live go.
 retail:
   paper_then_live: true
-  first_live_usd: [100, 200]
-  scale_live_usd: [1000, 2000]
   min_lot: 0.01
   note: >
-    Lab stays Python until a FX/gold paper candidate. Then several $100-200
-    accounts for execution. Then $1000-2000. Then an EA. Min 0.01 lot means
-    $100-200 cannot run 1% risk on a 15-pip stop. No grid or martingale.
+    Research stays in Python until a hypothesis clears OOS and a human labels it
+    a paper candidate. Paper trading comes before any real money. With a 0.01
+    minimum lot, small accounts cannot hold 1% risk on a 15-pip stop, so the
+    first live step (if ever) checks execution, not returns. No grid or martingale.
 
 universe:
   # Working book: FX majors + gold. No equities/crypto/indices.
@@ -52,11 +51,11 @@ features:
   expansion_atr_ratio: 1.3
 
 costs:
-  # Exness Standard (commission-free). FX pips are 4/5-digit. Gold lab unit is
-  # 0.001 (MT5 point). Exness quotes gold 1 pip = 0.01, so 20 Exness pips = 200
-  # lab units = $0.20/oz. Numbers are this terminal's median bar spread
-  # (XAUUSD M15 med 200 points; majors ~8-17 points / 10). Not advertising minima.
-  source: exness_standard
+  # Example defaults: median bar spread of one commission-free retail MT5
+  # account (2026). Replace with your own broker's medians before trusting any
+  # result. FX pips are 4/5-digit. Gold lab unit is 0.001 (MT5 point), so 200
+  # lab units = $0.20/oz. Not advertising minima.
+  source: example_retail_standard
   spread_pips:
     EURUSD: 0.8
     GBPUSD: 1.0
@@ -79,6 +78,13 @@ validation:
   significance_alpha: 0.05
   # Applied after counting how many hypotheses were tested this run.
   multiple_testing: bonferroni
+
+# Automated lab budget (`ats lab run`). Volume is the main source of false
+# discoveries: cap the family size and how often a new family may be tested.
+lab:
+  max_batch: 8
+  min_days_between_batches: 7
+  max_leads_per_cycle: 10
 
 # Calendar locks. Do not move these after seeing results. Event-index 60/20/20
 # shifts when you pull more bars — new tests use these dates instead.

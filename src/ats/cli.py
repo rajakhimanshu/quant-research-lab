@@ -607,7 +607,93 @@ def build_parser() -> argparse.ArgumentParser:
     idd.add_argument("causal_actor", help="The causal_actor text to check")
     idd.add_argument("--name", default="", help="Optional mechanism name for extra signal")
 
+    # ── automated research lab ────────────────────────────────────────────────
+    lab = sub.add_parser("lab", help="Automated research loop: leads -> template specs -> family test -> book")
+    lab.set_defaults(func=cmd_lab, lab_cmd="status")
+    lsub = lab.add_subparsers(dest="lab_cmd")
+    lsub.add_parser("status", help="Queue, open candidates, batches run")
+    lsub.add_parser("templates", help="Print the template catalogue (what the lab can test)")
+    lrun = lsub.add_parser("run", help="One research cycle (stops at CANDIDATE)")
+    lrun.add_argument("--no-sweep", action="store_true", help="Skip paper/feed sweep")
+    lrun.add_argument("--no-propose", action="store_true", help="Skip LLM proposals")
+    lrun.add_argument("--no-test", action="store_true", help="Stop before freezing/testing")
+    lrun.add_argument("--max-batch", type=int, help="Override lab.max_batch")
+    lrun.add_argument("--force", action="store_true", help="Ignore the batch-frequency budget")
+    lrun.add_argument("--dry-run", action="store_true", help="Show what would be frozen; write nothing")
+    lpr = lsub.add_parser("propose", help="Queue a spec by hand (YAML) or ask the LLM about one intake lead")
+    lpr.add_argument("--file", help="YAML file with one spec or a list of specs")
+    lpr.add_argument("--lead", help="INTAKE_xxx or MECH_xxx id to translate with the LLM")
+    lun = lsub.add_parser("unlock", help="Human gate: spend the OOS segment of a CANDIDATE (once)")
+    lun.add_argument("--id", required=True)
+    lun.add_argument("--confirm", action="store_true", help="Required: OOS can only be spent once")
+    lde = lsub.add_parser("decide", help="Human gate: PAPER_CANDIDATE (after OOS_PASS) or REJECT")
+    lde.add_argument("--id", required=True)
+    g = lde.add_mutually_exclusive_group(required=True)
+    g.add_argument("--paper", action="store_true")
+    g.add_argument("--reject", action="store_true")
+    lde.add_argument("--note", required=True, help="Why you decided")
+
     return p
+
+
+def cmd_lab(args: argparse.Namespace) -> int:
+    import json
+
+    import yaml
+
+    from ats.lab import loop
+
+    cmd = args.lab_cmd or "status"
+    if cmd == "status":
+        loop.print_status()
+        return 0
+    if cmd == "templates":
+        from ats.lab.templates import catalogue
+
+        print(json.dumps(catalogue(), indent=2))
+        return 0
+    if cmd == "run":
+        loop.run_cycle(sweep=not args.no_sweep, propose=not args.no_propose, test=not args.no_test,
+                       force=args.force, dry_run=args.dry_run, max_batch=args.max_batch)
+        return 0
+    if cmd == "propose":
+        from ats.lab.proposer import load_queue, propose_from_lead, record_spec, save_queue
+
+        rows = load_queue()
+        if args.file:
+            with open(args.file, encoding="utf-8") as f:
+                blob = yaml.safe_load(f)
+            specs = blob if isinstance(blob, list) else [blob]
+            for s in specs:
+                rec = record_spec(s, source=str(s.get("source") or args.file), rows=rows)
+                print(f"{rec['id']} {rec['status']}: {'; '.join(rec.get('errors') or []) or s.get('name')}")
+        elif args.lead:
+            lead = None
+            if args.lead.startswith("INTAKE_"):
+                from ats.ideas.intake_store import get_idea
+
+                lead = get_idea(args.lead)
+            else:
+                from ats.ideas.mechanism_library import load_library
+
+                lead = next((m for m in load_library() if m.get("id") == args.lead), None)
+            if lead is None:
+                raise SystemExit(f"{args.lead} not found")
+            rec = propose_from_lead({**lead, "source_ref": lead.get("source_ref") or args.lead}, rows=rows)
+            print(f"{rec['id']} {rec['status']}: {'; '.join(rec.get('errors') or []) or rec['spec']['name']}")
+        else:
+            raise SystemExit("Give --file or --lead")
+        save_queue(rows)
+        return 0
+    if cmd == "unlock":
+        if not args.confirm:
+            raise SystemExit("OOS can be spent only once. Re-run with --confirm.")
+        print(f"{args.id}: {loop.unlock(args.id)}")
+        return 0
+    if cmd == "decide":
+        print(f"{args.id}: {loop.decide(args.id, paper=args.paper, note=args.note)}")
+        return 0
+    raise SystemExit(f"Unknown lab command {cmd}")
 
 
 def main(argv: list[str] | None = None) -> None:
