@@ -7,6 +7,7 @@ import yaml
 from ats.config import ROOT
 
 LEDGER_PATH = ROOT / "research" / "ledger.yaml"
+LAB_BOOK_PATH = ROOT / "research" / "lab" / "book.yaml"
 
 
 def load_ledger() -> dict:
@@ -14,8 +15,17 @@ def load_ledger() -> dict:
         return yaml.safe_load(f) or {}
 
 
+def lab_rows() -> list[dict]:
+    """Rows written by the automated lab (`ats lab`)."""
+    if not LAB_BOOK_PATH.exists():
+        return []
+    with LAB_BOOK_PATH.open(encoding="utf-8") as f:
+        return list((yaml.safe_load(f) or {}).get("tests") or [])
+
+
 def ledger_rows() -> list[dict]:
-    return list(load_ledger().get("tests") or [])
+    """Hand-curated ledger plus the lab book, in order."""
+    return list(load_ledger().get("tests") or []) + lab_rows()
 
 
 def print_ledger() -> None:

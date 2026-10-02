@@ -29,21 +29,11 @@ MIN_TRADES_MONTH = 8
 
 # ── H-number detection ────────────────────────────────────────────────────────
 
-def _ids_in(path, key: str) -> list[str]:
-    if not path.exists():
-        return []
-    with path.open(encoding="utf-8") as f:
-        blob = yaml.safe_load(f) or {}
-    return [str(r.get("id", "")) for r in blob.get(key) or []]
-
-
 def _next_h_number() -> int:
-    """Next H-number after every id in hypotheses.yaml AND the ledger (voids included)."""
-    from ats.research.ledger import LEDGER_PATH
+    """Next H-number after every id in hypotheses.yaml, the ledger and the lab book."""
+    from ats.lab.spec import next_h_number
 
-    ids = _ids_in(HYPOTHESES_PATH, "hypotheses") + _ids_in(LEDGER_PATH, "tests")
-    nums = [int(n) for i in ids for n in re.findall(r"H(\d+)", i)]
-    return max(nums, default=214) + 1
+    return next_h_number()
 
 
 # ── Validation gate ───────────────────────────────────────────────────────────

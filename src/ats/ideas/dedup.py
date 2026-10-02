@@ -50,12 +50,12 @@ def _tokenize(text: str) -> set[str]:
 
 
 def _load_ledger_tests() -> list[dict]:
-    """Load the tests list from ledger.yaml. Returns [] if file missing."""
+    """Load ledger.yaml tests plus the lab book. Returns [] if the ledger is missing."""
     if not LEDGER_PATH.exists():
         return []
-    with LEDGER_PATH.open(encoding="utf-8") as f:
-        blob = yaml.safe_load(f) or {}
-    return blob.get("tests", [])
+    from ats.research.ledger import ledger_rows
+
+    return ledger_rows()
 
 
 def check_dedup(causal_actor: str, mechanism_name: str = "") -> list[str]:

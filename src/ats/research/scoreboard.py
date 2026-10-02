@@ -6,7 +6,7 @@ from collections import Counter
 from datetime import date
 
 from ats.config import ROOT
-from ats.research.ledger import load_ledger
+from ats.research.ledger import ledger_rows, load_ledger
 
 OUT = ROOT / "research" / "HYPOTHESIS_SCOREBOARD.md"
 
@@ -18,7 +18,7 @@ def _one_line(s: object, n: int) -> str:
 
 def build_scoreboard_markdown() -> str:
     led = load_ledger()
-    tests = list(led.get("tests") or [])
+    tests = ledger_rows()
     counts = Counter(str(t.get("decision") or "?") for t in tests)
     today = date.today().isoformat()
     n = len(tests)
@@ -38,14 +38,17 @@ def build_scoreboard_markdown() -> str:
         "|---|---:|---|",
         f"| **REJECT** | {counts.get('REJECT', 0)} | Failed train/val gates, negative R, or OOS fail. Closed. |",
         f"| **NEEDS_MORE_DATA** | {counts.get('NEEDS_MORE_DATA', 0)} | Spec frozen; sample too thin. Do not loosen. |",
-        f"| **PAPER_CANDIDATE** | {counts.get('PAPER_CANDIDATE', 0)} | Lab label only — see status notes. |",
+        f"| **PAPER_CANDIDATE** | {counts.get('PAPER_CANDIDATE', 0)} | Human label after OOS_PASS. Paper only, never proof. |",
+        f"| **ARCHIVED** | {counts.get('ARCHIVED', 0)} | Out of the current universe; kept for history only. |",
+        f"| **CANDIDATE** | {counts.get('CANDIDATE', 0)} | Cleared train+val; awaiting a human OOS unlock. |",
+        f"| **OOS_PASS** | {counts.get('OOS_PASS', 0)} | Cleared OOS; awaiting a human paper decision. |",
         f"| **VOID** | {counts.get('VOID', 0)} | Not a result: no why, snooped spec, duplicate, or out of universe. |",
         f"| **Total tested** | {n} | Through `{last_id}` |",
         "",
         "### Current status (honest)",
         "",
         "- **No FX/gold live survivor.** Do not start an MT5 EA.",
-        "- **H5** PAPER_CANDIDATE on equities only — archived / out of FX+gold universe.",
+        "- **H5** equity RSI(2): ARCHIVED (published folklore, out of the FX+gold universe, never live).",
         "- **H86** weekend G10 gap: REJECT after last-level FAIL on Sunday fill spread.",
         "- **H192** Xetra 17:30 gold: OOS REJECT after lab clear.",
         "- **H214** Gulf 05+08→09 dual-hour liq fade: REJECT (train below 11:00 baseline, R−).",
@@ -105,8 +108,7 @@ def write_scoreboard() -> str:
 
 def main() -> None:
     path = write_scoreboard()
-    led = load_ledger()
-    n = len(led.get("tests") or [])
+    n = len(ledger_rows())
     print(f"Wrote {path} ({n} hypotheses)")
 
 
