@@ -1,0 +1,23 @@
+# Example hand-written proposal for `ats lab propose --file examples/proposal.yaml`.
+# This only shows the format. It is not a recommendation and has no claimed edge.
+# Every field is checked by ats.lab.spec.validate_spec before it can be queued.
+name: London 4pm fix fade (format example)
+why: >-
+  Asset managers and corporates benchmarked to the WM/Reuters 16:00 London fix must
+  complete their orders inside the fix window, so flow into the fix is one-sided and
+  should partly reverse once the window closes and that demand disappears.
+payer: Benchmark-tracking funds and corporates that must transact at the 16:00 fix
+causal_category: forced_flow
+template: clock_run
+symbols: [EURUSD]
+timeframe: M15
+source: example
+params:
+  tz: Europe/London
+  treat_hour: 16
+  base_hour: 11
+  mode: fade
+  min_prior_atr: 0.5
+  horizon_bars: 4
+  stop_atr: 1.0
+  target_atr: 1.0
