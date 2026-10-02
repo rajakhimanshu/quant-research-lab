@@ -2784,6 +2784,254 @@ hypotheses:
       horizon_bars: 36
       skip_weekend: true
 
+  # --- Family sept_batch (H219-H248): re-frozen 2026-10-02 after the audit ---
+  # First runs (2026-09-19..30) used unlogged params, per-test alpha 0.05,
+  # repeated reruns, and cost-free R in 15 modules. Specs below freeze module
+  # defaults, fix fills (next open + cost, net R, mirror or control baseline,
+  # one position at a time) and run as ONE Bonferroni family of 29.
+  # Symbols/timeframes were not recorded by the first runs; reconstructed from
+  # id, sample sizes, and code. H238 duplicates H237 and is not re-run.
+  # OOS already burned by earlier unlocks: H226, H234, H235, H242.
+
+  - id: H219_london_close_gold
+    enabled: false
+    name: Fade the stretched day trend at 15:00 UTC on gold
+    why: >
+      European desks exit around the London close, so when the 15-hour range
+      exceeds 1.5 ATR and the 15:00 UTC close sits in its outer 20%, a fade
+      should beat a follow of the same bar. 1:1.5 ATR. XAUUSD H1.
+    params: {symbols: [XAUUSD], timeframe: H1, horizon_bars: 48}
+
+  - id: H220_bb_squeeze_gold
+    enabled: false
+    name: Bollinger squeeze breakout on gold H1
+    why: >
+      Volatility compression ends in expansion; a close outside the bands right
+      after a squeeze should follow through more than a break with no squeeze.
+      Indicator-defined (no named payer). Logged for completeness. XAUUSD H1.
+    params: {symbols: [XAUUSD], timeframe: H1, horizon_bars: 24}
+
+  - id: H221_london_breakout_gold
+    enabled: false
+    name: Follow the London 08:00 close through the Asia range on gold
+    why: >
+      Asia consolidates and London brings volume, so an 08:00 UTC H1 close
+      outside the 00:00-07:00 range should follow through. Baseline: fade of
+      the same break. 1:2 ATR, 12 bars. XAUUSD H1.
+    params: {symbols: [XAUUSD], timeframe: H1, horizon_bars: 12}
+
+  - id: H222_london_breakout_fade_gold
+    enabled: false
+    name: Fade the London 08:00 close through the Asia range on gold
+    why: >
+      Mirror of H221 (turtle soup). Fade the same 08:00 UTC break of the Asia
+      range at 1.5/1.5 ATR. Baseline: follow of the same break. XAUUSD H1.
+    params: {symbols: [XAUUSD], timeframe: H1, horizon_bars: 12}
+
+  - id: H223_tuesday_turnaround_gold
+    enabled: false
+    name: Fade Monday's move at Tuesday 00:00 UTC vs the same fade on Thursday
+    why: >
+      Monday sets a false bias that market makers reverse on Tuesday. Fading the
+      prior 24h at Tuesday 00:00 should beat the same fade at Thursday 00:00.
+      1.5/2.0 ATR, 24 bars. XAUUSD H1.
+    params: {symbols: [XAUUSD], timeframe: H1, horizon_bars: 24}
+
+  - id: H224_rsi_extreme_fade_gold
+    enabled: false
+    name: Fade RSI(14) beyond 85/15 on gold H1
+    why: >
+      Oscillator folklore (no named payer). Fade RSI>85 / <15 at 1.5/1.5 ATR.
+      Baseline: follow at the same bar. Logged for completeness. XAUUSD H1.
+    params: {symbols: [XAUUSD], timeframe: H1, horizon_bars: 12}
+
+  - id: H225_trend_pullback_gold
+    enabled: false
+    name: RSI<30 pullback above SMA200 on gold H1
+    why: >
+      Trend pullback folklore. Buy RSI<30 above SMA200 vs the same dip below
+      it. Indicator-defined. Logged for completeness. XAUUSD H1.
+    params: {symbols: [XAUUSD], timeframe: H1, horizon_bars: 24}
+
+  - id: H226_bb_exhaustion_eur
+    enabled: false
+    name: Bollinger band false-break pinbar on EURUSD H1
+    why: >
+      A wick outside the bands that closes back inside is exhausted liquidity
+      and reverts to the mean. Baseline: band tag without the reversal candle.
+      First run was retuned 4 times and OOS was unlocked. EURUSD H1.
+    params: {symbols: [EURUSD], timeframe: H1, horizon_bars: 24}
+
+  - id: H227_engulfing_pullback_gold
+    enabled: false
+    name: Engulfing at a 24h extreme with the SMA200 trend on gold
+    why: >
+      An engulfing bar at a 24h extreme in the trend direction traps
+      counter-trend traders. Baseline: the same bar against the trend. XAUUSD H1.
+    params: {symbols: [XAUUSD], timeframe: H1, horizon_bars: 24}
+
+  - id: H228_mtf_pullback_gold
+    enabled: false
+    name: H4-mean pullback aligned with the daily trend on gold
+    why: >
+      Multi-timeframe pullback folklore at 1:2. Indicator-defined. Logged for
+      completeness. XAUUSD H1.
+    params: {symbols: [XAUUSD], timeframe: H1, horizon_bars: 48}
+
+  - id: H229_pure_momentum_gold
+    enabled: false
+    name: 12-bar channel breakout with the SMA1200 trend on gold
+    why: >
+      Momentum folklore at 1:2. Indicator-defined. Logged for completeness.
+      XAUUSD H1.
+    params: {symbols: [XAUUSD], timeframe: H1, horizon_bars: 48}
+
+  - id: H230_london_close_reversal_gbp
+    enabled: false
+    name: Fade the stretched day trend at 15:00 UTC on GBPUSD
+    why: >
+      Same London-close exit as H219 on GBPUSD H1. Baseline: follow.
+    params: {symbols: [GBPUSD], timeframe: H1, horizon_bars: 48}
+
+  - id: H231_daily_engulfing_gold
+    enabled: false
+    name: Next-day pullback after a daily engulfing on gold
+    why: >
+      A daily engulfing shows control; a next-day RSI pullback should beat
+      entering the same engulfing with no pullback. Calendar UTC days. XAUUSD H1.
+    params: {symbols: [XAUUSD], timeframe: H1, horizon_bars: 24}
+
+  - id: H232_pdhl_sweep_gold
+    enabled: false
+    name: Fade a sweep of the prior UTC day high/low on gold
+    why: >
+      Stops rest beyond yesterday's extremes; a sweep that closes back inside
+      traps breakout traders. Calendar prior day (was a 24-48h stale window).
+      XAUUSD H1. Close cousin of rejected H17.
+    params: {symbols: [XAUUSD], timeframe: H1, horizon_bars: 24}
+
+  - id: H233_rsi_divergence_gold
+    enabled: false
+    name: RSI divergence reversal on gold H1
+    why: >
+      Oscillator folklore. Indicator-defined. Logged for completeness. XAUUSD H1.
+    params: {symbols: [XAUUSD], timeframe: H1, horizon_bars: 48}
+
+  - id: H234_trend_continuation_gold
+    enabled: false
+    name: SMA20 pullback with the SMA200 trend on gold
+    why: >
+      Moving-average folklore. OOS already unlocked on the first run (failed).
+      Logged for completeness. XAUUSD H1.
+    params: {symbols: [XAUUSD], timeframe: H1, horizon_bars: 48}
+
+  - id: H235_strong_trend_gold
+    enabled: false
+    name: Stacked SMA 50/100/200 pullback on gold
+    why: >
+      Moving-average folklore. OOS already unlocked on the first run (failed).
+      Logged for completeness. XAUUSD H1.
+    params: {symbols: [XAUUSD], timeframe: H1, horizon_bars: 48}
+
+  - id: H236_rsi_extreme_gold
+    enabled: false
+    name: Fade RSI 20/80 on gold H1
+    why: >
+      Oscillator folklore. Indicator-defined. Logged for completeness. XAUUSD H1.
+    params: {symbols: [XAUUSD], timeframe: H1, horizon_bars: 24}
+
+  - id: H237_cross_pair_eurusd_gbpusd_lag
+    enabled: false
+    name: Follow a strong EURUSD London move on GBPUSD three bars later
+    why: >
+      Dealers hedge EURUSD inventory through GBPUSD with a short lag, so a
+      1.5 ATR 15-minute EURUSD move in London should carry into GBPUSD three M5
+      bars later. Baseline: fade on the same bar. Intake INTAKE_007. GBPUSD M5.
+    params: {symbols: [GBPUSD], timeframe: M5, horizon_bars: 3}
+
+  - id: H239_three_bar_exhaustion
+    enabled: false
+    name: Fade three consecutive 0.8 ATR M5 bodies on gold
+    why: >
+      Three large same-direction bars exhaust near-touch depth; dealers step
+      back and price reverts 1-2 bars. Baseline: follow. XAUUSD M5.
+    params: {symbols: [XAUUSD], timeframe: M5, horizon_bars: 3}
+
+  - id: H240_stop_cascade_absorption
+    enabled: false
+    name: Fade a shallow sweep of a 20-bar swing that closes back inside on gold
+    why: >
+      Market makers absorb stop orders beyond a recent swing; after the cascade
+      clears, quotes skew back (MECH_001). Baseline: follow. XAUUSD M5.
+    params: {symbols: [XAUUSD], timeframe: M5, horizon_bars: 5}
+
+  - id: H241_post_ny_drift_reversion
+    enabled: false
+    name: Fade the 20:00-00:00 UTC drift at the Asia open on gold
+    why: >
+      Asia market makers re-center inventory left by thin late-NY trading, so a
+      0.5 ATR drift into 00:00 UTC should revert. Baseline: follow. Rollover
+      spread at 00:00 is wider than the lab cost. XAUUSD M15.
+    params: {symbols: [XAUUSD], timeframe: M15, horizon_bars: 12}
+
+  - id: H242_eur_gbp_divergence_fade
+    enabled: false
+    name: Fade EURUSD/GBPUSD 3-bar divergence on M5
+    why: >
+      A sharp divergence between correlated pairs is a temporary book imbalance
+      that cross-market arbitrage closes. Baseline: follow. OOS already unlocked
+      on the first run. EURUSD + GBPUSD M5.
+    params: {symbols: [EURUSD, GBPUSD], timeframe: M5, horizon_bars: 6}
+
+  - id: H243_div_filtered_london_asia_fade
+    enabled: false
+    name: Fade a London break of the Asia range only with cross-pair divergence
+    why: >
+      H30 London-break fade filtered by the H242 divergence. Stacked filters on
+      two rejected ideas. Baseline: follow. EURUSD + GBPUSD M5.
+    params: {symbols: [EURUSD, GBPUSD], timeframe: M5, horizon_bars: 12}
+
+  - id: H244_div_filtered_rsi_extreme
+    enabled: false
+    name: Fade RSI 70/30 only with cross-pair divergence
+    why: >
+      RSI fade filtered by the H242 divergence. Stacked filters. Baseline:
+      follow. EURUSD + GBPUSD M5.
+    params: {symbols: [EURUSD, GBPUSD], timeframe: M5, horizon_bars: 6}
+
+  - id: H245_eur_gbp_div_m15
+    enabled: false
+    name: Fade EURUSD/GBPUSD 3-bar divergence on M15
+    why: >
+      H242 at M15 so the 1 ATR move can clear costs. Same mechanism, second
+      timeframe. Baseline: follow. EURUSD + GBPUSD M15.
+    params: {symbols: [EURUSD, GBPUSD], timeframe: M15, horizon_bars: 6}
+
+  - id: H246_h1_vol_exhaustion
+    enabled: false
+    name: Fade a 2.5 SD band break with RSI 75/25 on gold H1
+    why: >
+      Higher-timeframe capitulation through the bands; dealers fade it.
+      Indicator-defined. Baseline: follow. 1:1.5 ATR. XAUUSD H1.
+    params: {symbols: [XAUUSD], timeframe: H1, horizon_bars: 24}
+
+  - id: H247_asia_mean_reversion
+    enabled: false
+    name: Fade 2 SD band closes in the 22:00-05:00 UTC Asia session on gold
+    why: >
+      Thin Asia books are dominated by range-bound dealer hedging, so band
+      breaks are stop sweeps that revert. Baseline: follow. XAUUSD M15.
+    params: {symbols: [XAUUSD], timeframe: M15, horizon_bars: 12}
+
+  - id: H248_h1_weekly_reversal
+    enabled: false
+    name: Fade a 2 ATR week at Friday 12:00 UTC on gold
+    why: >
+      Funds flatten weekly trends before the weekend. Fade a week up/down more
+      than 2 ATR from the true weekly open at Friday 12:00 UTC. Baseline:
+      follow. XAUUSD H1.
+    params: {symbols: [XAUUSD], timeframe: H1, horizon_bars: 9}
+
 
 
 
