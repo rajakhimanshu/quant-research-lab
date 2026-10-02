@@ -6,6 +6,8 @@ Quant Research Lab (internal name **Proofbook**) takes research leads from acade
 
 > **Not financial advice.** Nothing in this repository is a profitable or recommended strategy. After 250 frozen tests, no FX or gold hypothesis has survived. See [Disclaimer](#disclaimer).
 
+![The research loop is automated; the final calls are human](docs/images/pipeline.png)
+
 | | |
 |---|---|
 | **Universe** | 7 FX majors (EURUSD, GBPUSD, USDJPY, AUDUSD, USDCAD, USDCHF, NZDUSD) + XAUUSD |
@@ -57,6 +59,8 @@ The lab also keeps a **permanent record of failures**. A public list of 233 reje
 ---
 
 ## 2. Results so far
+
+![250 frozen hypotheses, 0 survivors](docs/images/scoreboard.png)
 
 | Decision | Count | Meaning |
 |---|---:|---|
