@@ -30,6 +30,11 @@ data/sentiment/*
 !data/**/.gitkeep
 !data/calendar/README.md
 
+# Private notes and editor-agent rules (kept locally, not published)
+.cursor/
+research/PERPLEXITY_RESEARCH_BRIEF.md
+research/OPERATING_LOOP.md
+
 .idea/
 .vscode/
 *.swp
