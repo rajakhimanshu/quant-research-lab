@@ -130,6 +130,21 @@ def _events_for(hyp: dict, frames: dict[str, pd.DataFrame], settings: dict) -> p
     merged_params = {**settings["features"], **(hyp.get("params") or {})}
     hid = hyp["id"]
     key = hyp_key(hid)
+    if hyp.get("template"):
+        from ats.lab.templates import template_events
+
+        ctx = {
+            "timeframe": merged_params.get("timeframe"),
+            "load": lambda sym, tf: load_frames([sym], tf, settings)[sym],
+        }
+        for symbol, df in frames.items():
+            spread = float(costs["spread_pips"].get(symbol, 1.5))
+            slip = float((costs.get("slippage_by_symbol") or {}).get(symbol, costs["slippage_pips"]))
+            print(f"  scoring {hid} [{hyp['template']}] on {symbol} ({len(df)} bars)")
+            ev = template_events(hyp["template"], df, symbol, merged_params, spread, slip, ctx)
+            if ev is not None and not ev.empty:
+                chunks.append(ev)
+        return pd.concat(chunks, ignore_index=True).sort_values("time") if chunks else pd.DataFrame()
     if key == "H38":
         print(f"  scoring {hid} cross-section ({len(frames)} pairs)")
         return xs_momentum_events(frames, merged_params, settings)
@@ -542,10 +557,11 @@ def evaluate(
     v = settings["validation"]
     times = pd.to_datetime(events["time"], utc=True)
     idx = pd.DatetimeIndex(times)
-    split = locked_calendar_split(settings, split_book_for(hid))
+    book = hyp.get("split_book") or split_book_for(hid)
+    split = locked_calendar_split(settings, book)
     if split is None:
         split = time_splits(idx, float(v["train"]), float(v["validation"]))
-    notes.append(f"split {split_book_for(hid)} train_end={split.train_end} val_end={split.val_end}")
+    notes.append(f"split {book} train_end={split.train_end} val_end={split.val_end}")
     train_m = times <= split.train_end
     val_m = (times > split.train_end) & (times <= split.val_end)
     oos_m = times > split.val_end
@@ -557,8 +573,9 @@ def evaluate(
     else:
         oos = {"status": LOCKED, "n": int(oos_m.sum())}
 
-    treated = events.loc[events["treatment"]]
-    overall = rates(events["success"], events["treatment"])
+    seen = events if unlock_oos else events.loc[~oos_m]
+    treated = seen.loc[seen["treatment"]]
+    overall = rates(seen["success"], seen["treatment"])
     cost_rate = None
     if "success_cost_adj" in events.columns and not treated.empty:
         cost_rate = float(treated["success_cost_adj"].mean())
@@ -658,7 +675,9 @@ def print_report(report: HypothesisReport) -> None:
     print("=" * 64)
 
 
-def run_hypotheses(ids: list[str] | None, unlock_oos: bool) -> list[HypothesisReport]:
+def run_hypotheses(
+    ids: list[str] | None, unlock_oos: bool, n_tests: int | None = None
+) -> list[HypothesisReport]:
     settings = load_settings()
     hyps = load_hypotheses()
     if ids:
@@ -669,7 +688,7 @@ def run_hypotheses(ids: list[str] | None, unlock_oos: bool) -> list[HypothesisRe
             raise SystemExit(f"Unknown hypothesis ids: {missing}")
     else:
         hyps = [h for h in hyps if h.get("enabled", True)]
-    n_tests = len(hyps)
+    n_tests = max(n_tests or 0, len(hyps))
     reports = []
     for hyp in hyps:
         params = hyp.get("params") or {}
