@@ -135,7 +135,6 @@ def cmd_paper_h86(_: argparse.Namespace) -> int:
     print_paper(run_paper())
     return 0
 
-
 def cmd_paper_h5(args: argparse.Namespace) -> int:
     from ats.paper.forward import log_entry, log_exit
     from ats.paper.h5_run import print_paper, run_paper
@@ -153,6 +152,184 @@ def cmd_paper_h5(args: argparse.Namespace) -> int:
         return 0
     print_paper(run_paper(refresh=not args.no_refresh))
     return 0
+
+
+# ── Intake pipeline commands ─────────────────────────────────────────────────
+
+def cmd_intake(args: argparse.Namespace) -> int:  # noqa: C901
+    """Dispatcher for `python -m ats intake <subcommand>`."""
+    cmd = args.intake_cmd or "list"
+
+    # ── list ──────────────────────────────────────────────────────────────────
+    if cmd == "list":
+        from ats.ideas.intake_store import list_rows, print_intake
+        rows = list_rows(status_filter=args.status or None)
+        total = list_rows()  # unfiltered count for context
+        label = f"(filtered: status={args.status})" if args.status else ""
+        print(f"Intake backlog: {len(rows)} records {label}  |  total in file: {len(total)}")
+        print_intake(rows)
+        return 0
+
+    # ── review ────────────────────────────────────────────────────────────────
+    if cmd == "review":
+        from datetime import date
+        from ats.ideas.intake_store import update_status
+        extra: dict = {"reviewed": str(date.today())}
+        if args.tier:
+            extra["timeframe_tier"] = args.tier
+        if args.category:
+            extra["causal_category"] = args.category
+        if args.causal_actor:
+            extra["causal_actor"] = args.causal_actor
+        if args.trades:
+            extra["expected_trades_month"] = args.trades
+        if args.bars:
+            extra["expected_holding_bars"] = args.bars
+        ok = update_status(args.intake_id, "reviewed", **extra)
+        if ok:
+            print(f"[OK] {args.intake_id} -> status=reviewed")
+            for k, v in extra.items():
+                print(f"     {k}: {v}")
+            print(f"\nNext: python -m ats intake promote {args.intake_id}")
+        else:
+            print(f"[ERROR] {args.intake_id} not found in config/intake.yaml")
+        return 0 if ok else 1
+
+    # ── promote ───────────────────────────────────────────────────────────────
+    if cmd == "promote":
+        from ats.ideas.promoter import promote
+        promote(
+            args.intake_id,
+            dry_run=not args.confirm,
+            override_dedup=args.override_dedup,
+        )
+        return 0
+
+    # ── reject ────────────────────────────────────────────────────────────────
+    if cmd == "reject":
+        from ats.ideas.intake_store import update_status
+        ok = update_status(
+            args.intake_id,
+            "rejected_at_intake",
+            rejection_reason=args.reason or "",
+        )
+        if ok:
+            print(f"[OK] {args.intake_id} -> status=rejected_at_intake")
+            print(f"     reason: {args.reason or '(none given)'}")
+        else:
+            print(f"[ERROR] {args.intake_id} not found in config/intake.yaml")
+        return 0 if ok else 1
+
+    # ── paper-monitor ─────────────────────────────────────────────────────────
+    if cmd == "paper-monitor":
+        from ats.ideas.paper_monitor import run_paper_monitor
+        run_paper_monitor(
+            max_per_query=args.max_per_query or 6,
+            save=args.save,
+            ssrn_url=args.ssrn or None,
+        )
+        return 0
+
+    # ── groq-brainstorm ───────────────────────────────────────────────────────
+    if cmd == "groq-brainstorm":
+        from ats.ideas.groq_brainstorm import run_groq_brainstorm, run_groq_brainstorm_all
+        n = args.n or 5
+        if args.all:
+            run_groq_brainstorm_all(n=n)
+        else:
+            if not args.category:
+                print("[ERROR] Provide --category forced_flow|inventory_pressure|structural_liquidity")
+                print("        or use --all to run all three categories.")
+                return 1
+            run_groq_brainstorm(args.category, n=n)
+        return 0
+
+    # ── brainstorm-prompt (copy-paste fallback, no API key needed) ────────────
+    if cmd == "brainstorm-prompt":
+        from ats.ideas.prompts import CATEGORIES, _PROMPTS
+        cat = args.category
+        n = args.n or 5
+        if cat not in CATEGORIES:
+            print(f"[ERROR] Unknown category: {cat!r}. Choose from: {CATEGORIES}")
+            return 1
+        prompt = _PROMPTS[cat].format(n=n)
+        print("=" * 80)
+        print(f"BRAINSTORM PROMPT — category={cat}, n={n}")
+        print("Copy the block below into any LLM, then import the JSON response with:")
+        print("  python -m ats intake brainstorm-import --file response.json")
+        print("=" * 80)
+        print(prompt)
+        return 0
+
+    # ── brainstorm-import (JSON response from any LLM) ────────────────────────
+    if cmd == "brainstorm-import":
+        import json
+        from pathlib import Path
+        from ats.ideas.dedup import check_dedup
+        from ats.ideas.intake_store import add_idea
+        json_path = Path(args.file)
+        if not json_path.exists():
+            print(f"[ERROR] File not found: {json_path}")
+            return 1
+        with open(json_path, encoding="utf-8") as f:
+            ideas = json.load(f)
+        if not isinstance(ideas, list):
+            print("[ERROR] Expected a JSON array of idea objects.")
+            return 1
+        saved = discarded = 0
+        for idea in ideas:
+            actor = (idea.get("causal_actor") or "").strip()
+            if not actor:
+                print(f"  [DISCARD] Missing causal_actor: {idea.get('name', '?')[:60]}")
+                discarded += 1
+                continue
+            dedup = check_dedup(actor, idea.get("name", ""))
+            iid = add_idea({
+                "source": "llm_brainstorm",
+                "source_ref": str(json_path.name),
+                "name": (idea.get("name") or "")[:80],
+                "causal_category": idea.get("causal_category", ""),
+                "causal_actor": actor,
+                "timeframe_tier": "",
+                "instrument": idea.get("instrument", ""),
+                "timeframe": idea.get("timeframe", ""),
+                "expected_holding_bars": idea.get("expected_holding_bars"),
+                "expected_trades_month": idea.get("expected_trades_month"),
+                "dedup_check": dedup,
+                "notes": (idea.get("notes") or "")[:300],
+                "status": "raw",
+            })
+            print(f"  Saved {iid}: {idea.get('name', '')[:60]}")
+            saved += 1
+        print(f"\nImported: {saved}  Discarded (no causal_actor): {discarded}")
+        return 0
+
+    # ── log-trade (K-A04) ─────────────────────────────────────────────────────
+    if cmd == "log-trade":
+        from ats.ideas.ka04_log import log_trade
+        log_trade(
+            instrument=args.instrument,
+            direction=args.direction,
+            timeframe=args.timeframe,
+            reason=args.reason,
+            causal_actor=args.causal_actor,
+            outcome=args.outcome or "",
+        )
+        return 0
+
+    # ── library ───────────────────────────────────────────────────────────────
+    if cmd == "library":
+        from ats.ideas.mechanism_library import print_library
+        print_library(tier_filter=args.tier or None)
+        return 0
+
+    # ── dedup (standalone check) ──────────────────────────────────────────────
+    if cmd == "dedup":
+        from ats.ideas.dedup import print_dedup_report
+        print_dedup_report(args.causal_actor, args.name or "")
+        return 0
+
+    raise SystemExit(f"Unknown intake subcommand: {cmd!r}")
 
 
 DEFAULT_ARXIV = (
@@ -334,6 +511,102 @@ def build_parser() -> argparse.ArgumentParser:
 
     sent = isub.add_parser("sentiment", help="Read a dropped retail-positioning CSV")
     sent.add_argument("--csv", help="Path to CSV (default: data/sentiment/*.csv)")
+    # ── intake subcommand group ───────────────────────────────────────────────
+    intake = sub.add_parser(
+        "intake",
+        help="Hypothesis intake pipeline — upstream of the lab. Generates, screens, and queues ideas.",
+    )
+    intake.set_defaults(func=cmd_intake, intake_cmd="list")
+    isub2 = intake.add_subparsers(dest="intake_cmd")
+
+    # list
+    il = isub2.add_parser("list", help="Show the intake backlog")
+    il.add_argument(
+        "--status",
+        choices=["raw", "reviewed", "promoted", "rejected_at_intake"],
+        help="Filter by status",
+    )
+
+    # review
+    irv = isub2.add_parser("review", help="Mark an intake record as reviewed and fill fields")
+    irv.add_argument("intake_id", help="INTAKE_xxx id")
+    irv.add_argument("--tier", choices=["retail_feasible", "infra_gated"], help="Assign timeframe tier")
+    irv.add_argument(
+        "--category",
+        choices=["forced_flow", "inventory_pressure", "structural_liquidity"],
+        help="Assign causal category",
+    )
+    irv.add_argument("--causal-actor", dest="causal_actor", help="Override/set causal_actor text")
+    irv.add_argument("--trades", type=int, dest="trades", help="Set expected_trades_month")
+    irv.add_argument("--bars", type=int, dest="bars", help="Set expected_holding_bars")
+
+    # promote
+    ipr = isub2.add_parser("promote", help="Run promotion gate + print hypotheses.yaml block")
+    ipr.add_argument("intake_id", help="INTAKE_xxx id")
+    ipr.add_argument("--confirm", action="store_true", help="Mark as promoted in intake.yaml")
+    ipr.add_argument(
+        "--override-dedup",
+        action="store_true",
+        dest="override_dedup",
+        help="Skip dedup gate (use after manual review confirms genuine novelty)",
+    )
+
+    # reject
+    irj = isub2.add_parser("reject", help="Mark as rejected at intake (never reaches the lab)")
+    irj.add_argument("intake_id", help="INTAKE_xxx id")
+    irj.add_argument("--reason", required=True, help="Why this idea is rejected at intake")
+
+    # paper-monitor
+    ipm = isub2.add_parser("paper-monitor", help="Weekly arXiv multi-query M5–M30 paper run")
+    ipm.add_argument("--save", action="store_true", help="Save results to config/intake.yaml")
+    ipm.add_argument("--max-per-query", type=int, default=6, dest="max_per_query")
+    ipm.add_argument("--ssrn", help="Manually drop a single SSRN paper URL instead of running the full sweep")
+
+    # groq-brainstorm
+    ibr = isub2.add_parser("groq-brainstorm", help="Fully automated Groq LLM brainstorm (requires GROQ_API_KEY)")
+    ibr.add_argument(
+        "--category",
+        choices=["forced_flow", "inventory_pressure", "structural_liquidity"],
+        help="Single category to brainstorm",
+    )
+    ibr.add_argument("--all", action="store_true", help="Run all three categories")
+    ibr.add_argument("--n", type=int, default=5, help="Number of ideas to request per category")
+
+    # brainstorm-prompt (copy-paste fallback, no API key needed)
+    ibp = isub2.add_parser("brainstorm-prompt", help="Print a brainstorm prompt for manual copy-paste into any LLM")
+    ibp.add_argument(
+        "category",
+        choices=["forced_flow", "inventory_pressure", "structural_liquidity"],
+    )
+    ibp.add_argument("--n", type=int, default=5)
+
+    # brainstorm-import (import JSON response from any LLM)
+    ibi = isub2.add_parser("brainstorm-import", help="Import LLM response JSON file into intake backlog")
+    ibi.add_argument("--file", required=True, help="Path to JSON response file")
+
+    # log-trade (K-A04)
+    ilt = isub2.add_parser("log-trade", help="K-A04: log a discretionary trade to extract its causal mechanism")
+    ilt.add_argument("--instrument", required=True, help="e.g. XAUUSD")
+    ilt.add_argument("--direction", required=True, choices=["long", "short"])
+    ilt.add_argument("--timeframe", required=True, help="e.g. M5")
+    ilt.add_argument("--reason", required=True, help="Setup description")
+    ilt.add_argument(
+        "--causal-actor",
+        required=True,
+        dest="causal_actor",
+        help="One sentence: who pays you and why",
+    )
+    ilt.add_argument("--outcome", help="e.g. 'win +1.2R'")
+
+    # library
+    ilib = isub2.add_parser("library", help="View the static mechanism library")
+    ilib.add_argument("--tier", choices=["retail_feasible", "infra_gated"])
+
+    # dedup (standalone check)
+    idd = isub2.add_parser("dedup", help="Check a causal_actor string against the ledger for near-duplicates")
+    idd.add_argument("causal_actor", help="The causal_actor text to check")
+    idd.add_argument("--name", default="", help="Optional mechanism name for extra signal")
+
     return p
 
 
