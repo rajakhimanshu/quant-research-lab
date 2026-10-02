@@ -23,6 +23,51 @@ def test_split_books():
     assert split_book_for("H8_atr_momentum") == "fx_h1"
     assert split_book_for("H9_cot_spec_fade") == "gold_m15"
     assert split_book_for("H83_eur_cot_fade") == "fx_h1"
+    assert split_book_for("H219_london_close_gold") == "fx_h1"
+    assert split_book_for("H237_cross_pair_eurusd_gbpusd_lag") == "fx_m5"
+    assert split_book_for("H239_three_bar_exhaustion") == "gold_m5"
+    assert split_book_for("H245_eur_gbp_div_m15") == "fx_m15"
+    assert split_book_for("H247_asia_mean_reversion") == "gold_m15"
+
+
+def test_parse_feed_rss2_and_rdf():
+    from ats.ideas.paper_monitor import parse_feed
+
+    rss2 = b"""<?xml version="1.0"?><rss version="2.0"><channel>
+      <item><title>Dealer inventory and FX liquidity</title>
+      <link>https://www.bis.org/publ/work1.htm</link>
+      <description>&lt;p&gt;Order flow at the fix.&lt;/p&gt;</description>
+      <pubDate>Tue, 01 Sep 2026 00:00:00 GMT</pubDate></item></channel></rss>"""
+    rdf = b"""<?xml version="1.0"?>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://purl.org/rss/1.0/"
+      xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <item><title>Housing credit</title><link>https://example.org/p2</link>
+      <description>Mortgage spreads.</description><dc:date>2026-09-02</dc:date></item>
+    </rdf:RDF>"""
+    a = parse_feed(rss2, "BIS")
+    b = parse_feed(rdf, "ECB")
+    assert a[0]["link"].endswith("work1.htm") and "<p>" not in a[0]["summary"]
+    assert b[0]["published"] == "2026-09-02"
+
+
+def test_relevance_filter_drops_off_topic():
+    from ats.ideas.paper_monitor import is_relevant
+
+    assert is_relevant("Dealer inventory and FX liquidity", "")
+    assert is_relevant("Gold auction drift", "")
+    assert not is_relevant("Housing credit", "Mortgage spreads.")
+
+
+def test_promoter_gates_and_numbering():
+    from ats.ideas.promoter import MIN_TRADES_MONTH, _next_h_number, _validate
+
+    ok = {"causal_actor": "LBMA auction participants", "timeframe_tier": "retail_feasible",
+          "expected_trades_month": 20, "dedup_check": [], "status": "reviewed"}
+    assert _validate(ok) == []
+    assert MIN_TRADES_MONTH <= 20
+    assert _validate(dict(ok, causal_actor=""))
+    assert _validate(dict(ok, expected_trades_month=3))
+    assert _next_h_number() >= 256
 
 
 def test_parse_arxiv_atom():
