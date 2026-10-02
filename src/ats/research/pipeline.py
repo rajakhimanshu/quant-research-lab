@@ -21,6 +21,23 @@ from ats.hypotheses.rapid_bullet import rapid_bullet_events
 from ats.hypotheses.equity_rsi2 import equity_rsi2_events
 from ats.hypotheses.event_reversal import event_reversal_events
 from ats.hypotheses.ema_13_50_200 import ema_13_50_200_events
+from ats.hypotheses.london_close import london_close_events
+from ats.hypotheses.bb_squeeze import bb_squeeze_events
+from ats.hypotheses.london_breakout import london_breakout_events
+from ats.hypotheses.london_breakout_fade import london_breakout_fade_events
+from ats.hypotheses.tuesday_turnaround import tuesday_turnaround_events
+from ats.hypotheses.rsi_extreme_fade import rsi_extreme_fade_events
+from ats.hypotheses.trend_pullback import trend_pullback_events
+from ats.hypotheses.bb_exhaustion import bb_exhaustion_events
+from ats.hypotheses.engulfing_pullback import engulfing_pullback_events
+from ats.hypotheses.mtf_pullback import mtf_pullback_events
+from ats.hypotheses.pure_momentum import pure_momentum_events
+from ats.hypotheses.daily_engulfing import daily_engulfing_events
+from ats.hypotheses.pdhl_sweep import pdhl_sweep_events
+from ats.hypotheses.rsi_divergence import rsi_divergence_events
+from ats.hypotheses.trend_continuation import trend_continuation_events
+from ats.hypotheses.strong_trend import strong_trend_events
+from ats.hypotheses.rsi_extreme import rsi_extreme_events
 from ats.hypotheses.ema200_drd_entry import ema200_drd_entry_events
 from ats.hypotheses.ny_ema_drd import ny_ema_drd_events
 from ats.hypotheses.fx_session import (
@@ -82,6 +99,16 @@ from ats.hypotheses.gulf_dual_liq import gulf_dual_liq_fade_events
 from ats.hypotheses.ny_open_sweep import ny_open_sweep_events, ny_sweep_follow_events
 from ats.hypotheses.session_orb import session_orb_events
 from ats.hypotheses.tap_breakout import tap_events
+from ats.hypotheses.cross_pair_lag import cross_pair_lag_events
+from ats.hypotheses.three_bar_exhaustion import three_bar_exhaustion_events
+from ats.hypotheses.stop_cascade import stop_cascade_absorption_events
+from ats.hypotheses.post_ny_drift import post_ny_drift_reversion_events
+from ats.hypotheses.eur_gbp_divergence import eur_gbp_divergence_events
+from ats.hypotheses.div_filtered_london_asia import div_filtered_london_asia_events
+from ats.hypotheses.div_filtered_rsi import div_filtered_rsi_events
+from ats.hypotheses.h1_vol_exhaustion import h1_vol_exhaustion_events
+from ats.hypotheses.asia_mean_reversion import asia_mean_reversion_events
+from ats.hypotheses.h1_weekly_reversal import h1_weekly_reversal_events
 from ats.research.stats import HypothesisReport, rates
 from ats.timeutil import hyp_key, time_splits, locked_calendar_split, split_book_for
 
@@ -311,6 +338,62 @@ def _events_for(hyp: dict, frames: dict[str, pd.DataFrame], settings: dict) -> p
             ev = clock_run_events(df, symbol, merged_params, spread, slip)
         elif key == "H214":
             ev = gulf_dual_liq_fade_events(df, symbol, merged_params, spread, slip)
+        elif key == "H219":
+            ev = london_close_events(df, symbol, merged_params, spread, slip)
+        elif key == "H220":
+            ev = bb_squeeze_events(df, symbol, merged_params, spread, slip)
+        elif key == "H221":
+            ev = london_breakout_events(df, symbol, merged_params, spread, slip)
+        elif key == "H222":
+            ev = london_breakout_fade_events(df, symbol, merged_params, spread, slip)
+        elif key == "H223":
+            ev = tuesday_turnaround_events(df, symbol, merged_params, spread, slip)
+        elif key == "H224":
+            ev = rsi_extreme_fade_events(df, symbol, merged_params, spread, slip)
+        elif key == "H225":
+            ev = trend_pullback_events(df, symbol, merged_params, spread, slip)
+        elif key == "H226":
+            ev = bb_exhaustion_events(df, symbol, merged_params, spread, slip)
+        elif key == "H227":
+            ev = engulfing_pullback_events(df, symbol, merged_params, spread, slip)
+        elif key == "H228":
+            ev = mtf_pullback_events(df, symbol, merged_params, spread, slip)
+        elif key == "H229":
+            ev = pure_momentum_events(df, symbol, merged_params, spread, slip)
+        elif key == "H230":
+            ev = london_close_events(df, symbol, merged_params, spread, slip)
+        elif key == "H231":
+            ev = daily_engulfing_events(df, symbol, merged_params, spread, slip)
+        elif key == "H232":
+            ev = pdhl_sweep_events(df, symbol, merged_params, spread, slip)
+        elif key == "H233":
+            ev = rsi_divergence_events(df, symbol, merged_params, spread, slip)
+        elif key == "H234":
+            ev = trend_continuation_events(df, symbol, merged_params, spread, slip)
+        elif key == "H235":
+            ev = strong_trend_events(df, symbol, merged_params, spread, slip)
+        elif key == "H236":
+            ev = rsi_extreme_events(df, symbol, merged_params, spread, slip)
+        elif key in {"H237", "H238"}:
+            ev = cross_pair_lag_events(df, symbol, merged_params, spread, slip)
+        elif key == "H239":
+            ev = three_bar_exhaustion_events(df, symbol, merged_params, spread, slip)
+        elif key == "H240":
+            ev = stop_cascade_absorption_events(df, symbol, merged_params, spread, slip)
+        elif key == "H241":
+            ev = post_ny_drift_reversion_events(df, symbol, merged_params, spread, slip)
+        elif key in {"H242", "H245"}:
+            ev = eur_gbp_divergence_events(df, symbol, merged_params, spread, slip)
+        elif key == "H243":
+            ev = div_filtered_london_asia_events(df, symbol, merged_params, spread, slip)
+        elif key == "H244":
+            ev = div_filtered_rsi_events(df, symbol, merged_params, spread, slip)
+        elif key == "H246":
+            ev = h1_vol_exhaustion_events(df, symbol, merged_params, spread, slip)
+        elif key == "H247":
+            ev = asia_mean_reversion_events(df, symbol, merged_params, spread, slip)
+        elif key == "H248":
+            ev = h1_weekly_reversal_events(df, symbol, merged_params, spread, slip)
         else:
             raise ValueError(f"Unknown hypothesis {hid}")
         if ev is not None and not ev.empty:
@@ -318,6 +401,25 @@ def _events_for(hyp: dict, frames: dict[str, pd.DataFrame], settings: dict) -> p
     if not chunks:
         return pd.DataFrame()
     return pd.concat(chunks, ignore_index=True).sort_values("time")
+
+
+def _mean_r(events: pd.DataFrame, mask: pd.Series) -> float | None:
+    if "r_mult" not in events.columns:
+        return None
+    part = events.loc[mask & events["treatment"]]
+    if part.empty:
+        return None
+    return float(part["r_mult"].mean())
+
+
+def mirage_reason(train_r: float | None, val_r: float | None) -> str | None:
+    """A hit-rate win with mean R <= 0 after costs is not an edge."""
+    if train_r is None:
+        return None
+    if train_r <= 0 or val_r is None or val_r <= 0:
+        shown = None if val_r is None else round(val_r, 3)
+        return f"hit-rate mirage: mean R train={train_r:.3f} val={shown} not > 0 after costs"
+    return None
 
 
 def _part_rates(events: pd.DataFrame, mask: pd.Series, success_col: str = "success") -> dict:
@@ -343,6 +445,8 @@ def decide(
         return "NEEDS_MORE_DATA", f"train treatment n={train['n']} < {min_n}"
     if not (train["rate"] == train["rate"]):  # NaN
         return "REJECT", "no treatment events"
+    if not train.get("baseline_n"):
+        return "REJECT", "no baseline arm (treatment-only design cannot be tested)"
     if train["rate"] <= train["baseline_rate"]:
         return "REJECT", "train success is not above baseline"
     if train["p_value"] is None or train["p_value"] > alpha:
@@ -479,14 +583,23 @@ def evaluate(
                 f"n={len(part)} total R={float(part['r_mult'].sum()):.1f}"
             )
 
+    if decision == "CANDIDATE":
+        mirage = mirage_reason(_mean_r(events, train_m), _mean_r(events, val_m))
+        if mirage:
+            decision, reason = "REJECT", mirage
+
     if decision == "CANDIDATE" and not unlock_oos:
         notes.append("OOS is locked until you explicitly unlock it.")
     elif decision == "CANDIDATE" and unlock_oos:
         min_oos = max(30, int(v["min_trades"]) // 4)
+        oos_base = oos.get("baseline_rate")
+        oos_r = _mean_r(events, oos_m)
         if oos.get("n", 0) < min_oos:
             decision, reason = "NEEDS_MORE_DATA", f"oos n={oos.get('n')} too small"
-        elif oos.get("rate") is None or oos.get("rate") <= oos.get("baseline_rate", 1):
+        elif oos.get("rate") is None or oos_base is None or oos_base != oos_base or oos["rate"] <= oos_base:
             decision, reason = "REJECT", "oos success is not above baseline"
+        elif oos_r is not None and oos_r <= 0:
+            decision, reason = "REJECT", f"oos mean R={oos_r:.3f} not > 0 after costs"
         else:
             gap_oos = abs(train["rate"] - oos["rate"])
             if gap_oos > float(v["max_train_val_gap"]):
