@@ -1,29 +1,72 @@
 # Proofbook
 
-**Individual FX & gold hypothesis lab.**  
-Not a company. Not a signal service. Not a quick-money project.
+**An automated quant research lab for FX majors and gold that is built to reject ideas honestly.**
 
-You bring a causal **why**. Proofbook freezes it as `H###`, runs it after spread + slippage on locked train/validation, and writes the verdict into a permanent **closed book**. Rejects stay closed. No EA until a real survivor exists.
+Proofbook takes research leads (papers, a mechanism library, an LLM, or your own notes), turns each one into a frozen hypothesis with a causal *why*, tests it after spread and slippage against a baseline on locked train/validation data, and writes every verdict into a permanent public book. The machine stops at `CANDIDATE`. Unlocking out-of-sample data and choosing a paper candidate are human decisions.
+
+> **Not financial advice. No strategy here is profitable or recommended.** See [Disclaimer](#disclaimer).
 
 | | |
 |---|---|
-| **Name** | Proofbook |
-| **CLI** | `ats` → `python -m ats …` |
-| **Universe** | FX majors + **XAUUSD** only (M5 / M15 / H1) |
-| **Stack** | Python **3.12** + MetaTrader 5 data |
-| **Repo** | https://github.com/rajakhimanshu/algo-trading-system |
+| **CLI** | `python -m ats …` |
+| **Universe** | 7 FX majors + XAUUSD, M5 / M15 / H1 |
+| **Data** | MetaTrader 5 (required, Windows) |
+| **Stack** | Python **3.12** (the MetaTrader5 package has no newer wheel) |
+| **Record** | 250 frozen tests, 0 survivors in FX/gold |
 
 ## Status (honest)
 
-- **250** ledger rows (**H1–H255**)
-- **233 REJECT** · **13 NEEDS_MORE_DATA** · **3 VOID** · **1 PAPER label (H5 equity archived only)**
-- **No FX/gold survivor** → **no MT5 EA**
-- H5 equity RSI is **archived** (out of universe)
-- H86 weekend gap: **REJECT** after last-level FAIL (Sunday fill spread)
-- H192 Xetra gold fade: **OOS REJECT**
-- H214 Gulf 05+08→09 liq fade: **REJECT** (below 11:00 baseline, R−)
-- H219–H248 September batch: **audited and re-run as one family of 29** — 0 candidates (see below)
-- Still thin: H37, H68, H77, H80, H81, H85 (+ seven sept_batch tests below `min_trades`)
+- **250** ledger rows (**H1–H255**): **233 REJECT** · **13 NEEDS_MORE_DATA** · **3 VOID** · **1 ARCHIVED**
+- **No FX/gold hypothesis has survived.** Nothing here is a strategy to trade.
+- H5 (textbook RSI(2) equity dip-buy) is **archived**: out of universe, never live, and today's validator would refuse it.
+- Full table: [`research/HYPOTHESIS_SCOREBOARD.md`](research/HYPOTHESIS_SCOREBOARD.md)
+
+The value of the repo is the process and the closed book, not a result.
+
+## How the lab works
+
+```
+sources ─► leads ─► template spec ─► validate + dedup ─► budget ─► freeze ─► test as one family ─► book
+                                                                                   │
+                                        CANDIDATE ─► human: unlock OOS once ─► OOS_PASS ─► human: paper or reject
+```
+
+- **Templates, not generated code.** An LLM (optional) may only fill the parameters of six fixed event templates (`clock_run`, `session_box`, `sweep_reclaim`, `lead_lag`, `weekend_gap`, `month_end`), each with a closed, bounded schema.
+- **A payer or nothing.** Every spec names who is forced to trade and why. Indicator terms (RSI, EMA, MACD, Bollinger, Fibonacci, support/resistance…) are refused.
+- **No retuning.** A signature excludes stop/target/horizon, so a retune of a closed idea is caught as a duplicate.
+- **Frozen before results**, tested as **one Bonferroni family**, at most one family per week by default.
+- **Costs and a baseline on every trade**: next-bar fill with spread + slippage, treatment must beat a control arm, and mean R must be positive after costs.
+- **OOS locked** until a human runs `ats lab unlock`, once.
+
+Architecture, gates and limits: [`docs/LAB.md`](docs/LAB.md) · Test protocol: [`research/HOW_WE_TEST.md`](research/HOW_WE_TEST.md)
+
+## Quickstart
+
+Requirements: Windows, Python 3.12, a MetaTrader 5 terminal logged in to any broker (a demo account is fine).
+
+```powershell
+git clone https://github.com/rajakhimanshu/algo-trading-system.git proofbook
+cd proofbook
+py -3.12 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -e ".[dev]"
+copy .env.example .env          # optional: MT5 terminal path, GROQ_API_KEY for the proposer
+pytest -q                       # synthetic-data tests; no MT5 needed
+```
+
+Open MT5, log in, then:
+
+```powershell
+python -m ats doctor            # Python 3.12 + MT5 connection check
+python -m ats pull              # OHLC into data/raw (gitignored)
+python -m ats lab templates     # what the lab can test
+python -m ats lab propose --file examples/proposal.yaml
+python -m ats lab run --dry-run
+python -m ats lab run --no-sweep
+python -m ats lab status
+```
+
+Before trusting any result, replace the example cost defaults in [`config/settings.yaml`](config/settings.yaml) with your own broker's median spreads.
 
 ## Audit case study: the September batch (H215–H255)
 
@@ -38,111 +81,48 @@ A fast batch of 41 tests produced several "winners". The audit found the wins we
 | α = 0.05 per test, reruns | Multiple-testing leak | One Bonferroni family of 29 (α = 0.0017) |
 | Spec chosen on full sample | OOS snooped (H255) | VOID, not a result |
 
-After the fixes, the one pre-fix CANDIDATE (H234, gold SMA20 pullback) fell from n=2,766 to n=199 and p=0.15 — its edge was overlapping entries plus long gold beta. Full rows in [`research/ledger.yaml`](research/ledger.yaml).
+After the fixes, the one pre-fix CANDIDATE (H234, gold SMA20 pullback) fell from n=2,766 to n=199 and p=0.15 — its edge was overlapping entries plus long gold beta. These failures are what the automated lab's gates now enforce by construction.
 
-## Research intake (where ideas come from)
+## Research intake (where leads come from)
 
-Ideas enter `config/intake.yaml` as raw leads, are deduplicated against the closed book, and need a human-assigned causal payer before the promotion gate prints a frozen-spec stub. Sources:
+- **Papers:** arXiv q-fin queries plus RSS from BIS, Federal Reserve (FEDS, IFDP), ECB and Bank of England working papers, filtered for FX/gold/dealer/liquidity terms.
+- **Mechanism library:** [`config/mechanism_library.yaml`](config/mechanism_library.yaml) — documented payers (fixes, auctions, inventory, settlement).
+- **LLM (Groq, optional):** constrained by the template catalogue and the ledger's do-not-reopen list.
+- **Manual:** hand-written specs or intake leads.
 
-- **Papers:** arXiv q-fin queries plus RSS from **BIS**, **Federal Reserve (FEDS, IFDP)**, **ECB** and **Bank of England** working papers, filtered for FX/gold/dealer/liquidity terms. SSRN/NBER by manual drop.
-- **Mechanism library:** `config/mechanism_library.yaml` — documented payers (fixes, auctions, inventory, settlement).
-- **LLM brainstorm (Groq):** constrained by category and the ledger's do-not-reopen list.
-- **Discretionary trade log:** manual trades that suggest a mechanism.
+Details: [`research/INTAKE_PIPELINE.md`](research/INTAKE_PIPELINE.md)
 
-```powershell
-python -m ats intake paper-monitor          # dry run
-python -m ats intake list --status raw
-python -m ats intake promote INTAKE_xxx     # gate: payer, retail tier, >= 8 trades/month, dedup, reviewed
-```
-
-Design notes: [`research/INTAKE_PIPELINE.md`](research/INTAKE_PIPELINE.md) · [`research/OPERATING_LOOP.md`](research/OPERATING_LOOP.md)
-
-Full table: [`research/HYPOTHESIS_SCOREBOARD.md`](research/HYPOTHESIS_SCOREBOARD.md)
-
-## What Proofbook is for
-
-1. Force every idea through the same gates (costs, baseline, Bonferroni, train/val gap).  
-2. Keep memory so we never retest noise.  
-3. Stay retail-realistic: one symbol, simple rules, paper → small live → EA only after proof.
-
-Aspiration (~5%/month, ~1% risk) is a **goal**, not something we curve-fit in a backtest.
-
-## How a test works
-
-1. Write the **why** (who pays you).  
-2. Freeze rules + baseline in `config/hypotheses.yaml` **before** results.  
-3. `python -m ats test --id Hxxx`  
-4. Decide from the report (you decide; the lab does not declare “profitable”).  
-5. Update ledger → journal → scoreboard (see checklist below).  
-6. OOS stays **locked** until an explicit survivor unlock.
-
-Details: [`research/HOW_WE_TEST.md`](research/HOW_WE_TEST.md)
-
-**Refused without a new causal why:** indicator stacks (EMA 13/50/200, S/R folklore), multi-TF fishing, “find me an edge,” reopening a REJECT.
-
-## Records (every H is logged)
+## Records
 
 | Record | Path |
 |---|---|
 | Frozen specs | [`config/hypotheses.yaml`](config/hypotheses.yaml) |
-| Closed book | [`research/ledger.yaml`](research/ledger.yaml) |
+| Closed book (hand-curated) | [`research/ledger.yaml`](research/ledger.yaml) |
+| Closed book (lab-written) | `research/lab/book.yaml` |
 | Dated log | [`research/journal.md`](research/journal.md) |
-| Shareable scoreboard | [`research/HYPOTHESIS_SCOREBOARD.md`](research/HYPOTHESIS_SCOREBOARD.md) |
-| After each test | [`research/AFTER_EACH_TEST.md`](research/AFTER_EACH_TEST.md) |
-| External AI brief | [`research/PERPLEXITY_RESEARCH_BRIEF.md`](research/PERPLEXITY_RESEARCH_BRIEF.md) |
-| Name note | [`docs/PROJECT_NAME.md`](docs/PROJECT_NAME.md) |
+| Scoreboard | [`research/HYPOTHESIS_SCOREBOARD.md`](research/HYPOTHESIS_SCOREBOARD.md) |
+| Lab batch reports | `research/lab/reports/` |
 
-```powershell
-python -m ats ledger
-python -m ats scoreboard
-```
-
-## Setup (once)
-
-```powershell
-cd "W:\Currently Working\Algo Trading System"
-py -3.12 -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install -e ".[dev]"
-copy .env.example .env
-```
-
-Open **one** MT5 terminal (logged in), then:
-
-```powershell
-python -m ats doctor
-python -m ats pull
-python -m ats test --id H9_cot_spec_fade
-```
-
-Do **not** pass `--unlock-oos` until train+val clears and you choose to unlock.
-
-## Retail path (locked)
-
-Python lab → paper on this broker → several **$100–$200** accounts (execution / fills) → **$1,000–$2,000** (where ~1% risk on a ~15–20 pip stop is realistic with 0.01 lot) → EA.
-
-No grid. No martingale. One symbol until a survivor.
-
-## Useful commands
+## Commands
 
 | Command | Purpose |
 |---|---|
 | `python -m ats doctor` | Python 3.12 + MT5 check |
 | `python -m ats pull` | OHLC into `data/raw` |
-| `python -m ats test --id H…` | Costed train/val (OOS locked) |
-| `python -m ats ledger` | Print closed book |
-| `python -m ats scoreboard` | Rebuild scoreboard markdown |
-| `python -m ats ideas …` | Idea inbox (not an edge finder) |
-| `python -m ats intake …` | Research intake: paper monitor, review, promotion gate |
+| `python -m ats lab …` | Automated loop: `templates`, `propose`, `run`, `status`, `unlock`, `decide` |
+| `python -m ats test --id H…` | Run one frozen hypothesis (OOS locked) |
+| `python -m ats ledger` | Print the closed book |
+| `python -m ats scoreboard` | Rebuild the scoreboard |
+| `python -m ats intake …` | Paper monitor, intake review, promotion gate |
 
-## Docs map
+## Repo layout
 
-- Research index: [`research/README.md`](research/README.md)  
-- Repo layout: [`docs/REPO_LAYOUT.md`](docs/REPO_LAYOUT.md)  
-- Contributing / tiny commits: [`CONTRIBUTING.md`](CONTRIBUTING.md)  
-- Agent protocol: [`.cursor/rules/research-protocol.mdc`](.cursor/rules/research-protocol.mdc)  
+See [`docs/REPO_LAYOUT.md`](docs/REPO_LAYOUT.md). Contributions: [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
-## Git hygiene
+## Disclaimer
 
-After **every** test: update ledger + journal + scoreboard, prefer **small commits**, push.  
-No Cursor co-author trailers on purpose — commits should read as the owner’s lab history.
+This is a research and education project. It is **not financial advice**, not a signal service, and not an offer to manage money. Every hypothesis in the book is closed or unproven, and none should be traded. Backtests, including honest ones, do not predict future results. Trading leveraged FX and gold can lose more than your deposit. Cost defaults are examples from one retail account; your broker will differ. You are solely responsible for anything you do with this code.
+
+## License
+
+[MIT](LICENSE)

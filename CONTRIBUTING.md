@@ -1,21 +1,24 @@
 # Contributing to Proofbook
 
-This is a **personal research lab**, not an open strategy farm and not a company product.
+Proofbook is a research lab built to reject ideas honestly. Contributions are
+welcome when they keep that property.
 
 ## Rules
 
-1. Every new idea needs a causal **why** before code.  
-2. Freeze the spec in `config/hypotheses.yaml` before looking at results.  
-3. After every test, follow `research/AFTER_EACH_TEST.md`.  
-4. Prefer **many small commits** (ledger, then journal, then scoreboard).  
-5. Never retune a REJECT. Never force-add Co-authored-by bots to history on purpose.  
-6. Do not commit secrets (`.env`), raw MT5 dumps you do not need, or `data/results/*` noise.
+1. Every idea needs a causal **why** and a **payer** (who is forced to trade) before code.
+2. New hypotheses go through `ats lab propose` and an existing template. A mechanism
+   that fits no template needs a new template in `src/ats/lab/templates.py` with a
+   closed, bounded parameter schema, a baseline arm and tests — not a looser schema.
+3. Freeze before results. Never retune or flip a REJECT. Never move split dates.
+4. Do not unlock out-of-sample data except through `ats lab unlock` on a CANDIDATE.
+5. Do not submit "profitable strategy" PRs, indicator combinations, or result-chasing parameter changes.
+6. Do not commit secrets (`.env`), MT5 data (`data/` is gitignored), or `data/results/*`.
+7. Keep commits small (code, then tests, then records).
 
-## Useful commands
+## Checks
 
 ```powershell
-python -m ats doctor
-python -m ats test --id Hxxx
-python -m ats ledger
-python -m ats scoreboard
+pytest -q
+python -m ats lab templates
+python -m ats lab run --dry-run --no-sweep --no-propose
 ```
