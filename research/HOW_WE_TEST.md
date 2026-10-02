@@ -28,7 +28,7 @@ If there is **no causal why** (who is forced to trade / inventory / documented p
 5. **Decide** — train/val gates (below). OOS stays **LOCKED**.  
 6. **Last-level** (rare) — fill/spread/path stress if lab CANDIDATE.  
 7. **OOS unlock** — only after survivor pick + pre-committed gates; one-shot.  
-8. **Paper → $100–200 live → $1k–2k → EA** — only after owner asks; no EA with no survivor.
+8. **Paper → small live execution check → EA** — only after a human decides; no EA with no survivor.
 
 ---
 
@@ -39,7 +39,7 @@ If there is **no causal why** (who is forced to trade / inventory / documented p
 - Timeframes used in research: **M5 / M15 / H1** (not a free scan of every TF to pick a winner).  
 - No equities / crypto / indices (H5 equity archived).
 
-### Costs (Exness Standard–style, applied every trade)
+### Costs (example retail defaults, applied every trade — replace with your broker's medians)
 | Symbol | Spread (lab pips) | Slippage |
 |---|---:|---:|
 | EURUSD | 0.8 | 0.2 |
@@ -77,10 +77,8 @@ Examples:
 OOS = everything after `val_end`. Default: **do not peek** (`--unlock-oos` only after a survivor).
 
 ### Retail path (not a fund)
-- Min lot **0.01**  
-- First live **$100–$200** = execution check (often **cannot** hit 1% risk on a 15-pip stop)  
-- Scale **$1,000–$2,000** ≈ where 1% risk becomes realistic  
-- Aspiration **~5%/month** is a **goal**, not a curve-fit target  
+- Min lot **0.01**: a small account **cannot** hold 1% risk on a 15-pip stop, so a first live step checks fills and spread, not returns  
+- No return target is ever fitted in a backtest  
 
 ---
 
@@ -153,4 +151,4 @@ Implemented in `src/ats/research/pipeline.py` → `decide()`:
 
 **We freeze a causal hypothesis, cost it, compare to a baseline on locked train/val with Bonferroni and a 20% gap rule, require enough trades and positive economics (R), keep OOS locked, and permanently close fails — including indicator folklore we already killed.**
 
-*Config source: `config/settings.yaml`. Protocol: `.cursor/rules/research-protocol.mdc`. Book: `research/ledger.yaml`.*
+*Config source: `config/settings.yaml`. Automated loop: `docs/LAB.md`. Book: `research/ledger.yaml`.*

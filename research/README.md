@@ -12,7 +12,9 @@ Every hypothesis we test is recorded. Nothing is “try and forget.”
 | `research/HYPOTHESIS_SCOREBOARD.md` | Human/shareable table of all Hs | After ledger changes (`python -m ats scoreboard`) |
 | `data/results/H*_*.json` | Raw machine report from that run (gitignored) | Auto on `ats test` |
 | `research/HOW_WE_TEST.md` | Gates, costs, reject rules | When protocol changes |
-| `research/PERPLEXITY_RESEARCH_BRIEF.md` | External AI context brief | After big scoreboard shifts |
+| `research/lab/book.yaml` | Automated lab rows (merged into the ledger view) | Written by `ats lab run` / `unlock` / `decide` |
+| `research/lab/runs.yaml` | One entry per lab family (n, alpha, ids) | Written by `ats lab run` |
+| `research/lab/reports/*.md` | Per-batch report | Written by `ats lab run` |
 
 ## Commands
 

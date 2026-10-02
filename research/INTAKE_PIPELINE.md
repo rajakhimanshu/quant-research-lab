@@ -83,7 +83,7 @@ An intake record must pass **all five gates** before the YAML block is printed:
 
 ### 1. Weekly automated run (set up in Task Scheduler)
 ```bat
-cd /d W:\Currently Working\Algo Trading System
+cd /d C:\path\to\proofbook
 .venv\Scripts\python -m ats intake paper-monitor --save
 .venv\Scripts\python -m ats intake groq-brainstorm --all --n 5
 ```
