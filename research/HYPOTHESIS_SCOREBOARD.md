@@ -10,14 +10,17 @@
 |---|---:|---|
 | **REJECT** | 233 | Failed train/val gates, negative R, or OOS fail. Closed. |
 | **NEEDS_MORE_DATA** | 13 | Spec frozen; sample too thin. Do not loosen. |
-| **PAPER_CANDIDATE** | 1 | Lab label only — see status notes. |
+| **PAPER_CANDIDATE** | 0 | Human label after OOS_PASS. Paper only, never proof. |
+| **ARCHIVED** | 1 | Out of the current universe; kept for history only. |
+| **CANDIDATE** | 0 | Cleared train+val; awaiting a human OOS unlock. |
+| **OOS_PASS** | 0 | Cleared OOS; awaiting a human paper decision. |
 | **VOID** | 3 | Not a result: no why, snooped spec, duplicate, or out of universe. |
 | **Total tested** | 250 | Through `H255_time_scan_gold` |
 
 ### Current status (honest)
 
 - **No FX/gold live survivor.** Do not start an MT5 EA.
-- **H5** PAPER_CANDIDATE on equities only — archived / out of FX+gold universe.
+- **H5** equity RSI(2): ARCHIVED (published folklore, out of the FX+gold universe, never live).
 - **H86** weekend G10 gap: REJECT after last-level FAIL on Sunday fill spread.
 - **H192** Xetra 17:30 gold: OOS REJECT after lab clear.
 - **H214** Gulf 05+08→09 dual-hour liq fade: REJECT (train below 11:00 baseline, R−).
@@ -36,7 +39,7 @@ An edge is who pays you, after spread+slippage, on a frozen spec, with a baselin
 | 2 | `H2_tap_breakout` | **REJECT** | fx_h1 | Third tap of a swing cluster is absorption then breakout vs tap 1-2. | 57.3% vs 54.4%, p=0.12 — 3pp noise. Do not retune cluster width or tap count. |
 | 3 | `H3_ny_open_sweep` | **REJECT** | gold_m15 | Overnight-range stops get run at NY cash open, then reclaim. | 61.7% vs 54.9%, p=0.059; path expectancy negative — Hit-rate mirage. Do not retune stop/target or RR. |
 | 4 | `H4_asia_vs_ny_orb` | **REJECT** | gold_m15 | Asia opening-range breakout should beat NY ORB. | 33.5% vs 46.2% — Opposite of the live book. Asia ORB lost. Do not flip hours. |
-| 5 | `H5_equity_rsi2` | **PAPER_CANDIDATE** | equity_daily | Liquid US ETFs dip-buy above SMA200. RSI(2)<10 vs same dip below SMA200. | 0.091R / val 0.136R / OOS 0.154R (unlocked after survivor) — Only paper book. Not live. Not FX. Do not retune RSI 10/65 or 200. |
+| 5 | `H5_equity_rsi2` | **ARCHIVED** | equity_daily | Liquid US ETFs dip-buy above SMA200. RSI(2)<10 vs same dip below SMA200. | 0.091R / val 0.136R / OOS 0.154R (unlocked after survivor) — Was labelled PAPER_CANDIDATE on 2026-09-03 (equity daily). Archived 2026-09-04 when th... |
 | 6 | `H6_london_sweep` | **REJECT** | gold_m15 | Same as H3 with London 03-08 NY as the stop pool. | 62.9% vs 52.5%, p=0.006, mean R -0.08 — Hit rate up, expectancy negative. Do not retune RR. |
 | 7 | `H7_asia_fade` | **REJECT** | gold_m15 | Fade first Asia ORB vs fade first NY ORB. | both sides lose — Breakout and fade both lose. Journal is not this rule. |
 | 8 | `H8_atr_momentum` | **REJECT** | fx_h1 | Large H1 candle, close in outer 20%, continuation vs same-size mid-close. | 33.7% vs 32.6%, p=0.13, mean R +0.012 — 1:2 coin flip. Do not retune to ATR SL/TP. |
