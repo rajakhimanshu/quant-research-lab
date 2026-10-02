@@ -164,11 +164,15 @@ tests:
   - id: H5_equity_rsi2
     date: 2026-09-03
     book: equity_daily
-    decision: PAPER_CANDIDATE
+    decision: ARCHIVED
     mechanism: Liquid US ETFs dip-buy above SMA200. RSI(2)<10 vs same dip below SMA200.
     baseline: RSI(2)<10 below SMA200.
     train: 0.091R / val 0.136R / OOS 0.154R (unlocked after survivor)
-    why_closed: Only paper book. Not live. Not FX. Do not retune RSI 10/65 or 200.
+    why_closed: >-
+      Was labelled PAPER_CANDIDATE on 2026-09-03 (equity daily). Archived 2026-09-04 when the
+      universe was locked to FX + gold; never traded live. This is the widely published
+      RSI(2) equity dip-buy, kept only as the lab's first pipeline check, not a recommendation.
+      Indicator rule with no forced payer: would be refused by today's lab validator.
 
   - id: H6_london_sweep
     date: 2026-09-03

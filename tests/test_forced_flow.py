@@ -18,7 +18,7 @@ def test_ledger_covers_every_closed_id():
     missing = sorted(hyp_ids - ledger_ids)
     assert not missing, missing
     decisions = {r["id"]: r["decision"] for r in ledger_rows()}
-    assert decisions["H5_equity_rsi2"] == "PAPER_CANDIDATE"
+    assert decisions["H5_equity_rsi2"] == "ARCHIVED"
     assert decisions["H22_ny_box_fade_vs_break"] == "REJECT"
     assert decisions["H9_cot_spec_fade"] == "REJECT"
     assert decisions["H27_wm_fix_follow"] == "REJECT"
