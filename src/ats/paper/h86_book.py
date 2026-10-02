@@ -125,7 +125,7 @@ def scan_symbol(df: pd.DataFrame, symbol: str, settings: dict, now: datetime | N
             "action": "WAIT_HALT",
             "note": (
                 f"Weekend halt. Fade the Sunday reopen (~21:00/22:00 London) if the "
-                f"gap is >=36h and >=0.15 ATR. Exness demo 0.01 lot. Not live. Not an EA."
+                f"gap is >=36h and >=0.15 ATR. Demo 0.01 lot. Not live. Not an EA."
             ),
             "gap_hours": round(hours_since, 1),
             "asof": last_t.isoformat(),

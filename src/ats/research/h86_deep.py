@@ -271,7 +271,7 @@ def run_deep() -> dict:
                 "lot": LOT,
                 "sum_usd": float(cash.sum()) if len(cash) else 0.0,
                 "mean_usd": float(cash.mean()) if len(cash) else None,
-                "note": "0.01 lot cash, not 1% risk. $100-200 demo cannot 1% a 15-pip stop.",
+                "note": "0.01 lot cash, not 1% risk. A small demo cannot 1% a 15-pip stop.",
             }
         )
 

@@ -64,7 +64,7 @@ def run_paper() -> dict:
 
 def print_paper(report: dict) -> None:
     print("H86 paper — weekend-gap fade. NOT live. NOT an EA.")
-    print("Exness demo: 0.01 lot when WAIT_HALT becomes ENTER. $100-200 cannot 1%-risk a 15-pip stop.")
+    print("Demo account: 0.01 lot when WAIT_HALT becomes ENTER. Small accounts cannot 1%-risk a 15-pip stop.")
     print(
         f"OOS replay (hypothetical ${report['paper_start_usd']:.0f} at 1%/R, not the demo lot): "
         f"n={report['oos_n']} mean R={report['oos_mean_r']:.3f} "
