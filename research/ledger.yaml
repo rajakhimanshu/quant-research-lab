@@ -100,6 +100,11 @@ do_not_reopen:
   - H208–H210 Tokyo 08:00 pre-cash follow (do not move to 09:00; do not flip; H209 hit-rate mirage)
   - H211–H213 NY 19:00 Asia-handover fade (do not move to 18:00/21:00; do not flip)
   - H214 Gulf 05+08 dual-hour liq fade at 09:00 Dubai (do not drop 05:00; do not move to 10:00; do not flip; do not retune RR)
+  - H215-H218 Dr.D / SMA / weekly-trap stubs (code lost; not reproducible)
+  - H219-H248 sept_batch re-frozen family of 29 (2026-10-02). No survivor. Do not retune any member; do not split the family to lower alpha
+  - H234 SMA20 pullback (pre-fix CANDIDATE was overlapping entries + gold long beta; one-at-a-time train R +0.01, p=0.15)
+  - H249-H255 EMA batch and time-scan (VOID; no why / snooped / out of universe)
+  - H140 T/N roll revival (17:00 fill spread kills it; stays REJECT)
   - H83 EURO FX COT fade (do not widen 80/20)
   - H84 JPY COT fade (do not rerun n_tests=1; do not widen 80/20)
   - H85 GBP COT fade (n=92; do not widen 80/20)
@@ -2265,21 +2270,279 @@ tests:
       Train success not above baseline. Mean R negative. Do not drop the 05:00
       filter. Do not move to 10:00. Do not flip to follow. Do not retune RR.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  - id: H219_london_close_gold
+    date: 2026-10-02
+    book: fx_h1
+    family: sept_batch
+    decision: REJECT
+    train: 37.6% vs 34.7% n=213, R -0.06; val 28.9% vs 50.0% n=38, R -0.28
+    why_closed: Re-frozen retest (29-test family, alpha 0.0017). train p=0.2726 not < 0.0017 (multiple-testing
+      adjusted). Do not retune.
+  - id: H220_bb_squeeze_gold
+    date: 2026-10-02
+    book: fx_h1
+    family: sept_batch
+    decision: REJECT
+    train: 33.5% vs 30.8% n=164, R +0.00; val 17.6% vs 35.9% n=34, R -0.47
+    why_closed: Re-frozen retest (29-test family, alpha 0.0017). train p=0.2592 not < 0.0017 (multiple-testing
+      adjusted). Do not retune.
+  - id: H221_london_breakout_gold
+    date: 2026-10-02
+    book: fx_h1
+    family: sept_batch
+    decision: REJECT
+    train: 29.0% vs 29.0% n=221, R -0.16; val 19.4% vs 41.9% n=31, R -0.42
+    why_closed: Re-frozen retest (29-test family, alpha 0.0017). train success is not above baseline. Do
+      not retune.
+  - id: H222_london_breakout_fade_gold
+    date: 2026-10-02
+    book: fx_h1
+    family: sept_batch
+    decision: REJECT
+    train: 44.8% vs 48.9% n=221, R -0.10; val 61.3% vs 35.5% n=31, R +0.23
+    why_closed: Re-frozen retest (29-test family, alpha 0.0017). train success is not above baseline. Do
+      not retune.
+  - id: H223_tuesday_turnaround_gold
+    date: 2026-10-02
+    book: fx_h1
+    family: sept_batch
+    decision: REJECT
+    train: 38.6% vs 43.5% n=184, R -0.10; val 35.5% vs 44.8% n=31, R -0.17
+    why_closed: Re-frozen retest (29-test family, alpha 0.0017). train success is not above baseline. Do
+      not retune.
+  - id: H224_rsi_extreme_fade_gold
+    date: 2026-10-02
+    book: fx_h1
+    family: sept_batch
+    decision: REJECT
+    train: 44.6% vs 52.4% n=233, R -0.12; val 37.5% vs 60.0% n=40, R -0.24
+    why_closed: Re-frozen retest (29-test family, alpha 0.0017). train success is not above baseline. Do
+      not retune.
+  - id: H225_trend_pullback_gold
+    date: 2026-10-02
+    book: fx_h1
+    family: sept_batch
+    decision: NEEDS_MORE_DATA
+    train: 42.6% vs 43.4% n=94, R -0.04; val 36.4% vs 45.5% n=11, R -0.15
+    why_closed: Re-frozen retest (29-test family, alpha 0.0017). train treatment n=94 < 100. Do not retune.
+  - id: H226_bb_exhaustion_eur
+    date: 2026-10-02
+    book: fx_h1
+    family: sept_batch
+    decision: NEEDS_MORE_DATA
+    train: 30.1% vs 29.3% n=83, R -0.17; val 7.1% vs 29.9% n=14, R -0.84
+    why_closed: Re-frozen retest (29-test family, alpha 0.0017). train treatment n=83 < 100. OOS already
+      burned by the first-run unlock. Do not retune.
+  - id: H227_engulfing_pullback_gold
+    date: 2026-10-02
+    book: fx_h1
+    family: sept_batch
+    decision: NEEDS_MORE_DATA
+    train: 41.4% vs 32.9% n=29, R +0.24; val 33.3% vs 35.6% n=3, R +0.00
+    why_closed: Re-frozen retest (29-test family, alpha 0.0017). train treatment n=29 < 100. Do not retune.
+  - id: H228_mtf_pullback_gold
+    date: 2026-10-02
+    book: fx_h1
+    family: sept_batch
+    decision: NEEDS_MORE_DATA
+    train: 37.5% vs 38.4% n=56, R +0.06; val 37.5% vs 37.3% n=8, R +0.12
+    why_closed: Re-frozen retest (29-test family, alpha 0.0017). train treatment n=56 < 100. Do not retune.
+  - id: H229_pure_momentum_gold
+    date: 2026-10-02
+    book: fx_h1
+    family: sept_batch
+    decision: REJECT
+    train: 35.5% vs 26.3% n=200, R +0.06; val 23.9% vs 41.2% n=46, R -0.28
+    why_closed: Re-frozen retest (29-test family, alpha 0.0017). train p=0.0331 not < 0.0017 (multiple-testing
+      adjusted). Do not retune.
+  - id: H230_london_close_reversal_gbp
+    date: 2026-10-02
+    book: fx_h1
+    family: sept_batch
+    decision: REJECT
+    train: 42.1% vs 33.5% n=197, R +0.05; val 42.1% vs 28.9% n=38, R +0.05
+    why_closed: Re-frozen retest (29-test family, alpha 0.0017). train p=0.0387 not < 0.0017 (multiple-testing
+      adjusted). Do not retune.
+  - id: H231_daily_engulfing_gold
+    date: 2026-10-02
+    book: fx_h1
+    family: sept_batch
+    decision: NEEDS_MORE_DATA
+    train: 16.7% vs 27.8% n=6, R -0.50; val 50.0% vs 24.0% n=2, R +0.50
+    why_closed: Re-frozen retest (29-test family, alpha 0.0017). train treatment n=6 < 100. Do not retune.
+  - id: H232_pdhl_sweep_gold
+    date: 2026-10-02
+    book: fx_h1
+    family: sept_batch
+    decision: REJECT
+    train: 38.7% vs 35.5% n=287, R -0.03; val 52.3% vs 31.7% n=44, R +0.41
+    why_closed: Re-frozen retest (29-test family, alpha 0.0017). train p=0.2012 not < 0.0017 (multiple-testing
+      adjusted). Do not retune.
+  - id: H233_rsi_divergence_gold
+    date: 2026-10-02
+    book: fx_h1
+    family: sept_batch
+    decision: REJECT
+    train: 32.2% vs 32.1% n=115, R -0.03; val 31.8% vs 25.6% n=22, R -0.05
+    why_closed: Re-frozen retest (29-test family, alpha 0.0017). train p=0.4914 not < 0.0017 (multiple-testing
+      adjusted). Do not retune.
+  - id: H234_trend_continuation_gold
+    date: 2026-10-02
+    book: fx_h1
+    family: sept_batch
+    decision: REJECT
+    train: 33.7% vs 28.7% n=199, R +0.01; val 41.9% vs 21.9% n=31, R +0.26
+    why_closed: Re-frozen retest (29-test family, alpha 0.0017). train p=0.1500 not < 0.0017 (multiple-testing
+      adjusted). OOS already burned by the first-run unlock. Do not retune.
+  - id: H235_strong_trend_gold
+    date: 2026-10-02
+    book: fx_h1
+    family: sept_batch
+    decision: REJECT
+    train: 39.5% vs 28.7% n=124, R +0.18; val 34.6% vs 50.0% n=26, R -0.01
+    why_closed: Re-frozen retest (29-test family, alpha 0.0017). train p=0.0392 not < 0.0017 (multiple-testing
+      adjusted). OOS already burned by the first-run unlock. Do not retune.
+  - id: H236_rsi_extreme_gold
+    date: 2026-10-02
+    book: fx_h1
+    family: sept_batch
+    decision: NEEDS_MORE_DATA
+    train: 43.1% vs 47.1% n=72, R -0.13; val 28.6% vs 48.3% n=14, R -0.43
+    why_closed: Re-frozen retest (29-test family, alpha 0.0017). train treatment n=72 < 100. Do not retune.
+  - id: H237_cross_pair_eurusd_gbpusd_lag
+    date: 2026-10-02
+    book: fx_m5
+    family: sept_batch
+    decision: REJECT
+    train: 40.1% vs 39.4% n=1644, R -0.20; val 37.9% vs 42.1% n=570, R -0.23
+    why_closed: Re-frozen retest (29-test family, alpha 0.0017). train p=0.3216 not < 0.0017 (multiple-testing
+      adjusted). Do not retune.
+  - id: H239_three_bar_exhaustion
+    date: 2026-10-02
+    book: gold_m5
+    family: sept_batch
+    decision: REJECT
+    train: 40.6% vs 51.5% n=165, R -0.17; val 49.1% vs 45.5% n=55, R -0.07
+    why_closed: Re-frozen retest (29-test family, alpha 0.0017). train success is not above baseline. Do
+      not retune.
+  - id: H240_stop_cascade_absorption
+    date: 2026-10-02
+    book: gold_m5
+    family: sept_batch
+    decision: REJECT
+    train: 42.7% vs 47.4% n=852, R -0.14; val 45.3% vs 50.7% n=371, R -0.06
+    why_closed: Re-frozen retest (29-test family, alpha 0.0017). train success is not above baseline. Do
+      not retune.
+  - id: H241_post_ny_drift_reversion
+    date: 2026-10-02
+    book: gold_m15
+    family: sept_batch
+    decision: REJECT
+    train: 41.9% vs 38.3% n=540, R -0.17; val 45.9% vs 48.6% n=183, R -0.09
+    why_closed: Re-frozen retest (29-test family, alpha 0.0017). train p=0.1191 not < 0.0017 (multiple-testing
+      adjusted). Do not retune.
+  - id: H242_eur_gbp_divergence_fade
+    date: 2026-10-02
+    book: fx_m5
+    family: sept_batch
+    decision: REJECT
+    train: 36.2% vs 28.4% n=1871, R -0.27; val 33.8% vs 26.7% n=423, R -0.33
+    why_closed: 'Re-frozen retest (29-test family, alpha 0.0017). hit-rate mirage: mean R train=-0.269 val=-0.325
+      not > 0 after costs. OOS already burned by the first-run unlock. Do not retune.'
+  - id: H243_div_filtered_london_asia_fade
+    date: 2026-10-02
+    book: fx_m5
+    family: sept_batch
+    decision: NEEDS_MORE_DATA
+    train: 49.4% vs 33.7% n=83, R -0.01; val 40.0% vs 30.0% n=20, R -0.20
+    why_closed: Re-frozen retest (29-test family, alpha 0.0017). train treatment n=83 < 100. Do not retune.
+  - id: H244_div_filtered_rsi_extreme
+    date: 2026-10-02
+    book: fx_m5
+    family: sept_batch
+    decision: REJECT
+    train: 38.4% vs 27.6% n=380, R -0.22; val 26.7% vs 33.7% n=86, R -0.45
+    why_closed: Re-frozen retest (29-test family, alpha 0.0017). validation success is not above baseline.
+      Do not retune.
+  - id: H245_eur_gbp_div_m15
+    date: 2026-10-02
+    book: fx_m15
+    family: sept_batch
+    decision: REJECT
+    train: 40.6% vs 37.0% n=2235, R -0.19; val 43.5% vs 38.9% n=561, R -0.13
+    why_closed: Re-frozen retest (29-test family, alpha 0.0017). train p=0.0070 not < 0.0017 (multiple-testing
+      adjusted). Do not retune.
+  - id: H246_h1_vol_exhaustion
+    date: 2026-10-02
+    book: fx_h1
+    family: sept_batch
+    decision: REJECT
+    train: 33.0% vs 40.0% n=215, R -0.18; val 42.4% vs 42.4% n=33, R +0.06
+    why_closed: Re-frozen retest (29-test family, alpha 0.0017). train success is not above baseline. Do
+      not retune.
+  - id: H247_asia_mean_reversion
+    date: 2026-10-02
+    book: gold_m15
+    family: sept_batch
+    decision: REJECT
+    train: 40.3% vs 40.9% n=771, R -0.19; val 42.5% vs 48.4% n=285, R -0.15
+    why_closed: Re-frozen retest (29-test family, alpha 0.0017). train success is not above baseline. Do
+      not retune.
+  - id: H248_h1_weekly_reversal
+    date: 2026-10-02
+    book: fx_h1
+    family: sept_batch
+    decision: REJECT
+    train: 43.8% vs 34.7% n=144, R -0.12; val 26.1% vs 73.9% n=23, R -0.48
+    why_closed: Re-frozen retest (29-test family, alpha 0.0017). train p=0.0583 not < 0.0017 (multiple-testing
+      adjusted). Do not retune.
+  - id: H215_drd_sma9_gold
+    date: 2026-09-19
+    book: fx_h1
+    family: drd
+    decision: REJECT
+    train: first run only; module was a stub, result not reproducible
+    why_closed: Dr.D/SMA family is closed (H14-H16). Code lost in audit. Not reproducible. Do not reopen.
+  - id: H216_weekly_trap
+    date: 2026-09-19
+    book: fx_h1
+    decision: REJECT
+    train: first run used unlogged params; module removed in audit
+    why_closed: No causal payer beyond weekly-high folklore. Removed with scratch code. Do not reopen.
+  - id: H217_sma_cross
+    date: 2026-09-19
+    book: fx_h1
+    decision: REJECT
+    train: first run used unlogged params; module removed in audit
+    why_closed: Moving-average cross is an indicator combo, not a why. Do not reopen.
+  - id: H218_drd_mtf
+    date: 2026-09-19
+    book: fx_h1
+    family: drd
+    decision: REJECT
+    train: first run only; module was a stub, result not reproducible
+    why_closed: Dr.D family closed. OOS was unlocked on a stub. Not reproducible. Do not reopen.
+  - id: H238_cross_pair_lag_dup
+    date: 2026-10-02
+    book: fx_m5
+    family: sept_batch
+    decision: VOID
+    train: same module and params as H237
+    why_closed: Duplicate of H237. Not counted in the family.
+  - id: H249_H254_ema_batch
+    date: 2026-09-30
+    book: gold_m5
+    decision: VOID
+    train: all six ran on XAUUSD M5 by config fallback; H252-H254 identical numbers
+    why_closed: >
+      why was "testing" (no causal payer). EMA family closed. H253 was M30 and BTCUSD,
+      out of universe. Void, not a result.
+  - id: H255_time_scan_gold
+    date: 2026-09-30
+    book: gold_m5
+    decision: VOID
+    train: entry hour picked by a full-sample scan including OOS
+    why_closed: Snooped. OOS used to choose the spec. Void, not a result. Do not re-freeze.
 
 open:
   - "Working universe: FX majors + XAUUSD, intraday (M5/M15) and swing (H1). No stocks."
@@ -2335,4 +2598,5 @@ open:
   - H196–H207 clock batch REJECT (2026-09-16). fedwire18, sgx09, cme14, hk12 — all mean R negative after costs. Do not retune hours. Do not flip. Do not reopen as equity/H5 list.
   - H208–H213 tokyo08 + ny19 REJECT (2026-09-17). H209 hit-rate CANDIDATE but R− (mirage). Do not last-level. Do not unlock OOS. Do not flip.
   - H214_gulf_dual_liq_fade REJECT (2026-09-17). Train below 11:00 baseline; R−. Do not drop 05:00. Do not move to 10:00. Do not flip. Do not retune RR.
+  - sept_batch NEEDS_MORE_DATA (H225, H226, H227, H228, H231, H236, H243) are below min_trades with flat or negative R. Do not loosen filters to raise n.
   - No MT5 EA. No paper book. No survivor yet.

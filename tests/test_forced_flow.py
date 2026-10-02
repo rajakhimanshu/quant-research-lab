@@ -20,11 +20,12 @@ def test_ledger_covers_every_closed_id():
     decisions = {r["id"]: r["decision"] for r in ledger_rows()}
     assert decisions["H5_equity_rsi2"] == "PAPER_CANDIDATE"
     assert decisions["H22_ny_box_fade_vs_break"] == "REJECT"
-    assert decisions["H9_cot_spec_fade"] == "NEEDS_MORE_DATA"
+    assert decisions["H9_cot_spec_fade"] == "REJECT"
     assert decisions["H27_wm_fix_follow"] == "REJECT"
     assert decisions["H37_weekend_gap_fx"] == "NEEDS_MORE_DATA"
-    assert decisions["H86_weekend_gap_g10"] == "PAPER_CANDIDATE"
-    assert decisions["H192_xetra1730_fade_gold"] == "PAPER_CANDIDATE"
+    assert decisions["H86_weekend_gap_g10"] == "REJECT"
+    assert decisions["H192_xetra1730_fade_gold"] == "REJECT"
+    assert decisions["H140_tnext_roll_gbp"] == "REJECT"
 
 
 def _gold(n: int = 500, seed: int = 2, freq: str = "15min") -> pd.DataFrame:
