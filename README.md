@@ -316,6 +316,8 @@ A PAPER_CANDIDATE is still not proof. It means a human has chosen to watch the i
 
 A fast batch of 41 tests (H215–H255) produced several apparent winners. An audit found that the wins came from the test harness, not the market:
 
+![How a winning strategy was really a bug](docs/images/audit.png)
+
 | Problem | Effect | Fix now built into every template |
 |---|---|---|
 | Fill at the signal bar's close, no spread | Inflated R in 15 modules | Next-bar open ± cost, net R |
