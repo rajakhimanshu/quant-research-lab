@@ -52,8 +52,14 @@ def _intake_leads(limit: int) -> list[dict]:
     for r in list_rows():
         if r.get("lab_proposal") or r.get("status") in {"rejected_at_intake", "promoted"}:
             continue
-        leads.append({k: r.get(k) for k in ("id", "name", "title", "summary_excerpt", "causal_actor",
-                                             "causal_category", "instrument", "timeframe", "source_ref")})
+        brainstorm = str(r.get("source_ref") or "").startswith("groq_")
+        if brainstorm and r.get("status") != "reviewed":
+            continue
+        lead = {k: r.get(k) for k in ("id", "name", "title", "summary_excerpt", "causal_actor",
+                                      "causal_category", "instrument", "timeframe", "source_ref")}
+        if brainstorm:
+            lead["source_ref"] = f"{r['source_ref']}:{r['id']}"
+        leads.append(lead)
         if len(leads) >= limit:
             break
     return leads

@@ -163,7 +163,8 @@ intake:
   created: '2026-09-26'
   reviewed: '2026-09-27'
   promoted_to: H237_cross_pair_eurusd_gbpusd_lag
-  outcome: REJECT 2026-10-02 (sept_batch family; tested on M5 with 3-bar lag; train R -0.20)
+  outcome: REJECT 2026-10-02 (sept_batch family; tested on M5 with 3-bar lag; train
+    R -0.20)
 - source: llm_brainstorm
   source_ref: groq_structural_liquidity
   name: Sydney Close Liquidity Vacuum Fade
@@ -269,3 +270,1462 @@ intake:
     >30/month floor
   reopen_note: Floor lowered to 8/month on 2026-10-02. Eligible for owner re-review;
     check against H99_tokyo_roll_jpy before promoting.
+- source: paper
+  feed: arXiv
+  source_ref: https://arxiv.org/abs/2410.23294v1
+  name: Exploiting Risk-Aversion and Size-dependent fees in FX Trading with Fitted
+    Natur
+  title: Exploiting Risk-Aversion and Size-dependent fees in FX Trading with Fitted
+    Natural Actor-Critic
+  summary_excerpt: In recent years, the popularity of artificial intelligence has
+    surged due to its widespread application in various fields. The financial sector
+    has harnessed its advantages for multiple purposes, including the development
+    of automated trading systems designed to interact autonomously with markets to
+  published: '2024-10-15'
+  causal_category: ''
+  causal_actor: ''
+  timeframe_tier: ''
+  instrument: ''
+  timeframe: ''
+  expected_holding_bars: null
+  expected_trades_month: null
+  dedup_check: []
+  status: raw
+  id: INTAKE_012
+  created: '2026-10-04'
+  lab_proposal: P0001
+- source: paper
+  feed: arXiv
+  source_ref: https://arxiv.org/abs/math/0412344v1
+  name: 'Decomposing Intraday Dependence in Currency Markets: Evidence from the AUD/USD
+    S'
+  title: 'Decomposing Intraday Dependence in Currency Markets: Evidence from the AUD/USD
+    Spot Market'
+  summary_excerpt: The local Hurst exponent, a measure employed to detect the presence
+    of dependence in a time series, may also be used to investigate the source of
+    intraday variation observed in the returns in foreign exchange markets. Given
+    that changes in the local Hurst exponent may be due to either a time-varying
+  published: '2004-12-17'
+  causal_category: ''
+  causal_actor: ''
+  timeframe_tier: ''
+  instrument: ''
+  timeframe: ''
+  expected_holding_bars: null
+  expected_trades_month: null
+  dedup_check: []
+  status: raw
+  id: INTAKE_013
+  created: '2026-10-04'
+  lab_proposal: P0002
+- source: paper
+  feed: arXiv
+  source_ref: https://arxiv.org/abs/2608.02002v2
+  name: 'Hawkes-Driven OTC Market Making: Volterra-Riccati Approximation'
+  title: 'Hawkes-Driven OTC Market Making: Volterra-Riccati Approximation'
+  summary_excerpt: 'We formulate an over-the-counter (OTC) market-making problem in
+    which request-for-quote (RFQ) arrivals are modelled by general Hawkes kernels
+    and fills are controlled thinnings of the exogenous request flow. The modelling
+    choice is motivated by spot-FX RFQ data: after filtering and transforming to s'
+  published: '2026-08-03'
+  causal_category: ''
+  causal_actor: ''
+  timeframe_tier: ''
+  instrument: ''
+  timeframe: ''
+  expected_holding_bars: null
+  expected_trades_month: null
+  dedup_check: []
+  status: raw
+  id: INTAKE_014
+  created: '2026-10-04'
+  lab_proposal: P0003
+- source: paper
+  feed: arXiv
+  source_ref: https://arxiv.org/abs/2403.02572v2
+  name: Fill Probabilities in a Limit Order Book with State-Dependent Stochastic Order
+    F
+  title: Fill Probabilities in a Limit Order Book with State-Dependent Stochastic
+    Order Flows
+  summary_excerpt: This paper studies the fill probabilities of limit orders placed
+    at different price levels in a limit order book. These probabilities play a central
+    role in execution optimization, as limit orders are not guaranteed to be executed
+    and inherently involve a trade-off between execution cost and executi
+  published: '2024-03-05'
+  causal_category: ''
+  causal_actor: ''
+  timeframe_tier: ''
+  instrument: ''
+  timeframe: ''
+  expected_holding_bars: null
+  expected_trades_month: null
+  dedup_check: []
+  status: raw
+  id: INTAKE_015
+  created: '2026-10-04'
+  lab_proposal: P0004
+- source: paper
+  feed: arXiv
+  source_ref: https://arxiv.org/abs/2004.01499v1
+  name: Deep Recurrent Modelling of Stationary Bitcoin Price Formation Using the Order
+    F
+  title: Deep Recurrent Modelling of Stationary Bitcoin Price Formation Using the
+    Order Flow
+  summary_excerpt: 'In this paper we propose a deep recurrent model based on the order
+    flow for the stationary modelling of the high-frequency directional prices movements.
+    The order flow is the microsecond stream of orders arriving at the exchange, driving
+    the formation of prices seen on the price chart of a stock or '
+  published: '2020-03-31'
+  causal_category: ''
+  causal_actor: ''
+  timeframe_tier: ''
+  instrument: ''
+  timeframe: ''
+  expected_holding_bars: null
+  expected_trades_month: null
+  dedup_check: []
+  status: raw
+  id: INTAKE_016
+  created: '2026-10-04'
+  lab_proposal: P0005
+- source: paper
+  feed: arXiv
+  source_ref: https://arxiv.org/abs/1609.04640v3
+  name: Statistically validated lead-lag networks and inventory prediction in the
+    foreig
+  title: Statistically validated lead-lag networks and inventory prediction in the
+    foreign exchange market
+  summary_excerpt: We introduce a method to infer lead-lag networks of agents' actions
+    in complex systems. These networks open the way to both microscopic and macroscopic
+    states prediction in such systems. We apply this method to trader-resolved data
+    in the foreign exchange market. We show that these networks are rema
+  published: '2016-09-15'
+  causal_category: ''
+  causal_actor: ''
+  timeframe_tier: ''
+  instrument: ''
+  timeframe: ''
+  expected_holding_bars: null
+  expected_trades_month: null
+  dedup_check: []
+  status: raw
+  id: INTAKE_017
+  created: '2026-10-04'
+  lab_proposal: P0006
+- source: paper
+  feed: arXiv
+  source_ref: https://arxiv.org/abs/1504.04354v2
+  name: The Long Memory of Order Flow in the Foreign Exchange Spot Market
+  title: The Long Memory of Order Flow in the Foreign Exchange Spot Market
+  summary_excerpt: We study the long memory of order flow for each of three liquid
+    currency pairs on a large electronic trading platform in the foreign exchange
+    (FX) spot market. Due to the extremely high levels of market activity on the platform,
+    and in contrast to existing empirical studies of other markets, our dat
+  published: '2015-04-16'
+  causal_category: ''
+  causal_actor: ''
+  timeframe_tier: ''
+  instrument: ''
+  timeframe: ''
+  expected_holding_bars: null
+  expected_trades_month: null
+  dedup_check: []
+  status: raw
+  id: INTAKE_018
+  created: '2026-10-04'
+  lab_proposal: P0007
+- source: paper
+  feed: arXiv
+  source_ref: https://arxiv.org/abs/2407.16885v1
+  name: Automated Market Making and Decentralized Finance
+  title: Automated Market Making and Decentralized Finance
+  summary_excerpt: Automated market makers (AMMs) are a new type of trading venues
+    which are revolutionising the way market participants interact. At present, the
+    majority of AMMs are constant function market makers (CFMMs) where a deterministic
+    trading function determines how markets are cleared. Within CFMMs, we foc
+  published: '2024-07-23'
+  causal_category: ''
+  causal_actor: ''
+  timeframe_tier: ''
+  instrument: ''
+  timeframe: ''
+  expected_holding_bars: null
+  expected_trades_month: null
+  dedup_check: []
+  status: raw
+  id: INTAKE_019
+  created: '2026-10-04'
+  lab_proposal: P0008
+- source: paper
+  feed: arXiv
+  source_ref: https://arxiv.org/abs/2010.15403v2
+  name: Multiscale characteristics of the emerging global cryptocurrency market
+  title: Multiscale characteristics of the emerging global cryptocurrency market
+  summary_excerpt: The review introduces the history of cryptocurrencies, offering
+    a description of the blockchain technology behind them. Differences between cryptocurrencies
+    and the exchanges on which they are traded have been shown. The central part surveys
+    the analysis of cryptocurrency price changes on various pl
+  published: '2020-10-29'
+  causal_category: ''
+  causal_actor: ''
+  timeframe_tier: ''
+  instrument: ''
+  timeframe: ''
+  expected_holding_bars: null
+  expected_trades_month: null
+  dedup_check: []
+  status: raw
+  id: INTAKE_020
+  created: '2026-10-04'
+  lab_proposal: P0009
+- source: paper
+  feed: arXiv
+  source_ref: https://arxiv.org/abs/2004.10560v2
+  name: Examining Lead-Lag Relationships In-Depth, With Focus On FX Market As Covid-19
+    C
+  title: Examining Lead-Lag Relationships In-Depth, With Focus On FX Market As Covid-19
+    Crises Unfolds
+  summary_excerpt: The lead-lag relationship plays a vital role in financial markets.
+    It is the phenomenon where a certain price-series lags behind and partially replicates
+    the movement of leading time-series. The present research proposes a new technique
+    which helps better identify the lead-lag relationship empirical
+  published: '2020-04-22'
+  causal_category: ''
+  causal_actor: ''
+  timeframe_tier: ''
+  instrument: ''
+  timeframe: ''
+  expected_holding_bars: null
+  expected_trades_month: null
+  dedup_check: []
+  status: raw
+  id: INTAKE_021
+  created: '2026-10-04'
+  lab_proposal: P0010
+- source: paper
+  feed: arXiv
+  source_ref: https://arxiv.org/abs/1906.10388v3
+  name: Lead-lag Relationships in Foreign Exchange Markets
+  title: Lead-lag Relationships in Foreign Exchange Markets
+  summary_excerpt: Lead-lag relationships among assets represent a useful tool for
+    analyzing high frequency financial data. However, research on these relationships
+    predominantly focuses on correlation analyses for the dynamics of stock prices,
+    spots and futures on market indexes, whereas foreign exchange data have be
+  published: '2019-06-25'
+  causal_category: ''
+  causal_actor: ''
+  timeframe_tier: ''
+  instrument: ''
+  timeframe: ''
+  expected_holding_bars: null
+  expected_trades_month: null
+  dedup_check: []
+  status: raw
+  id: INTAKE_022
+  created: '2026-10-04'
+  lab_proposal: P0012
+- source: paper
+  feed: arXiv
+  source_ref: https://arxiv.org/abs/1903.00472v1
+  name: 'Cryptocurrency market structure: connecting emotions and economics'
+  title: 'Cryptocurrency market structure: connecting emotions and economics'
+  summary_excerpt: We study the dependency and causality structure of the cryptocurrency
+    market investigating collective movements of both prices and social sentiment
+    related to almost two thousand cryptocurrencies traded during the first six months
+    of 2018. This is the first study of the whole cryptocurrency market s
+  published: '2019-03-03'
+  causal_category: ''
+  causal_actor: ''
+  timeframe_tier: ''
+  instrument: ''
+  timeframe: ''
+  expected_holding_bars: null
+  expected_trades_month: null
+  dedup_check: []
+  status: raw
+  id: INTAKE_023
+  created: '2026-10-04'
+  lab_proposal: P0013
+- source: paper
+  feed: arXiv
+  source_ref: https://arxiv.org/abs/1901.00834v3
+  name: The market nanostructure origin of asset price time reversal asymmetry
+  title: The market nanostructure origin of asset price time reversal asymmetry
+  summary_excerpt: We introduce a framework to infer lead-lag networks between the
+    states of elements of complex systems, determined at different timescales. As
+    such networks encode the causal structure of a system, infering lead-lag networks
+    for many pairs of timescales provides a global picture of the mutual influen
+  published: '2019-01-03'
+  causal_category: ''
+  causal_actor: ''
+  timeframe_tier: ''
+  instrument: ''
+  timeframe: ''
+  expected_holding_bars: null
+  expected_trades_month: null
+  dedup_check: []
+  status: raw
+  id: INTAKE_024
+  created: '2026-10-04'
+  lab_proposal: P0014
+- source: institutional
+  feed: BIS working papers
+  source_ref: https://www.bis.org/publications/working-paper-1374-verifiable-official-statistics-blockchain-based-approach
+  name: 'Verifiable official statistics: a blockchain-based approach'
+  title: 'Verifiable official statistics: a blockchain-based approach'
+  summary_excerpt: International organisations including the Bank for International
+    Settlements (BIS) have adopted SDMx (Statistical Data and Metadata) as the standard
+    for exchanging official statistics. Trust in published data is essential for evidence-based
+    policymaking. This paper shows how binding each SDMx datase
+  published: '2026-09-02T00:00:00Z'
+  causal_category: ''
+  causal_actor: ''
+  timeframe_tier: ''
+  instrument: ''
+  timeframe: ''
+  expected_holding_bars: null
+  expected_trades_month: null
+  dedup_check: []
+  status: raw
+  id: INTAKE_025
+  created: '2026-10-04'
+  lab_proposal: P0015
+- source: institutional
+  feed: BIS working papers
+  source_ref: https://www.bis.org/publications/working-paper-1373-settlement-liquidity-colombian-large-value-payment-system-role-reserve-requirements
+  name: 'Settlement liquidity in the Colombian large-value payment system: the role
+    of re'
+  title: 'Settlement liquidity in the Colombian large-value payment system: the role
+    of reserve requirements'
+  summary_excerpt: This paper analyzes the intraday timing of transactions in Colombia's
+    large-value payment system (CUD) from 2018 to 2025, focusing on how changes in
+    reserve requirements affect liquidity management by financial institutions. Using
+    high-frequency transaction data, we document that reductions in reser
+  published: '2026-08-25T00:00:00Z'
+  causal_category: ''
+  causal_actor: ''
+  timeframe_tier: ''
+  instrument: ''
+  timeframe: ''
+  expected_holding_bars: null
+  expected_trades_month: null
+  dedup_check: []
+  status: raw
+  id: INTAKE_026
+  created: '2026-10-04'
+  lab_proposal: P0016
+- source: institutional
+  feed: BIS working papers
+  source_ref: https://www.bis.org/publications/working-paper-1372-hard-shift-easy-reshape-central-bank-reserve-demand-and-frictions
+  name: 'Hard to shift, easy to reshape: central bank reserve demand and frictions'
+  title: 'Hard to shift, easy to reshape: central bank reserve demand and frictions'
+  summary_excerpt: How far can central banks shrink their balance sheets? The answer
+    sets the limits to quantitative tightening (QT), and depends critically on the
+    demand for reserves and whether the drivers widely thought to have increased it
+    over the past decade actually do so. We assess the impact of three such dri
+  published: '2026-08-24T00:00:00Z'
+  causal_category: ''
+  causal_actor: ''
+  timeframe_tier: ''
+  instrument: ''
+  timeframe: ''
+  expected_holding_bars: null
+  expected_trades_month: null
+  dedup_check: []
+  status: raw
+  id: INTAKE_027
+  created: '2026-10-04'
+  lab_proposal: P0017
+- source: institutional
+  feed: BIS working papers
+  source_ref: https://www.bis.org/publications/working-paper-1371-what-drives-exchange-rate-pass-throughs-evidence-non-parametric-method
+  name: What drives exchange rate pass-throughs? Evidence from a non-parametric method
+  title: What drives exchange rate pass-throughs? Evidence from a non-parametric method
+  summary_excerpt: We provide new evidence on the drivers of the pass-through of exchange
+    rate movements into consumer prices across four decades and close to a hundred
+    countries, combining econometrics and random forests.
+  published: '2026-07-22T00:00:00Z'
+  causal_category: ''
+  causal_actor: ''
+  timeframe_tier: ''
+  instrument: ''
+  timeframe: ''
+  expected_holding_bars: null
+  expected_trades_month: null
+  dedup_check: []
+  status: raw
+  id: INTAKE_028
+  created: '2026-10-04'
+  lab_proposal: P0018
+- source: institutional
+  feed: BIS working papers
+  source_ref: https://www.bis.org/publications/dollarisation-and-monetary-control-what-lessons-rise-stablecoins
+  name: 'Dollarisation and monetary control: what lessons for the rise of stablecoins?'
+  title: 'Dollarisation and monetary control: what lessons for the rise of stablecoins?'
+  summary_excerpt: We document that historical deposit dollarisation and recent stablecoin
+    flows are both associated with similar macro-financial drivers, including the
+    strength of exchange rate pass-through and sovereign or banking crises.
+  published: '2026-07-21T00:00:00Z'
+  causal_category: ''
+  causal_actor: ''
+  timeframe_tier: ''
+  instrument: ''
+  timeframe: ''
+  expected_holding_bars: null
+  expected_trades_month: null
+  dedup_check: []
+  status: raw
+  id: INTAKE_029
+  created: '2026-10-04'
+  lab_proposal: P0019
+- source: institutional
+  feed: BIS working papers
+  source_ref: https://www.bis.org/publications/working-paper-1358-asset-price-bubbles-and-systemic-risk-money-market-funds
+  name: Asset price bubbles and systemic risk in money market funds
+  title: Asset price bubbles and systemic risk in money market funds
+  summary_excerpt: We investigate how asset price bubbles interact with systemic risk
+    in the money market fund (MMF) sector, using a large sample of more than 3,500
+    US dollar-denominated MMFs between 2004 and 2022.
+  published: '2026-06-09T00:00:00Z'
+  causal_category: ''
+  causal_actor: ''
+  timeframe_tier: ''
+  instrument: ''
+  timeframe: ''
+  expected_holding_bars: null
+  expected_trades_month: null
+  dedup_check: []
+  status: raw
+  id: INTAKE_030
+  created: '2026-10-04'
+  lab_proposal: P0020
+- source: institutional
+  feed: BIS research hub
+  source_ref: https://www.federalreserve.gov/econres/feds/files/2026051pap.pdf
+  name: 'The Last Taxi: LCR Buffers and Bank Liquidity Provision'
+  title: 'The Last Taxi: LCR Buffers and Bank Liquidity Provision'
+  summary_excerpt: Board of Governors of the Federal Reserve System Finance and Economics
+    Discussion Series by Alexandros Vardoulakis, Matt Darst, Arazi Lubis and Lucia
+    Gurrieri
+  published: '2026-07-17T00:00:00Z'
+  causal_category: ''
+  causal_actor: ''
+  timeframe_tier: ''
+  instrument: ''
+  timeframe: ''
+  expected_holding_bars: null
+  expected_trades_month: null
+  dedup_check: []
+  status: raw
+  id: INTAKE_031
+  created: '2026-10-04'
+  lab_proposal: P0021
+- source: institutional
+  feed: BIS research hub
+  source_ref: https://www.clevelandfed.org/-/media/project/clevelandfedtenant/clevelandfedsite/publications/working-papers/2026/wp2616.pdf
+  name: Do You Even Crypto, Bro? Cryptocurrencies in Household Finance
+  title: Do You Even Crypto, Bro? Cryptocurrencies in Household Finance
+  summary_excerpt: Federal Reserve Bank of Cleveland Working Papers by Olivier Coibion,
+    Yuriy Gorodnichenko, Michael Weber and Bernardo Candia
+  published: '2026-07-14T00:00:00Z'
+  causal_category: ''
+  causal_actor: ''
+  timeframe_tier: ''
+  instrument: ''
+  timeframe: ''
+  expected_holding_bars: null
+  expected_trades_month: null
+  dedup_check: []
+  status: raw
+  id: INTAKE_032
+  created: '2026-10-04'
+  lab_proposal: P0023
+- source: institutional
+  feed: Fed FEDS
+  source_ref: https://www.federalreserve.gov/econres/feds/government-bond-backed-repo-markets-between-resilience-and-vulnerability.htm
+  name: 'FEDS Paper: Government bond-backed repo markets: between resilience and vulnerab'
+  title: 'FEDS Paper: Government bond-backed repo markets: between resilience and
+    vulnerability'
+  summary_excerpt: Ayelen Banegas , Lucas Devigne, Mulalo Mamburu, Kleopatra Nikolaou,
+    Anna Samarina, Fabio Tamburrini This paper synthesizes the literature on vulnerabilities
+    in government bond-backed repo markets, focusing on the features that contribute
+    to both the fragility and stability of these markets. The lite
+  published: Wed, 12 Aug 2026 12:30:00 GMT
+  causal_category: ''
+  causal_actor: ''
+  timeframe_tier: ''
+  instrument: ''
+  timeframe: ''
+  expected_holding_bars: null
+  expected_trades_month: null
+  dedup_check: []
+  status: raw
+  id: INTAKE_033
+  created: '2026-10-04'
+  lab_proposal: P0024
+- source: institutional
+  feed: Fed IFDP
+  source_ref: https://www.federalreserve.gov/econres/ifdp/exchange-rate-transmission-through-multinational-firms-evidence-from-japan.htm
+  name: 'IFDP Paper: Exchange Rate Transmission through Multinational Firms: Evidence
+    fro'
+  title: 'IFDP Paper: Exchange Rate Transmission through Multinational Firms: Evidence
+    from Japan'
+  summary_excerpt: Ryan Kim, Bin Ni, Hyunseung Oh , and Choongryul Yang We study an
+    income-account channel of exchange-rate transmission using matched data on Japanese
+    multinational parents and their foreign affiliates. During the sharp yen depreciation
+    of 2021&#8211;22, we find that (i) foreign affiliates with greate
+  published: Fri, 4 Sep 2026 15:44:00 GMT
+  causal_category: ''
+  causal_actor: ''
+  timeframe_tier: ''
+  instrument: ''
+  timeframe: ''
+  expected_holding_bars: null
+  expected_trades_month: null
+  dedup_check: []
+  status: raw
+  id: INTAKE_034
+  created: '2026-10-04'
+  lab_proposal: P0025
+- source: institutional
+  feed: Fed IFDP
+  source_ref: https://www.federalreserve.gov/econres/ifdp/pricing-risk-globally-intermediary-constraints-the-dollar-and-the-global-financial-cycle.htm
+  name: 'IFDP Paper: Pricing Risk Globally: Intermediary Constraints, the Dollar,
+    and the'
+  title: 'IFDP Paper: Pricing Risk Globally: Intermediary Constraints, the Dollar,
+    and the Global Financial Cycle'
+  summary_excerpt: Ozge Akinci, Sebnem Kalemli-Ozcan, and Albert Queralto We study
+    how increased uncertainty about U.S. asset returns affects global asset prices
+    and exchange rates in a two-country model with intermediary balance-sheet constraints.
+    Empirically, uncertainty shocks widen global credit spreads, appreciat
+  published: Mon, 31 Aug 2026 17:29:00 GMT
+  causal_category: ''
+  causal_actor: ''
+  timeframe_tier: ''
+  instrument: ''
+  timeframe: ''
+  expected_holding_bars: null
+  expected_trades_month: null
+  dedup_check: []
+  status: raw
+  id: INTAKE_035
+  created: '2026-10-04'
+  lab_proposal: P0026
+- source: institutional
+  feed: Fed IFDP
+  source_ref: https://www.federalreserve.gov/econres/ifdp/fiscal-policy-portfolio-frictions-and-international-transmission.htm
+  name: 'IFDP Paper: Fiscal Policy, Portfolio Frictions, and International Transmission'
+  title: 'IFDP Paper: Fiscal Policy, Portfolio Frictions, and International Transmission'
+  summary_excerpt: 'Marcos Mac Mullen I study the international transmission of fiscal
+    policy and its impact on the real exchange rate (RER) and net exports. I document
+    that periods of high government debt are strongly associated with a depreciated
+    RER and subsequent increases in net exports. I present causal evidence '
+  published: Mon, 22 Jun 2026 14:51:00 GMT
+  causal_category: ''
+  causal_actor: ''
+  timeframe_tier: ''
+  instrument: ''
+  timeframe: ''
+  expected_holding_bars: null
+  expected_trades_month: null
+  dedup_check: []
+  status: raw
+  id: INTAKE_036
+  created: '2026-10-04'
+  lab_proposal: P0027
+- source: institutional
+  feed: ECB working papers
+  source_ref: https://www.ecb.europa.eu//pub/pdf/scpwps/ecb.wp3282~b3fc21f7c5.en.pdf
+  name: 'When firms do not take the money and run: evidence from corporate loan moratoria'
+  title: 'When firms do not take the money and run: evidence from corporate loan moratoria'
+  summary_excerpt: 'Suspending loan repayments is a widely used policy tool to provide
+    liquidity during crises. We study the take-up and real effects of the 2020 Austrian
+    corporate debt moratoria, which required banks to temporarily postpone loan repayments
+    for eligible firms. Exploiting a discontinuity in eligibility '
+  published: Wed, 16 Sep 2026 11:00:00 +0200
+  causal_category: ''
+  causal_actor: ''
+  timeframe_tier: ''
+  instrument: ''
+  timeframe: ''
+  expected_holding_bars: null
+  expected_trades_month: null
+  dedup_check: []
+  status: raw
+  id: INTAKE_037
+  created: '2026-10-04'
+  lab_proposal: P0028
+- source: institutional
+  feed: Bank of England
+  source_ref: https://www.bankofengland.co.uk/working-paper/2026/one-dollar-many-prices-dealer-specific-pricing-of-synthetic-dollar-funding
+  name: 'One dollar, many prices: dealer-specific pricing of synthetic dollar funding'
+  title: 'One dollar, many prices: dealer-specific pricing of synthetic dollar funding'
+  summary_excerpt: Staff working papers set out research in progress by our staff,
+    with the aim of encouraging comments and debate.
+  published: Fri, 18 Sep 2026 14:00:00 +0100
+  causal_category: ''
+  causal_actor: ''
+  timeframe_tier: ''
+  instrument: ''
+  timeframe: ''
+  expected_holding_bars: null
+  expected_trades_month: null
+  dedup_check: []
+  status: raw
+  id: INTAKE_038
+  created: '2026-10-04'
+  lab_proposal: P0029
+- source: institutional
+  feed: Bank of England
+  source_ref: https://www.bankofengland.co.uk/working-paper/2026/sos-the-overnight-bilateral-liquidity-provision-of-non-bank-financial-institutions-to-banks
+  name: SoS! The overnight bilateral liquidity provision of non-bank financial instituti
+  title: SoS! The overnight bilateral liquidity provision of non-bank financial institutions
+    to banks
+  summary_excerpt: Staff working papers set out research in progress by our staff,
+    with the aim of encouraging comments and debate.
+  published: Fri, 10 Jul 2026 14:01:00 +0100
+  causal_category: ''
+  causal_actor: ''
+  timeframe_tier: ''
+  instrument: ''
+  timeframe: ''
+  expected_holding_bars: null
+  expected_trades_month: null
+  dedup_check: []
+  status: raw
+  id: INTAKE_039
+  created: '2026-10-04'
+  lab_proposal: P0030
+- source: paper
+  feed: arXiv
+  source_ref: https://arxiv.org/abs/2507.14810v2
+  name: 'Optimal Decisions for Liquid Staking: Allocation and Exit Timing'
+  title: 'Optimal Decisions for Liquid Staking: Allocation and Exit Timing'
+  summary_excerpt: 'In this paper, we study an investor''s optimal entry and exit
+    decisions in a liquid staking protocol (LSP) and an automated market maker (AMM),
+    primarily from the standpoint of the investor. Our analysis focuses on two key
+    investor actions: the initial allocation decision at time $t=0$, and the optim'
+  published: '2025-07-20'
+  causal_category: ''
+  causal_actor: ''
+  timeframe_tier: ''
+  instrument: ''
+  timeframe: ''
+  expected_holding_bars: null
+  expected_trades_month: null
+  dedup_check: []
+  status: raw
+  id: INTAKE_040
+  created: '2026-10-04'
+  lab_proposal: P0031
+- source: llm_brainstorm
+  source_ref: groq_forced_flow
+  name: Euro CPI Forced ETF Rebalance
+  causal_category: forced_flow
+  causal_actor: Euro‑area index ETF managers are forced to rebalance their EUR exposure
+    exactly at the Euro CPI release because the index rules require immediate weight
+    adjustments.
+  timeframe_tier: ''
+  instrument: EURUSD
+  timeframe: M5
+  expected_holding_bars: 10
+  expected_trades_month: 130
+  dedup_check: []
+  notes: Uses the 07:45 Euro CPI release, not the WM 16:00 benchmark; focuses on ETF
+    rebalancing rather than a market‑wide fix.
+  status: rejected_at_intake
+  id: INTAKE_041
+  created: '2026-10-06'
+  lab_proposal: P0033
+  rejection_reason: 'Invented forced flow: no rule forces this trade at that time
+    (ETFs do not rebalance on CPI)'
+  rejected_date: '2026-10-10'
+- source: llm_brainstorm
+  source_ref: groq_forced_flow
+  name: UK Retail Sales Carry‑Trade Unwind
+  causal_category: forced_flow
+  causal_actor: Large UK pension fund managers must unwind short‑GBP carry‑trades
+    exactly after the 10:00 UK Retail Sales print to stay within mandated risk limits.
+  timeframe_tier: ''
+  instrument: GBPUSD
+  timeframe: M15
+  expected_holding_bars: 14
+  expected_trades_month: 115
+  dedup_check:
+  - H258_fx_option_expiry_clustering_at_n
+  notes: Targets the retail‑sales release, distinct from NFP or FOMC ideas and avoids
+    any EMA/VWAP logic.
+  status: rejected_at_intake
+  id: INTAKE_042
+  created: '2026-10-06'
+  lab_proposal: P0034
+  rejection_reason: Already tested in lab (H259-H263), mechanism invented
+  rejected_date: '2026-10-10'
+- source: llm_brainstorm
+  source_ref: groq_forced_flow
+  name: BOJ Policy Decision Yen Carry‑Trade Settlement
+  causal_category: forced_flow
+  causal_actor: Hedge funds with yen‑funded carry positions are forced to close or
+    roll their USDJPY exposure at the 08:30 BOJ policy announcement because their
+    financing contracts expire at that moment.
+  timeframe_tier: ''
+  instrument: USDJPY
+  timeframe: M5
+  expected_holding_bars: 9
+  expected_trades_month: 140
+  dedup_check:
+  - H257_post_auction_price_discovery_dri
+  notes: Leverages the BOJ decision time, not previously tested tom‑next or month‑end
+    mechanisms.
+  status: rejected_at_intake
+  id: INTAKE_043
+  created: '2026-10-06'
+  lab_proposal: P0035
+  rejection_reason: Already tested in lab (H259-H263), mechanism invented; BOJ has
+    no fixed 08:30
+  rejected_date: '2026-10-10'
+- source: llm_brainstorm
+  source_ref: groq_forced_flow
+  name: RBA Minutes Commodity‑Fund Rebalance
+  causal_category: forced_flow
+  causal_actor: Commodity‑linked Australian fund managers must adjust AUD exposure
+    exactly after the 02:00 RBA minutes release to meet their benchmark allocation
+    rules.
+  timeframe_tier: ''
+  instrument: AUDUSD
+  timeframe: M15
+  expected_holding_bars: 12
+  expected_trades_month: 125
+  dedup_check: []
+  notes: Focuses on RBA minutes, a different forced‑flow trigger than any rejected
+    LBMA or WM benchmarks.
+  status: rejected_at_intake
+  id: INTAKE_044
+  created: '2026-10-06'
+  lab_proposal: P0036
+  rejection_reason: 'Invented forced flow: no rule forces this trade at that time'
+  rejected_date: '2026-10-10'
+- source: llm_brainstorm
+  source_ref: groq_forced_flow
+  name: Canadian Employment Futures Roll
+  causal_category: forced_flow
+  causal_actor: Energy and commodity trading desks are forced to roll their USDCAD
+    futures positions at the 08:30 Canadian employment data release because their
+    contracts settle on the same day.
+  timeframe_tier: ''
+  instrument: USDCAD
+  timeframe: M30
+  expected_holding_bars: 18
+  expected_trades_month: 110
+  dedup_check: []
+  notes: Uses employment data as a roll trigger, distinct from the rejected NFP fade
+    and from tom‑next fades.
+  status: rejected_at_intake
+  id: INTAKE_045
+  created: '2026-10-06'
+  lab_proposal: P0037
+  rejection_reason: 'Invented forced flow: no rule forces this trade at that time;
+    M30 not in universe'
+  rejected_date: '2026-10-10'
+- source: llm_brainstorm
+  source_ref: groq_forced_flow
+  name: SNB Rate Decision Safe‑Haven Shift
+  causal_category: forced_flow
+  causal_actor: Swiss insurance companies must reallocate CHF exposure immediately
+    after the 07:00 SNB rate decision to comply with regulatory capital requirements.
+  timeframe_tier: ''
+  instrument: USDCHF
+  timeframe: M5
+  expected_holding_bars: 8
+  expected_trades_month: 130
+  dedup_check: []
+  notes: Targets the SNB decision, not previously examined and avoids any round‑number
+    bias.
+  status: rejected_at_intake
+  id: INTAKE_046
+  created: '2026-10-06'
+  lab_proposal: P0038
+  rejection_reason: Already tested in lab (H259-H263), mechanism invented; SNB is
+    09:30 CET
+  rejected_date: '2026-10-10'
+- source: llm_brainstorm
+  source_ref: groq_forced_flow
+  name: NZ CPI Sovereign Fund Allocation
+  causal_category: forced_flow
+  causal_actor: New Zealand sovereign wealth fund managers are compelled to adjust
+    NZD positions at the 06:45 NZ CPI release to keep their currency allocation within
+    mandated limits.
+  timeframe_tier: ''
+  instrument: NZDUSD
+  timeframe: M15
+  expected_holding_bars: 11
+  expected_trades_month: 120
+  dedup_check: []
+  notes: Relies on NZ CPI timing, a fresh forced‑flow source not covered by earlier
+    rejects.
+  status: rejected_at_intake
+  id: INTAKE_047
+  created: '2026-10-06'
+  lab_proposal: P0039
+  rejection_reason: 'Invented forced flow: no rule forces this trade at that time'
+  rejected_date: '2026-10-10'
+- source: llm_brainstorm
+  source_ref: groq_forced_flow
+  name: London Gold Fix ETF Execution
+  causal_category: forced_flow
+  causal_actor: Gold‑backed ETFs must execute trades at the 10:30 London Gold Fix
+    to match their benchmark weightings, leaving no discretion.
+  timeframe_tier: ''
+  instrument: XAUUSD
+  timeframe: M5
+  expected_holding_bars: 7
+  expected_trades_month: 135
+  dedup_check:
+  - H114_london_open_gold
+  - H117_eia_gold
+  - H172_lbma_am_gold
+  - H257_post_auction_price_discovery_dri
+  notes: Uses the official Gold Fix, distinct from LBMA PM and unrelated to volume‑spike
+    ideas.
+  status: rejected_at_intake
+  id: INTAKE_048
+  created: '2026-10-06'
+  lab_proposal: P0040
+  rejection_reason: Already tested in lab (H259-H263), mechanism invented
+  rejected_date: '2026-10-10'
+- source: llm_brainstorm
+  source_ref: groq_forced_flow
+  name: Eurozone Sovereign Bond Auction Allocation
+  causal_category: forced_flow
+  causal_actor: Eurozone central banks are forced to purchase EURUSD at the 13:00
+    sovereign bond auction because the auction rules require them to meet a minimum
+    allocation quota.
+  timeframe_tier: ''
+  instrument: EURUSD
+  timeframe: M30
+  expected_holding_bars: 20
+  expected_trades_month: 105
+  dedup_check: []
+  notes: Different from WM 16:00 London benchmark; focuses on auction‑driven forced
+    buying.
+  status: rejected_at_intake
+  id: INTAKE_049
+  created: '2026-10-06'
+  lab_proposal: P0041
+  rejection_reason: Already tested in lab (H259-H263), mechanism invented; central
+    banks do not buy FX at bond auctions
+  rejected_date: '2026-10-10'
+- source: llm_brainstorm
+  source_ref: groq_forced_flow
+  name: UK Gilt Auction Market‑Maker Settlement
+  causal_category: forced_flow
+  causal_actor: London market‑makers must sell GBPUSD immediately after the 13:00
+    UK gilt auction to settle their auction‑book obligations.
+  timeframe_tier: ''
+  instrument: GBPUSD
+  timeframe: M5
+  expected_holding_bars: 9
+  expected_trades_month: 118
+  dedup_check:
+  - H256_micro_session_liquidity_vacuum_a
+  - H257_post_auction_price_discovery_dri
+  notes: Targets the gilt auction settlement flow, a novel forced‑flow trigger not
+    previously rejected.
+  status: rejected_at_intake
+  id: INTAKE_050
+  created: '2026-10-06'
+  lab_proposal: P0042
+  rejection_reason: 'Invented forced flow: no rule forces this trade at that time
+    (gilt auctions are GBP, no FX leg)'
+  rejected_date: '2026-10-10'
+- source: llm_brainstorm
+  source_ref: groq_inventory_pressure
+  name: EURUSD lead over GBPUSD
+  causal_category: inventory_pressure
+  causal_actor: EURUSD market makers accumulate a long EURUSD inventory and offload
+    it by selling GBPUSD two M5 bars later.
+  timeframe_tier: ''
+  instrument: GBPUSD
+  timeframe: M5
+  expected_holding_bars: 8
+  expected_trades_month: 130
+  dedup_check: []
+  notes: Uses cross‑pair lead‑lag inventory pressure, not a simple streak fade; avoids
+    EMA/RSI filters.
+  status: rejected_at_intake
+  id: INTAKE_051
+  created: '2026-10-06'
+  lab_proposal: P0043
+  rejection_reason: Invented cross-pair dealer inventory story; no forced payer
+  rejected_date: '2026-10-10'
+- source: llm_brainstorm
+  source_ref: groq_inventory_pressure
+  name: USDJPY post‑sweep unwind
+  causal_category: inventory_pressure
+  causal_actor: USDJPY dealers build a short inventory during a stop‑cascade sweep
+    and normalize it by buying back in the next three M15 bars.
+  timeframe_tier: ''
+  instrument: USDJPY
+  timeframe: M15
+  expected_holding_bars: 9
+  expected_trades_month: 115
+  dedup_check:
+  - H214_gulf_dual_liq_fade
+  notes: Focuses on post‑sweep normalization rather than prior‑day H/L fades.
+  status: rejected_at_intake
+  id: INTAKE_052
+  created: '2026-10-06'
+  lab_proposal: P0043
+  rejection_reason: 'Stop-cascade/sweep reversion: closed family (H3/H6, H51, journal
+    2026-09-04 do-not-reopen)'
+  rejected_date: '2026-10-10'
+- source: llm_brainstorm
+  source_ref: groq_inventory_pressure
+  name: AUDUSD retail‑flow surge
+  causal_category: inventory_pressure
+  causal_actor: Retail‑driven buying spikes cause AUDUSD dealers to accumulate longs
+    and they offload the position after a four‑bar M5 continuation.
+  timeframe_tier: ''
+  instrument: AUDUSD
+  timeframe: M5
+  expected_holding_bars: 6
+  expected_trades_month: 140
+  dedup_check: []
+  notes: Relies on tick‑volume as an inventory proxy, distinct from rejected volume‑spike
+    ideas.
+  status: rejected_at_intake
+  id: INTAKE_053
+  created: '2026-10-06'
+  lab_proposal: P0044
+  rejection_reason: Retail momentum, no forced payer
+  rejected_date: '2026-10-10'
+- source: llm_brainstorm
+  source_ref: groq_inventory_pressure
+  name: Gold‑USDCHF cross‑asset lag
+  causal_category: inventory_pressure
+  causal_actor: XAUUSD dealers go long gold, then offload a short USDCHF inventory
+    six M5 bars later as gold’s rise drags the franc down.
+  timeframe_tier: ''
+  instrument: USDCHF
+  timeframe: M5
+  expected_holding_bars: 6
+  expected_trades_month: 125
+  dedup_check:
+  - H256_micro_session_liquidity_vacuum_a
+  notes: Cross‑asset lead‑lag mechanism, not a commodity‑only strategy; avoids EMA
+    stacks.
+  status: rejected_at_intake
+  id: INTAKE_054
+  created: '2026-10-06'
+  lab_proposal: P0045
+  rejection_reason: Invented cross-pair dealer inventory story; no forced payer
+  rejected_date: '2026-10-10'
+- source: llm_brainstorm
+  source_ref: groq_inventory_pressure
+  name: London‑close EURUSD unwind
+  causal_category: inventory_pressure
+  causal_actor: EURUSD market makers holding net longs trim inventory by selling in
+    the final two M15 bars before the London session ends.
+  timeframe_tier: ''
+  instrument: EURUSD
+  timeframe: M15
+  expected_holding_bars: 4
+  expected_trades_month: 110
+  dedup_check: []
+  notes: Session‑boundary inventory reduction, separate from prior‑day H/L fade concepts.
+  status: rejected_at_intake
+  id: INTAKE_055
+  created: '2026-10-06'
+  lab_proposal: P0046
+  rejection_reason: 'London/NY close clock: closed family (H28-H112, H140 17:00 spread)'
+  rejected_date: '2026-10-10'
+- source: llm_brainstorm
+  source_ref: groq_inventory_pressure
+  name: USDJPY leads USDCAD
+  causal_category: inventory_pressure
+  causal_actor: USDJPY dealers accumulate a long USDJPY bias and offload it by buying
+    USDCAD one M15 bar later.
+  timeframe_tier: ''
+  instrument: USDCAD
+  timeframe: M15
+  expected_holding_bars: 7
+  expected_trades_month: 120
+  dedup_check: []
+  notes: Cross‑pair lead‑lag on correlated pairs, not a simple lag‑fade.
+  status: rejected_at_intake
+  id: INTAKE_056
+  created: '2026-10-06'
+  lab_proposal: P0047
+  rejection_reason: Invented cross-pair dealer inventory story; no forced payer
+  rejected_date: '2026-10-10'
+- source: llm_brainstorm
+  source_ref: groq_inventory_pressure
+  name: GBPUSD stop‑cascade reversal
+  causal_category: inventory_pressure
+  causal_actor: After a rapid GBPUSD stop cascade, dealers unwind the short inventory
+    by buying back over the next four M5 bars.
+  timeframe_tier: ''
+  instrument: GBPUSD
+  timeframe: M5
+  expected_holding_bars: 5
+  expected_trades_month: 130
+  dedup_check: []
+  notes: Post‑sweep normalization distinct from previously rejected stop‑pool fades.
+  status: rejected_at_intake
+  id: INTAKE_057
+  created: '2026-10-06'
+  lab_proposal: P0048
+  rejection_reason: 'Stop-cascade/sweep reversion: closed family (H3/H6, H51, journal
+    2026-09-04 do-not-reopen)'
+  rejected_date: '2026-10-10'
+- source: llm_brainstorm
+  source_ref: groq_inventory_pressure
+  name: NZDUSD sell‑flow pressure
+  causal_category: inventory_pressure
+  causal_actor: Consecutive high‑volume sell ticks on NZDUSD cause dealers to build
+    a short inventory, which they liquidate after seven M5 bars.
+  timeframe_tier: ''
+  instrument: NZDUSD
+  timeframe: M5
+  expected_holding_bars: 8
+  expected_trades_month: 135
+  dedup_check:
+  - H163_akl09_fade_nzd
+  - H256_micro_session_liquidity_vacuum_a
+  notes: Uses retail‑flow signal without relying on round‑number or RSI triggers.
+  status: rejected_at_intake
+  id: INTAKE_058
+  created: '2026-10-06'
+  lab_proposal: P0049
+  rejection_reason: Tick-volume story, no forced payer
+  rejected_date: '2026-10-10'
+- source: llm_brainstorm
+  source_ref: groq_inventory_pressure
+  name: XAUUSD drop → EURUSD short
+  causal_category: inventory_pressure
+  causal_actor: XAUUSD dealers short gold and, within three M5 bars, offload a short
+    EURUSD inventory as the metal’s fall pressures the euro.
+  timeframe_tier: ''
+  instrument: EURUSD
+  timeframe: M5
+  expected_holding_bars: 5
+  expected_trades_month: 120
+  dedup_check:
+  - H214_gulf_dual_liq_fade
+  notes: Cross‑asset lead‑lag with gold, avoiding any EMA or VWAP based rules.
+  status: rejected_at_intake
+  id: INTAKE_059
+  created: '2026-10-06'
+  lab_proposal: P0050
+  rejection_reason: Invented cross-pair dealer inventory story; no forced payer
+  rejected_date: '2026-10-10'
+- source: llm_brainstorm
+  source_ref: groq_inventory_pressure
+  name: NY‑close USDJPY trim
+  causal_category: inventory_pressure
+  causal_actor: USDJPY market makers holding net longs reduce exposure by selling
+    in the last three M15 bars before the New York session ends.
+  timeframe_tier: ''
+  instrument: USDJPY
+  timeframe: M15
+  expected_holding_bars: 4
+  expected_trades_month: 118
+  dedup_check: []
+  notes: Session‑boundary inventory reduction distinct from earlier session‑boundary
+    ideas; no reliance on price level patterns.
+  status: rejected_at_intake
+  id: INTAKE_060
+  created: '2026-10-06'
+  lab_proposal: P0051
+  rejection_reason: 'London/NY close clock: closed family (H28-H112, H140 17:00 spread)'
+  rejected_date: '2026-10-10'
+- source: llm_brainstorm
+  source_ref: groq_forced_flow
+  name: Eurozone CPI Hedge Unwind
+  causal_category: forced_flow
+  causal_actor: Eurozone index‑linked fund managers are forced to unwind CPI‑hedge
+    positions exactly at the CPI release because their benchmark exposure must match
+    the published index.
+  timeframe_tier: ''
+  instrument: EURUSD
+  timeframe: M5
+  expected_holding_bars: 10
+  expected_trades_month: 120
+  dedup_check:
+  - H257_post_auction_price_discovery_dri
+  - H259_uk_retail_sales_carry_trade_unwi
+  - H260_boj_policy_decision_yen_carry_tr
+  - H261_intake_046
+  - H263_eurozone_sovereign_bond_auction
+  - H266_gbpusd_stop_cascade_reversal
+  notes: Targets the mandatory post‑CPI rebalancing of CPI‑linked funds, not a simple
+    news‑fade; unlike the rejected pre‑ECB or NFP fades, this is a forced unwind that
+    occurs regardless of price direction.
+  status: rejected_at_intake
+  id: INTAKE_061
+  created: '2026-10-06'
+  rejection_reason: 'Invented forced flow: no rule forces this trade at that time'
+  rejected_date: '2026-10-10'
+- source: llm_brainstorm
+  source_ref: groq_forced_flow
+  name: Gold ETF Daily NAV Rebalance
+  causal_category: forced_flow
+  causal_actor: Large gold‑ETF managers must trade spot gold at the exact NAV calculation
+    time because the ETF’s creation/redemption process forces them to match the published
+    price.
+  timeframe_tier: ''
+  instrument: XAUUSD
+  timeframe: M15
+  expected_holding_bars: 18
+  expected_trades_month: 130
+  dedup_check:
+  - H5_equity_rsi2
+  - H257_post_auction_price_discovery_dri
+  - H258_fx_option_expiry_clustering_at_n
+  - H259_uk_retail_sales_carry_trade_unwi
+  - H262_london_gold_fix_etf_execution
+  notes: Exploits the mandatory spot‑gold trade that follows the 12:00 GMT NAV update,
+    a distinct forced‑flow event not covered by any rejected round‑number or volume‑spike
+    ideas.
+  status: rejected_at_intake
+  id: INTAKE_062
+  created: '2026-10-06'
+  rejection_reason: 'Invented forced flow: no rule forces this trade at that time
+    (GLD NAV uses LBMA PM; creations are in-kind)'
+  rejected_date: '2026-10-10'
+- source: llm_brainstorm
+  source_ref: groq_forced_flow
+  name: USDJPY Primary Dealer Treasury Auction Settlement
+  causal_category: forced_flow
+  causal_actor: Primary dealers are forced to roll USDJPY forward positions at the
+    exact settlement of each US Treasury auction because they must deliver USD to
+    settle the auction regardless of the spot rate.
+  timeframe_tier: ''
+  instrument: USDJPY
+  timeframe: M10
+  expected_holding_bars: 12
+  expected_trades_month: 110
+  dedup_check:
+  - H257_post_auction_price_discovery_dri
+  - H258_fx_option_expiry_clustering_at_n
+  - H260_boj_policy_decision_yen_carry_tr
+  - H261_intake_046
+  - H263_eurozone_sovereign_bond_auction
+  - H264_usdjpy_sweep_reclaim_unwind
+  - H266_gbpusd_stop_cascade_reversal
+  notes: Uses the mandatory post‑auction roll of dealer USD funding, a different mechanism
+    from the rejected tom‑next fade; the flow is driven by Treasury settlement, not
+    by a simple forward‑rate decay.
+  status: rejected_at_intake
+  id: INTAKE_063
+  created: '2026-10-06'
+  rejection_reason: 'Invented forced flow: no rule forces this trade at that time;
+    M10 not in universe'
+  rejected_date: '2026-10-10'
+- source: llm_brainstorm
+  source_ref: groq_inventory_pressure
+  name: EURUSD → USDJPY 2‑bar lead‑lag unwind
+  causal_category: inventory_pressure
+  causal_actor: Large FX dealers accumulate a net long USDJPY position when EURUSD
+    spikes up and then offload it by selling into the lagging USDJPY move two M5 bars
+    later.
+  timeframe_tier: ''
+  instrument: USDJPY
+  timeframe: M5
+  expected_holding_bars: 6
+  expected_trades_month: 130
+  dedup_check:
+  - H55_nyse_open_eur
+  - H265_london_close_eurusd_unwind
+  - H267_intake_058_sweep_reclaim
+  notes: Uses a cross‑pair lead‑lag mechanism not previously tested; differs from
+    rejected streak‑fade ideas by focusing on inter‑pair timing rather than same‑pair
+    price patterns.
+  status: rejected_at_intake
+  id: INTAKE_064
+  created: '2026-10-06'
+  rejection_reason: Invented cross-pair dealer inventory story; no forced payer
+  rejected_date: '2026-10-10'
+- source: llm_brainstorm
+  source_ref: groq_inventory_pressure
+  name: XAUUSD post‑sweep inventory reversion
+  causal_category: inventory_pressure
+  causal_actor: Gold market makers who filled aggressive buy orders during a stop‑cascade
+    sell their accumulated inventory over the next 4‑8 M5 bars as price stabilises.
+  timeframe_tier: ''
+  instrument: XAUUSD
+  timeframe: M5
+  expected_holding_bars: 7
+  expected_trades_month: 115
+  dedup_check:
+  - H257_post_auction_price_discovery_dri
+  - H264_usdjpy_sweep_reclaim_unwind
+  - H265_london_close_eurusd_unwind
+  - H266_gbpusd_stop_cascade_reversal
+  notes: Captures post‑sweep normalization specific to commodity, avoiding any EMA/VWAP
+    or volume‑spike filters that were rejected.
+  status: rejected_at_intake
+  id: INTAKE_065
+  created: '2026-10-06'
+  rejection_reason: 'Stop-cascade/sweep reversion: closed family (H3/H6, H51, journal
+    2026-09-04 do-not-reopen)'
+  rejected_date: '2026-10-10'
+- source: llm_brainstorm
+  source_ref: groq_inventory_pressure
+  name: London close inventory dump into NY open
+  causal_category: inventory_pressure
+  causal_actor: Dealers with net long EURUSD built during the London session offload
+    that inventory by selling into the first two M15 bars of the New York open to
+    meet end‑of‑day risk limits.
+  timeframe_tier: ''
+  instrument: EURUSD
+  timeframe: M15
+  expected_holding_bars: 9
+  expected_trades_month: 140
+  dedup_check:
+  - H28_postfix_usd_fade
+  - H36_overlap_continuation
+  - H47_london_lunch_fade
+  - H87_monday_cash_gbp
+  - H118_london_orb_eur
+  - H130_hour_gap_eur
+  - H136_pdc_tag_eur
+  - H148_ldn05_hand_eur
+  - H151_tgt18_fade_eur
+  - H256_micro_session_liquidity_vacuum_a
+  notes: Focuses on session‑boundary inventory reduction, a distinct driver from prior
+    stop‑pool or lag‑fade concepts.
+  status: rejected_at_intake
+  id: INTAKE_066
+  created: '2026-10-06'
+  rejection_reason: 'London/NY close clock: closed family (H28-H112, H140 17:00 spread);
+    timing incoherent'
+  rejected_date: '2026-10-10'
+- source: llm_brainstorm
+  source_ref: groq_structural_liquidity
+  name: Tokyo Pre-Open Liquidity Dip
+  causal_category: structural_liquidity
+  causal_actor: At 02:00 GMT the Asian market is still closed, so major liquidity
+    providers pause, creating a thin order book before the Tokyo open.
+  timeframe_tier: ''
+  instrument: USDJPY
+  timeframe: M5
+  expected_holding_bars: 8
+  expected_trades_month: 170
+  dedup_check:
+  - H256_micro_session_liquidity_vacuum_a
+  - H257_post_auction_price_discovery_dri
+  notes: Uses the pre‑open window before the Asian session, not the lunch or session‑transition
+    ideas previously rejected.
+  status: rejected_at_intake
+  id: INTAKE_067
+  created: '2026-10-06'
+  lab_proposal: P0052
+  rejection_reason: Wrong time, Asian market is open at 02:00 GMT
+- source: llm_brainstorm
+  source_ref: groq_structural_liquidity
+  name: European Mid‑Morning Risk Pause
+  causal_category: structural_liquidity
+  causal_actor: Around 10:00 GMT European banks run mandatory intra‑day risk checks,
+    temporarily withdrawing limit orders and thinning the market depth.
+  timeframe_tier: ''
+  instrument: GBPUSD
+  timeframe: M15
+  expected_holding_bars: 10
+  expected_trades_month: 150
+  dedup_check:
+  - H256_micro_session_liquidity_vacuum_a
+  notes: Targets a mid‑session pause distinct from the London‑NY overlap and from
+    the previously rejected lunch‑fade mechanisms.
+  status: rejected_at_intake
+  id: INTAKE_068
+  created: '2026-10-06'
+  lab_proposal: P0053
+  rejection_reason: Vague and sounds made up
+- source: llm_brainstorm
+  source_ref: groq_structural_liquidity
+  name: US Swap Window Closure Vacuum
+  causal_category: structural_liquidity
+  causal_actor: At 13:00 GMT the daily FX swap window closes, prompting banks to unwind
+    short‑term funding and pull liquidity, creating a brief vacuum across USD‑denominated
+    pairs and gold.
+  timeframe_tier: ''
+  instrument: XAUUSD
+  timeframe: M10
+  expected_holding_bars: 12
+  expected_trades_month: 130
+  dedup_check:
+  - H256_micro_session_liquidity_vacuum_a
+  - H266_gbpusd_stop_cascade_reversal
+  notes: Leverages the daily swap‑window deadline, a structural event not covered
+    by earlier session‑open or fade ideas.
+  status: rejected_at_intake
+  id: INTAKE_069
+  created: '2026-10-06'
+  lab_proposal: P0054
+  rejection_reason: Sounds made up, no universal swap closure at 13:00 GMT
+- source: llm_brainstorm
+  source_ref: groq_forced_flow
+  name: LBMA AM Gold Fix Spot Drift
+  causal_category: forced_flow
+  causal_actor: Gold banks must deliver or receive physical gold to settle the LBMA
+    AM 10:00 fix contracts, forcing them to trade spot XAUUSD regardless of price.
+  timeframe_tier: ''
+  instrument: XAUUSD
+  timeframe: M5
+  expected_holding_bars: 15
+  expected_trades_month: 130
+  dedup_check:
+  - H172_lbma_am_gold
+  - H257_post_auction_price_discovery_dri
+  - H258_fx_option_expiry_clustering_at_n
+  notes: Uses the AM gold fix (not the rejected PM fix) and focuses on the forced
+    spot drift after the fix, unlike previous LBMA PM follow ideas.
+  status: rejected_at_intake
+  id: INTAKE_070
+  created: '2026-10-06'
+  rejection_reason: Wrong time, LBMA AM fix is 10:30 London
+- source: llm_brainstorm
+  source_ref: groq_forced_flow
+  name: FX Swap Roll at 14:00 London
+  causal_category: forced_flow
+  causal_actor: Major banks must roll their EURUSD one‑day FX swaps at 14:00 London,
+    obligating them to buy or sell spot EURUSD to close the expiring leg, independent
+    of price.
+  timeframe_tier: ''
+  instrument: EURUSD
+  timeframe: M15
+  expected_holding_bars: 20
+  expected_trades_month: 110
+  dedup_check:
+  - H36_overlap_continuation
+  - H52_carry_roll
+  - H71_lse_close_fade
+  - H87_monday_cash_gbp
+  - H118_london_orb_eur
+  - H130_hour_gap_eur
+  - H136_pdc_tag_eur
+  - H151_tgt18_fade_eur
+  - H167_zur12_fade_eur
+  - H190_xetra1730_fade_eur
+  notes: Targets the daily FX‑swap roll, a distinct mechanism from WM 16:00 follow
+    and tom‑next fades already rejected.
+  status: rejected_at_intake
+  id: INTAKE_071
+  created: '2026-10-06'
+  rejection_reason: Wrong time, tom-next roll is at 17:00 NY
+- source: llm_brainstorm
+  source_ref: groq_forced_flow
+  name: Tokyo 9:55 Auction After‑drift
+  causal_category: forced_flow
+  causal_actor: Japanese institutional desks that missed the 9:55 Tokyo auction must
+    unwind their positions in the spot market within the next 5‑30 minutes, compelling
+    forced flow in USDJPY.
+  timeframe_tier: retail_feasible
+  instrument: USDJPY
+  timeframe: M5
+  expected_holding_bars: 12
+  expected_trades_month: 120
+  dedup_check:
+  - H53_tokyo_fix_follow
+  - H65_tse_open_follow
+  - H257_post_auction_price_discovery_dri
+  - H258_fx_option_expiry_clustering_at_n
+  - H259_uk_retail_sales_carry_trade_unwi
+  - H260_boj_policy_decision_yen_carry_tr
+  - H261_intake_046
+  - H263_eurozone_sovereign_bond_auction
+  - H264_usdjpy_sweep_reclaim_unwind
+  - H266_gbpusd_stop_cascade_reversal
+  notes: Exploits the post‑auction drift specific to the Tokyo session; differs from
+    previously rejected auction‑adjacent ideas which focused on London auctions.
+  status: reviewed
+  id: INTAKE_072
+  created: '2026-10-06'
+  reviewed: '2026-10-06'
+  lab_proposal: P0055
+- source: llm_brainstorm
+  source_ref: groq_inventory_pressure
+  name: EURUSD → USDJPY Cross‑Pair Lead‑Lag
+  causal_category: inventory_pressure
+  causal_actor: A large liquidity dealer accumulates USDJPY inventory when a sharp
+    EURUSD move occurs and offloads it 2‑3 M5 bars later as the lagging USDJPY price
+    retraces.
+  timeframe_tier: ''
+  instrument: USDJPY
+  timeframe: M10
+  expected_holding_bars: 6
+  expected_trades_month: 130
+  dedup_check:
+  - H256_micro_session_liquidity_vacuum_a
+  - H265_london_close_eurusd_unwind
+  notes: Uses a cross‑pair directional lag of 1‑3 M5 bars, not a single‑pair streak;
+    differs from rejected streak‑fade ideas.
+  status: rejected_at_intake
+  id: INTAKE_073
+  created: '2026-10-06'
+  rejection_reason: Vague, no scheduled time
+- source: llm_brainstorm
+  source_ref: groq_inventory_pressure
+  name: Post‑Sweep Normalization on EURUSD
+  causal_category: inventory_pressure
+  causal_actor: Market makers who absorb a rapid EURUSD stop‑cascade build a short
+    inventory and then unwind it over the next 3‑5 M5 bars as price stabilizes.
+  timeframe_tier: ''
+  instrument: EURUSD
+  timeframe: M5
+  expected_holding_bars: 4
+  expected_trades_month: 115
+  dedup_check:
+  - H264_usdjpy_sweep_reclaim_unwind
+  - H265_london_close_eurusd_unwind
+  - H266_gbpusd_stop_cascade_reversal
+  - H267_intake_058_sweep_reclaim
+  notes: Focuses on the dealer’s inventory rebalancing after a stop‑run, not a generic
+    volume‑spike or EMA signal.
+  status: rejected_at_intake
+  id: INTAKE_074
+  created: '2026-10-06'
+  rejection_reason: Vague, generic mean-reversion
+- source: llm_brainstorm
+  source_ref: groq_inventory_pressure
+  name: London‑Close USDCHF Inventory Drain
+  causal_category: inventory_pressure
+  causal_actor: A tier‑1 dealer reduces its USDCHF long inventory before the London
+    session close to meet end‑of‑day risk limits, prompting a short‑bias reversal.
+  timeframe_tier: ''
+  instrument: USDCHF
+  timeframe: M15
+  expected_holding_bars: 9
+  expected_trades_month: 122
+  dedup_check:
+  - H256_micro_session_liquidity_vacuum_a
+  - H265_london_close_eurusd_unwind
+  notes: Targets a session‑boundary inventory reduction, distinct from cross‑pair
+    lag or stop‑cascade ideas already rejected.
+  status: rejected_at_intake
+  id: INTAKE_075
+  created: '2026-10-06'
+  rejection_reason: Partially true but risk limits usually at 17:00 NY
+- source: institutional
+  feed: BIS working papers
+  source_ref: https://www.bis.org/publications/working-paper-1380-chasing-el-dorado-gold-under-shifting-geopolitical-and-financial-condition
+  name: 'Chasing El Dorado: gold under shifting geopolitical and financial conditions'
+  title: 'Chasing El Dorado: gold under shifting geopolitical and financial conditions'
+  summary_excerpt: This paper analyses the state-dependent effects of geopolitical
+    risks on gold prices (i.e. the safe-haven role of gold), conditional on financial
+    conditions. Geopolitical risks are often associated with tighter financial conditions.
+    However, recent data reveal a decoupling be tween such shocks and m
+  published: '2026-10-06T00:00:00Z'
+  causal_category: ''
+  causal_actor: ''
+  timeframe_tier: ''
+  instrument: ''
+  timeframe: ''
+  expected_holding_bars: null
+  expected_trades_month: null
+  dedup_check: []
+  status: raw
+  id: INTAKE_076
+  created: '2026-10-06'
+  lab_proposal: P0056

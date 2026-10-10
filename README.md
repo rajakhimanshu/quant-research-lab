@@ -15,7 +15,8 @@ Quant Research Lab (internal name **Proofbook**) takes research leads from acade
 | **Data** | MetaTrader 5 terminal (required, Windows) |
 | **Language** | Python 3.12 (the `MetaTrader5` package has no newer wheel) |
 | **CLI** | `python -m ats …` |
-| **Record** | 250 tests · 233 REJECT · 13 NEEDS_MORE_DATA · 3 VOID · 1 ARCHIVED · **0 survivors** |
+| **Record** | 262 tests · 245 REJECT · 13 NEEDS_MORE_DATA · 3 VOID · 1 ARCHIVED · **0 survivors** |
+| **Idea funnel** | 76 intake leads (34 papers/feeds, 42 LLM-brainstormed) → 56 lab proposals → 12 frozen and tested by the automated lab (3 families) |
 
 ---
 

@@ -1,6 +1,6 @@
 # Proofbook — Hypothesis Scoreboard
 
-**As of:** 2026-10-02  
+**As of:** 2026-10-06  
 **Lab:** Proofbook — individual FX majors + XAUUSD research (Python). Not live. Not an EA.  
 **Rule:** Each `H` is a frozen causal hypothesis tested after spread+slippage on locked train/validation. OOS unlocked only for survivors. REJECT is closed — no retune.
 
@@ -8,14 +8,14 @@
 
 | Decision | Count | Meaning |
 |---|---:|---|
-| **REJECT** | 233 | Failed train/val gates, negative R, or OOS fail. Closed. |
+| **REJECT** | 245 | Failed train/val gates, negative R, or OOS fail. Closed. |
 | **NEEDS_MORE_DATA** | 13 | Spec frozen; sample too thin. Do not loosen. |
 | **PAPER_CANDIDATE** | 0 | Human label after OOS_PASS. Paper only, never proof. |
 | **ARCHIVED** | 1 | Out of the current universe; kept for history only. |
 | **CANDIDATE** | 0 | Cleared train+val; awaiting a human OOS unlock. |
 | **OOS_PASS** | 0 | Cleared OOS; awaiting a human paper decision. |
 | **VOID** | 3 | Not a result: no why, snooped spec, duplicate, or out of universe. |
-| **Total tested** | 250 | Through `H255_time_scan_gold` |
+| **Total tested** | 262 | Through `H267_intake_058_sweep_reclaim` |
 
 ### Current status (honest)
 
@@ -285,6 +285,18 @@ An edge is who pays you, after spread+slippage, on a frozen spec, with a baselin
 | 248 | `H238_cross_pair_lag_dup` | **VOID** | fx_m5/sept_batch |  | same module and params as H237 — Duplicate of H237. Not counted in the family. |
 | 249 | `H249_H254_ema_batch` | **VOID** | gold_m5 |  | all six ran on XAUUSD M5 by config fallback; H252-H254 identical numbers — why was "testing" (no causal payer). EMA family closed. H253 was M30 and... |
 | 250 | `H255_time_scan_gold` | **VOID** | gold_m5 |  | entry hour picked by a full-sample scan including OOS — Snooped. OOS used to choose the spec. Void, not a result. Do not re-freeze. |
+| 251 | `H256_micro_session_liquidity_vacuum_a` | **REJECT** | fx_m5/lab_20261006T0632 | At 13:00 London (18:30 IST) European market‑makers who have accumulated net long or short inventory through... | 32.3% vs 33.4% n=462, R -0.36; val 35.8% vs 32.6% n=165, R -0.28 — train success is not above baseline. Closed; do not retune. |
+| 252 | `H257_post_auction_price_discovery_dri` | **REJECT** | gold_m5/lab_20261006T0632 | The LBMA AM Gold price is set at 10:30 London via an electronic auction; market participants who could not ... | 40.3% vs 54.4% n=149, R -0.19; val 52.4% vs 40.7% n=63, R +0.02 — train success is not above baseline. Closed; do not retune. |
+| 253 | `H258_fx_option_expiry_clustering_at_n` | **REJECT** | fx_m5/lab_20261006T0632 | Large FX options expire at the NY 10:00 cut daily; dealers who are net short gamma must delta‑hedge up to t... | 44.3% vs 38.0% n=467, R -0.12; val 36.9% vs 33.5% n=160, R -0.26 — train p=0.028906204257760717 not < 0.0167 (multiple-testing adjusted). Closed; d... |
+| 254 | `H259_uk_retail_sales_carry_trade_unwi` | **REJECT** | fx_m15/lab_20261006T0646 | Large UK pension fund managers must unwind short‑GBP carry‑trades exactly after the 10:00 UK Retail Sales p... | 43.0% vs 47.1% n=467, R -0.13; val 40.1% vs 40.9% n=162, R -0.19 — train success is not above baseline. Closed; do not retune. |
+| 255 | `H260_boj_policy_decision_yen_carry_tr` | **REJECT** | fx_m5/lab_20261006T0646 | Hedge funds with yen‑funded carry positions must close or roll their USDJPY exposure at the 08:30 BOJ polic... | 33.1% vs 40.1% n=139, R -0.34; val 35.7% vs 30.0% n=56, R -0.27 — train success is not above baseline. Closed; do not retune. |
+| 256 | `H261_intake_046` | **REJECT** | fx_m5/lab_20261006T0646 | Swiss insurance companies must reallocate CHF exposure immediately after the 07:00 SNB rate decision to com... | 7.2% vs 27.1% n=153, R -0.85; val 5.0% vs 28.6% n=60, R -0.90 — train success is not above baseline. Closed; do not retune. |
+| 257 | `H262_london_gold_fix_etf_execution` | **REJECT** | gold_m5/lab_20261006T0646 | Gold‑backed exchange‑traded funds are required to execute their rebalancing trades precisely at the 10:30 L... | 40.3% vs 40.0% n=149, R -0.19; val 52.4% vs 39.3% n=63, R +0.02 — train p=0.48111666311405554 not < 0.0100 (multiple-testing adjusted). Closed; do ... |
+| 258 | `H263_eurozone_sovereign_bond_auction` | **REJECT** | fx_m15/lab_20261006T0646 | Eurozone central banks are forced to purchase EURUSD at the 13:00 sovereign bond auction because the auctio... | 41.2% vs 41.4% n=449, R -0.18; val 40.7% vs 44.2% n=172, R -0.18 — train success is not above baseline. Closed; do not retune. |
+| 259 | `H264_usdjpy_sweep_reclaim_unwind` | **REJECT** | fx_m15/lab_20261006T0651 | USDJPY dealers build a short inventory during a stop‑cascade sweep and normalize it by buying back in the n... | 38.4% vs 45.0% n=951, R -0.23; val 42.1% vs 47.3% n=330, R -0.18 — train success is not above baseline. Closed; do not retune. |
+| 260 | `H265_london_close_eurusd_unwind` | **REJECT** | fx_m15/lab_20261006T0651 | EURUSD market makers holding net longs trim inventory by selling in the final two M15 bars before the Londo... | 40.9% vs 41.2% n=425, R -0.14; val 45.0% vs 40.7% n=149, R -0.10 — train success is not above baseline. Closed; do not retune. |
+| 261 | `H266_gbpusd_stop_cascade_reversal` | **REJECT** | fx_m5/lab_20261006T0651 | After a rapid GBPUSD stop cascade, dealers with short positions are forced to unwind inventory by buying ba... | 33.9% vs 33.3% n=832, R -0.31; val 31.5% vs 36.0% n=317, R -0.36 — train p=0.3976196102781205 not < 0.0125 (multiple-testing adjusted). Closed; do ... |
+| 262 | `H267_intake_058_sweep_reclaim` | **REJECT** | fx_m5/lab_20261006T0651 | Consecutive high‑volume sell ticks on NZDUSD push dealers to accumulate a short inventory, which they are c... | 9.6% vs 11.5% n=616, R -0.80; val 12.9% vs 15.3% n=248, R -0.75 — train success is not above baseline. Closed; do not retune. |
 
 ## Source of truth
 

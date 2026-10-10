@@ -1,25 +1,18 @@
 @echo off
-REM Weekly hypothesis intake automation.
-REM Set this up in Windows Task Scheduler → weekly, your chosen day/time.
-REM Action: Start a program → point at this .bat file.
+REM Weekly public-source intake. No LLM, no chat tokens, no tests run.
+REM Scheduled by Windows Task Scheduler (task: ProofbookWeeklyIntake).
+REM Output is appended to data\ideas\weekly_intake.log.
 
 cd /d "%~dp0.."
+if not exist "data\ideas" mkdir "data\ideas"
+set LOG=data\ideas\weekly_intake.log
 
-echo ============================================================
-echo  Hypothesis Intake — Weekly Run
-echo  %DATE% %TIME%
-echo ============================================================
+>> "%LOG%" echo ============================================================
+>> "%LOG%" echo  Hypothesis Intake - Weekly Run  %DATE% %TIME%
+>> "%LOG%" echo ============================================================
 
-echo.
-echo [1/2] Paper monitor (arXiv + BIS/Fed/ECB/BoE feeds)...
-.venv\Scripts\python -m ats intake paper-monitor --save
+>> "%LOG%" echo [1/1] Paper monitor (arXiv + BIS/Fed/ECB/BoE feeds)...
+.venv\Scripts\python -m ats intake paper-monitor --save >> "%LOG%" 2>&1
 
-echo.
-echo [2/2] Groq brainstorm (all 3 categories, 5 ideas each)...
-.venv\Scripts\python -m ats intake groq-brainstorm --all --n 5
-
-echo.
-echo ============================================================
-echo  Done. Review new raw leads with:
-echo    python -m ats intake list --status raw
-echo ============================================================
+>> "%LOG%" echo Done. Review new raw leads with: python -m ats intake list --status raw
+>> "%LOG%" echo.

@@ -40,3 +40,6 @@ research/OPERATING_LOOP.md
 *.swp
 .DS_Store
 Thumbs.db
+
+research/lab/auto_lab.lock
+research/lab/STOP

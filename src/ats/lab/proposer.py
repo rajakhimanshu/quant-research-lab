@@ -38,8 +38,11 @@ RULES = """Rules:
    Where the mechanism is silent, leave the param out so the template default applies.
 6. Do not propose anything on the do-not-reopen list.
 7. Output JSON: {{"decision": "spec" | "reject", "reason": "...", "spec": {{"name": "...",
-   "why": "...(>=80 chars, the mechanism)...", "payer": "...", "causal_category": one of {categories},
-   "template": "...", "symbols": ["..."], "timeframe": "...", "params": {{...}}}}}}
+   "why": "...(>=80 chars, the mechanism)...", "payer": "...(who is forced to trade AND why, >=15 chars,
+   e.g. 'EUR dealers rebalancing inventory before the 16:00 London fix')...",
+   "causal_category": one of {categories},
+   "template": "...", "symbols": ["...1 to 3 instruments, the ones the mechanism names..."],
+   "timeframe": "...", "params": {{...}}}}}}
 """
 
 

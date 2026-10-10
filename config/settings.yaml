@@ -82,8 +82,8 @@ validation:
 # Automated lab budget (`ats lab run`). Volume is the main source of false
 # discoveries: cap the family size and how often a new family may be tested.
 lab:
-  max_batch: 8
-  min_days_between_batches: 7
+  max_batch: 20
+  min_days_between_batches: 1
   max_leads_per_cycle: 10
 
 # Calendar locks. Do not move these after seeing results. Event-index 60/20/20

@@ -135,6 +135,21 @@ def test_budget_allows_one_family_per_window():
     assert budget_block(runs, 7, today=date(2026, 10, 9)) is None
 
 
+def test_brainstorm_leads_need_human_review(monkeypatch):
+    from ats.ideas import intake_store
+    from ats.lab.loop import _intake_leads
+
+    rows = [
+        {"id": "INTAKE_1", "status": "raw", "source_ref": "https://arxiv.org/abs/1"},
+        {"id": "INTAKE_2", "status": "raw", "source_ref": "groq_forced_flow"},
+        {"id": "INTAKE_3", "status": "reviewed", "source_ref": "groq_forced_flow"},
+    ]
+    monkeypatch.setattr(intake_store, "list_rows", lambda *a, **k: rows)
+    leads = _intake_leads(10)
+    assert [lead["id"] for lead in leads] == ["INTAKE_1", "INTAKE_3"]
+    assert leads[1]["source_ref"] == "groq_forced_flow:INTAKE_3"
+
+
 def test_record_spec_queues_then_flags_duplicate():
     rows: list[dict] = []
     first = record_spec(_spec(), "test", rows)

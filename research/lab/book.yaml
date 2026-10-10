@@ -1,0 +1,194 @@
+# Lab closed book. Written by `ats lab`; humans only change rows via
+# `ats lab unlock` / `ats lab decide`. A REJECT is closed: no retune.
+tests:
+- id: H256_micro_session_liquidity_vacuum_a
+  date: '2026-10-06'
+  book: fx_m5
+  family: lab_20261006T0632
+  decision: REJECT
+  template: clock_run
+  signature: 877d7687d3ca
+  mechanism: "At 13:00 London (18:30 IST) European market\u2011makers who have accumulated net long or\
+    \ short inventory through the London morning reduce their risk before end\u2011of\u2011day limits\
+    \ activate; the book briefly thins as they lift offers or hit bids to flatten, before full NY liquidity\
+    \ arrives and restores depth, creating a directional move into the vacuum."
+  payer: "European market\u2011makers rebalancing inventory before end\u2011of\u2011day limits at the\
+    \ 13:00 London overlap"
+  baseline: Same rule at a control clock on the same days.
+  source: MECH_005
+  train: 32.3% vs 33.4% n=462, R -0.36; val 35.8% vs 32.6% n=165, R -0.28
+  why_closed: train success is not above baseline. Closed; do not retune.
+- id: H257_post_auction_price_discovery_dri
+  date: '2026-10-06'
+  book: gold_m5
+  family: lab_20261006T0632
+  decision: REJECT
+  template: clock_run
+  signature: 63e4c186df36
+  mechanism: "The LBMA AM Gold price is set at 10:30 London via an electronic auction; market participants\
+    \ who could not participate in the auction (smaller dealers, hedgers with delayed systems) are forced\
+    \ to trade at spot shortly after the auction to adjust their positions relative to the new benchmark,\
+    \ creating a 5\u201115 minute directional drift in the direction of the auction settlement price versus\
+    \ the prior close."
+  payer: Smaller gold dealers and hedgers forced to trade spot after the 10:30 London LBMA AM auction
+    to rebalance against the new benchmark price
+  baseline: Same rule at a control clock on the same days.
+  source: MECH_008
+  train: 40.3% vs 54.4% n=149, R -0.19; val 52.4% vs 40.7% n=63, R +0.02
+  why_closed: train success is not above baseline. Closed; do not retune.
+- id: H258_fx_option_expiry_clustering_at_n
+  date: '2026-10-06'
+  book: fx_m5
+  family: lab_20261006T0632
+  decision: REJECT
+  template: clock_run
+  signature: c1f023a42c42
+  mechanism: "Large FX options expire at the NY 10:00 cut daily; dealers who are net short gamma must\
+    \ delta\u2011hedge up to the cut, generating directional flow toward the most\u2011traded open\u2011\
+    interest strike levels (barrier and round\u2011number strikes) in the 30 minutes preceding the expiry.\
+    \ This forced hedging creates a predictable flow pattern that can be tested by comparing the price\
+    \ action at the 10:00 NY clock to a neutral control clock on the same days."
+  payer: "FX dealers delta\u2011hedging net short gamma positions before the 10:00 NY options cut"
+  baseline: Same rule at a control clock on the same days.
+  source: MECH_012
+  train: 44.3% vs 38.0% n=467, R -0.12; val 36.9% vs 33.5% n=160, R -0.26
+  why_closed: train p=0.028906204257760717 not < 0.0167 (multiple-testing adjusted). Closed; do not retune.
+- id: H259_uk_retail_sales_carry_trade_unwi
+  date: '2026-10-06'
+  book: fx_m15
+  family: lab_20261006T0646
+  decision: REJECT
+  template: clock_run
+  signature: cf063e3c3b07
+  mechanism: "Large UK pension fund managers must unwind short\u2011GBP carry\u2011trades exactly after\
+    \ the 10:00 UK Retail Sales print to stay within mandated risk limits, creating a forced flow of buying\
+    \ GBP against USD."
+  payer: "UK pension fund managers forced to unwind short\u2011GBP carry\u2011trades after the 10:00 UK\
+    \ Retail Sales print to meet risk limits"
+  baseline: Same rule at a control clock on the same days.
+  source: groq_forced_flow
+  train: 43.0% vs 47.1% n=467, R -0.13; val 40.1% vs 40.9% n=162, R -0.19
+  why_closed: train success is not above baseline. Closed; do not retune.
+- id: H260_boj_policy_decision_yen_carry_tr
+  date: '2026-10-06'
+  book: fx_m5
+  family: lab_20261006T0646
+  decision: REJECT
+  template: clock_run
+  signature: bc46443b6691
+  mechanism: "Hedge funds with yen\u2011funded carry positions must close or roll their USDJPY exposure\
+    \ at the 08:30 BOJ policy announcement because their financing contracts expire at that moment, creating\
+    \ a forced flow of sell\u2011side pressure on USDJPY."
+  payer: "Hedge funds forced to close or roll yen\u2011funded carry USDJPY positions at the 08:30 BOJ\
+    \ policy announcement"
+  baseline: Same rule at a control clock on the same days.
+  source: groq_forced_flow
+  train: 33.1% vs 40.1% n=139, R -0.34; val 35.7% vs 30.0% n=56, R -0.27
+  why_closed: train success is not above baseline. Closed; do not retune.
+- id: H261_intake_046
+  date: '2026-10-06'
+  book: fx_m5
+  family: lab_20261006T0646
+  decision: REJECT
+  template: clock_run
+  signature: 3fe5238afac0
+  mechanism: Swiss insurance companies must reallocate CHF exposure immediately after the 07:00 SNB rate
+    decision to comply with regulatory capital requirements, creating a forced flow that pushes USDCHF
+    as insurers sell CHF and buy USD.
+  payer: Swiss insurance companies forced to rebalance CHF exposure after the 07:00 SNB rate decision
+  baseline: Same rule at a control clock on the same days.
+  source: groq_forced_flow
+  train: 7.2% vs 27.1% n=153, R -0.85; val 5.0% vs 28.6% n=60, R -0.90
+  why_closed: train success is not above baseline. Closed; do not retune.
+- id: H262_london_gold_fix_etf_execution
+  date: '2026-10-06'
+  book: gold_m5
+  family: lab_20261006T0646
+  decision: REJECT
+  template: clock_run
+  signature: 706bdb585a77
+  mechanism: "Gold\u2011backed exchange\u2011traded funds are required to execute their rebalancing trades\
+    \ precisely at the 10:30 London Gold Fix, matching benchmark weightings without discretion, which\
+    \ forces a burst of buying or selling pressure at that clock time."
+  payer: "Gold\u2011backed ETFs forced to trade at the 10:30 London Gold Fix to meet benchmark weightings"
+  baseline: Same rule at a control clock on the same days.
+  source: groq_forced_flow
+  train: 40.3% vs 40.0% n=149, R -0.19; val 52.4% vs 39.3% n=63, R +0.02
+  why_closed: train p=0.48111666311405554 not < 0.0100 (multiple-testing adjusted). Closed; do not retune.
+- id: H263_eurozone_sovereign_bond_auction
+  date: '2026-10-06'
+  book: fx_m15
+  family: lab_20261006T0646
+  decision: REJECT
+  template: clock_run
+  signature: 15f0d19603a4
+  mechanism: Eurozone central banks are forced to purchase EURUSD at the 13:00 sovereign bond auction
+    because the auction rules require them to meet a minimum allocation quota, generating a predictable
+    flow event.
+  payer: Eurozone central banks forced to purchase EURUSD at the 13:00 sovereign bond auction to meet
+    allocation quotas
+  baseline: Same rule at a control clock on the same days.
+  source: groq_forced_flow
+  train: 41.2% vs 41.4% n=449, R -0.18; val 40.7% vs 44.2% n=172, R -0.18
+  why_closed: train success is not above baseline. Closed; do not retune.
+- id: H264_usdjpy_sweep_reclaim_unwind
+  date: '2026-10-06'
+  book: fx_m15
+  family: lab_20261006T0651
+  decision: REJECT
+  template: sweep_reclaim
+  signature: 3d26d604fbec
+  mechanism: "USDJPY dealers build a short inventory during a stop\u2011cascade sweep and normalize it\
+    \ by buying back in the next three M15 bars, illustrating a forced stop\u2011order sweep followed\
+    \ by inventory unwinding."
+  payer: USDJPY dealers forced to absorb stop orders during the sweep, creating short inventory they must
+    unwind
+  baseline: Opposite side on the same sweep bar.
+  source: groq_inventory_pressure
+  train: 38.4% vs 45.0% n=951, R -0.23; val 42.1% vs 47.3% n=330, R -0.18
+  why_closed: train success is not above baseline. Closed; do not retune.
+- id: H265_london_close_eurusd_unwind
+  date: '2026-10-06'
+  book: fx_m15
+  family: lab_20261006T0651
+  decision: REJECT
+  template: clock_run
+  signature: b1f39a07fd60
+  mechanism: EURUSD market makers holding net longs trim inventory by selling in the final two M15 bars
+    before the London session ends, generating a forced price move at the session close.
+  payer: "EURUSD market makers forced to trim net\u2011long inventory by selling in the final two M15\
+    \ bars before the London session ends"
+  baseline: Same rule at a control clock on the same days.
+  source: groq_inventory_pressure
+  train: 40.9% vs 41.2% n=425, R -0.14; val 45.0% vs 40.7% n=149, R -0.10
+  why_closed: train success is not above baseline. Closed; do not retune.
+- id: H266_gbpusd_stop_cascade_reversal
+  date: '2026-10-06'
+  book: fx_m5
+  family: lab_20261006T0651
+  decision: REJECT
+  template: sweep_reclaim
+  signature: b9e4d95757d9
+  mechanism: "After a rapid GBPUSD stop cascade, dealers with short positions are forced to unwind inventory\
+    \ by buying back over the next four M5 bars, creating a short\u2011term reversal driven by inventory\
+    \ pressure."
+  payer: GBPUSD dealers forced to buy to unwind short inventory after a rapid stop cascade
+  baseline: Opposite side on the same sweep bar.
+  source: groq_inventory_pressure
+  train: 33.9% vs 33.3% n=832, R -0.31; val 31.5% vs 36.0% n=317, R -0.36
+  why_closed: train p=0.3976196102781205 not < 0.0125 (multiple-testing adjusted). Closed; do not retune.
+- id: H267_intake_058_sweep_reclaim
+  date: '2026-10-06'
+  book: fx_m5
+  family: lab_20261006T0651
+  decision: REJECT
+  template: sweep_reclaim
+  signature: 522d57eac160
+  mechanism: "Consecutive high\u2011volume sell ticks on NZDUSD push dealers to accumulate a short inventory,\
+    \ which they are compelled to unwind after seven consecutive M5 bars, creating a short\u2011side liquidation\
+    \ pressure."
+  payer: NZDUSD dealers forced to unwind short inventory after seven M5 bars due to inventory limits
+  baseline: Opposite side on the same sweep bar.
+  source: groq_inventory_pressure
+  train: 9.6% vs 11.5% n=616, R -0.80; val 12.9% vs 15.3% n=248, R -0.75
+  why_closed: train success is not above baseline. Closed; do not retune.

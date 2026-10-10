@@ -465,7 +465,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     ph = sub.add_parser(
         "paper-h5",
-        help="H5 paper book on OOS with frozen 0.5% risk / max-4 / 12% DD halt, plus current scan",
+        help="H5 paper book on OOS with frozen 0.5%% risk / max-4 / 12%% DD halt, plus current scan",
     )
     ph.add_argument("--no-refresh", action="store_true", help="Use cached ETF CSVs only")
     ph.add_argument(

@@ -3046,3 +3046,368 @@ hypotheses:
 
 
 
+
+  # --- Lab batch lab_20261006T0632: frozen 2026-10-06 by `ats lab run` before any result ---
+  - id: H256_micro_session_liquidity_vacuum_a
+    enabled: false
+    name: Micro-session liquidity vacuum at London-NY overlap open
+    why: "At 13:00 London (18:30 IST) European market\u2011makers who have accumulated net long or short\
+      \ inventory through the London morning reduce their risk before end\u2011of\u2011day limits activate;\
+      \ the book briefly thins as they lift offers or hit bids to flatten, before full NY liquidity arrives\
+      \ and restores depth, creating a directional move into the vacuum."
+    payer: "European market\u2011makers rebalancing inventory before end\u2011of\u2011day limits at the\
+      \ 13:00 London overlap"
+    causal_category: inventory_pressure
+    template: clock_run
+    baseline: Same rule at a control clock on the same days.
+    split_book: fx_m5
+    signature: 877d7687d3ca
+    family: lab_20261006T0632
+    frozen: '2026-10-06'
+    source: MECH_005
+    params:
+      symbols:
+      - EURUSD
+      - GBPUSD
+      - USDCHF
+      timeframe: M5
+      tz: Europe/London
+      treat_hour: 13
+      treat_minute: 0
+      base_hour: 12
+      base_minute: 0
+      mode: follow
+      min_prior_atr: 0.25
+      skip_weekend: true
+      horizon_bars: 8
+      stop_atr: 1.0
+      target_atr: 1.0
+  - id: H257_post_auction_price_discovery_dri
+    enabled: false
+    name: Post-auction price discovery drift after LBMA AM (10:30 London)
+    why: "The LBMA AM Gold price is set at 10:30 London via an electronic auction; market participants who\
+      \ could not participate in the auction (smaller dealers, hedgers with delayed systems) are forced\
+      \ to trade at spot shortly after the auction to adjust their positions relative to the new benchmark,\
+      \ creating a 5\u201115 minute directional drift in the direction of the auction settlement price versus\
+      \ the prior close."
+    payer: Smaller gold dealers and hedgers forced to trade spot after the 10:30 London LBMA AM auction
+      to rebalance against the new benchmark price
+    causal_category: forced_flow
+    template: clock_run
+    baseline: Same rule at a control clock on the same days.
+    split_book: gold_m5
+    signature: 63e4c186df36
+    family: lab_20261006T0632
+    frozen: '2026-10-06'
+    source: MECH_008
+    params:
+      symbols:
+      - XAUUSD
+      timeframe: M5
+      tz: Europe/London
+      treat_hour: 10
+      treat_minute: 30
+      base_hour: 9
+      base_minute: 0
+      mode: follow
+      min_prior_atr: 0.25
+      skip_weekend: true
+      horizon_bars: 8
+      stop_atr: 1.0
+      target_atr: 1.0
+  - id: H258_fx_option_expiry_clustering_at_n
+    enabled: false
+    name: FX option expiry clustering at NY 10:00 (daily)
+    why: "Large FX options expire at the NY 10:00 cut daily; dealers who are net short gamma must delta\u2011\
+      hedge up to the cut, generating directional flow toward the most\u2011traded open\u2011interest strike\
+      \ levels (barrier and round\u2011number strikes) in the 30 minutes preceding the expiry. This forced\
+      \ hedging creates a predictable flow pattern that can be tested by comparing the price action at the\
+      \ 10:00 NY clock to a neutral control clock on the same days."
+    payer: "FX dealers delta\u2011hedging net short gamma positions before the 10:00 NY options cut"
+    causal_category: forced_flow
+    template: clock_run
+    baseline: Same rule at a control clock on the same days.
+    split_book: fx_m5
+    signature: c1f023a42c42
+    family: lab_20261006T0632
+    frozen: '2026-10-06'
+    source: MECH_012
+    params:
+      symbols:
+      - EURUSD
+      - GBPUSD
+      - USDJPY
+      timeframe: M5
+      tz: America/New_York
+      treat_hour: 10
+      treat_minute: 0
+      base_hour: 14
+      base_minute: 0
+      mode: follow
+      min_prior_atr: 0.25
+      skip_weekend: true
+      horizon_bars: 8
+      stop_atr: 1.0
+      target_atr: 1.0
+
+  # --- Lab batch lab_20261006T0646: frozen 2026-10-06 by `ats lab run` before any result ---
+  - id: H259_uk_retail_sales_carry_trade_unwi
+    enabled: false
+    name: "UK Retail Sales Carry\u2011Trade Unwind"
+    why: "Large UK pension fund managers must unwind short\u2011GBP carry\u2011trades exactly after the\
+      \ 10:00 UK Retail Sales print to stay within mandated risk limits, creating a forced flow of buying\
+      \ GBP against USD."
+    payer: "UK pension fund managers forced to unwind short\u2011GBP carry\u2011trades after the 10:00 UK\
+      \ Retail Sales print to meet risk limits"
+    causal_category: forced_flow
+    template: clock_run
+    baseline: Same rule at a control clock on the same days.
+    split_book: fx_m15
+    signature: cf063e3c3b07
+    family: lab_20261006T0646
+    frozen: '2026-10-06'
+    source: groq_forced_flow
+    params:
+      symbols:
+      - GBPUSD
+      timeframe: M15
+      tz: Europe/London
+      treat_hour: 10
+      treat_minute: 0
+      base_hour: 9
+      base_minute: 0
+      mode: follow
+      min_prior_atr: 0.25
+      skip_weekend: true
+      horizon_bars: 8
+      stop_atr: 1.0
+      target_atr: 1.0
+  - id: H260_boj_policy_decision_yen_carry_tr
+    enabled: false
+    name: "BOJ Policy Decision Yen Carry\u2011Trade Settlement"
+    why: "Hedge funds with yen\u2011funded carry positions must close or roll their USDJPY exposure at the\
+      \ 08:30 BOJ policy announcement because their financing contracts expire at that moment, creating\
+      \ a forced flow of sell\u2011side pressure on USDJPY."
+    payer: "Hedge funds forced to close or roll yen\u2011funded carry USDJPY positions at the 08:30 BOJ\
+      \ policy announcement"
+    causal_category: forced_flow
+    template: clock_run
+    baseline: Same rule at a control clock on the same days.
+    split_book: fx_m5
+    signature: bc46443b6691
+    family: lab_20261006T0646
+    frozen: '2026-10-06'
+    source: groq_forced_flow
+    params:
+      symbols:
+      - USDJPY
+      timeframe: M5
+      tz: Asia/Tokyo
+      treat_hour: 8
+      treat_minute: 30
+      base_hour: 12
+      base_minute: 0
+      mode: follow
+      min_prior_atr: 0.25
+      skip_weekend: true
+      horizon_bars: 8
+      stop_atr: 1.0
+      target_atr: 1.0
+  - id: H261_intake_046
+    enabled: false
+    name: INTAKE_046
+    why: Swiss insurance companies must reallocate CHF exposure immediately after the 07:00 SNB rate decision
+      to comply with regulatory capital requirements, creating a forced flow that pushes USDCHF as insurers
+      sell CHF and buy USD.
+    payer: Swiss insurance companies forced to rebalance CHF exposure after the 07:00 SNB rate decision
+    causal_category: forced_flow
+    template: clock_run
+    baseline: Same rule at a control clock on the same days.
+    split_book: fx_m5
+    signature: 3fe5238afac0
+    family: lab_20261006T0646
+    frozen: '2026-10-06'
+    source: groq_forced_flow
+    params:
+      symbols:
+      - USDCHF
+      timeframe: M5
+      tz: Europe/Berlin
+      treat_hour: 7
+      treat_minute: 0
+      base_hour: 12
+      base_minute: 0
+      mode: follow
+      min_prior_atr: 0.25
+      skip_weekend: true
+      horizon_bars: 8
+      stop_atr: 1.0
+      target_atr: 1.0
+  - id: H262_london_gold_fix_etf_execution
+    enabled: false
+    name: London Gold Fix ETF Execution
+    why: "Gold\u2011backed exchange\u2011traded funds are required to execute their rebalancing trades precisely\
+      \ at the 10:30 London Gold Fix, matching benchmark weightings without discretion, which forces a burst\
+      \ of buying or selling pressure at that clock time."
+    payer: "Gold\u2011backed ETFs forced to trade at the 10:30 London Gold Fix to meet benchmark weightings"
+    causal_category: forced_flow
+    template: clock_run
+    baseline: Same rule at a control clock on the same days.
+    split_book: gold_m5
+    signature: 706bdb585a77
+    family: lab_20261006T0646
+    frozen: '2026-10-06'
+    source: groq_forced_flow
+    params:
+      symbols:
+      - XAUUSD
+      timeframe: M5
+      tz: Europe/London
+      treat_hour: 10
+      treat_minute: 30
+      base_hour: 11
+      base_minute: 0
+      mode: follow
+      min_prior_atr: 0.25
+      skip_weekend: true
+      horizon_bars: 8
+      stop_atr: 1.0
+      target_atr: 1.0
+  - id: H263_eurozone_sovereign_bond_auction
+    enabled: false
+    name: Eurozone Sovereign Bond Auction Allocation
+    why: Eurozone central banks are forced to purchase EURUSD at the 13:00 sovereign bond auction because
+      the auction rules require them to meet a minimum allocation quota, generating a predictable flow event.
+    payer: Eurozone central banks forced to purchase EURUSD at the 13:00 sovereign bond auction to meet
+      allocation quotas
+    causal_category: forced_flow
+    template: clock_run
+    baseline: Same rule at a control clock on the same days.
+    split_book: fx_m15
+    signature: 15f0d19603a4
+    family: lab_20261006T0646
+    frozen: '2026-10-06'
+    source: groq_forced_flow
+    params:
+      symbols:
+      - EURUSD
+      timeframe: M15
+      tz: Europe/Berlin
+      treat_hour: 13
+      treat_minute: 0
+      base_hour: 12
+      base_minute: 0
+      mode: follow
+      min_prior_atr: 0.25
+      skip_weekend: true
+      horizon_bars: 8
+      stop_atr: 1.0
+      target_atr: 1.0
+
+  # --- Lab batch lab_20261006T0651: frozen 2026-10-06 by `ats lab run` before any result ---
+  - id: H264_usdjpy_sweep_reclaim_unwind
+    enabled: false
+    name: USDJPY sweep reclaim unwind
+    why: "USDJPY dealers build a short inventory during a stop\u2011cascade sweep and normalize it by buying\
+      \ back in the next three M15 bars, illustrating a forced stop\u2011order sweep followed by inventory\
+      \ unwinding."
+    payer: USDJPY dealers forced to absorb stop orders during the sweep, creating short inventory they must
+      unwind
+    causal_category: inventory_pressure
+    template: sweep_reclaim
+    baseline: Opposite side on the same sweep bar.
+    split_book: fx_m15
+    signature: 3d26d604fbec
+    family: lab_20261006T0651
+    frozen: '2026-10-06'
+    source: groq_inventory_pressure
+    params:
+      symbols:
+      - USDJPY
+      timeframe: M15
+      swing_lookback: 20
+      min_bars_since: 5
+      mode: fade
+      horizon_bars: 3
+      stop_atr: 1.0
+      target_atr: 1.0
+  - id: H265_london_close_eurusd_unwind
+    enabled: false
+    name: "London\u2011close EURUSD unwind"
+    why: EURUSD market makers holding net longs trim inventory by selling in the final two M15 bars before
+      the London session ends, generating a forced price move at the session close.
+    payer: "EURUSD market makers forced to trim net\u2011long inventory by selling in the final two M15\
+      \ bars before the London session ends"
+    causal_category: inventory_pressure
+    template: clock_run
+    baseline: Same rule at a control clock on the same days.
+    split_book: fx_m15
+    signature: b1f39a07fd60
+    family: lab_20261006T0651
+    frozen: '2026-10-06'
+    source: groq_inventory_pressure
+    params:
+      symbols:
+      - EURUSD
+      timeframe: M15
+      tz: Europe/London
+      treat_hour: 17
+      treat_minute: 0
+      base_hour: 12
+      base_minute: 0
+      mode: follow
+      min_prior_atr: 0.25
+      skip_weekend: true
+      horizon_bars: 8
+      stop_atr: 1.0
+      target_atr: 1.0
+  - id: H266_gbpusd_stop_cascade_reversal
+    enabled: false
+    name: GBPUSD_stop_cascade_reversal
+    why: "After a rapid GBPUSD stop cascade, dealers with short positions are forced to unwind inventory\
+      \ by buying back over the next four M5 bars, creating a short\u2011term reversal driven by inventory\
+      \ pressure."
+    payer: GBPUSD dealers forced to buy to unwind short inventory after a rapid stop cascade
+    causal_category: inventory_pressure
+    template: sweep_reclaim
+    baseline: Opposite side on the same sweep bar.
+    split_book: fx_m5
+    signature: b9e4d95757d9
+    family: lab_20261006T0651
+    frozen: '2026-10-06'
+    source: groq_inventory_pressure
+    params:
+      symbols:
+      - GBPUSD
+      timeframe: M5
+      swing_lookback: 20
+      min_bars_since: 5
+      mode: fade
+      horizon_bars: 4
+      stop_atr: 1.0
+      target_atr: 1.0
+  - id: H267_intake_058_sweep_reclaim
+    enabled: false
+    name: INTAKE_058_sweep_reclaim
+    why: "Consecutive high\u2011volume sell ticks on NZDUSD push dealers to accumulate a short inventory,\
+      \ which they are compelled to unwind after seven consecutive M5 bars, creating a short\u2011side liquidation\
+      \ pressure."
+    payer: NZDUSD dealers forced to unwind short inventory after seven M5 bars due to inventory limits
+    causal_category: inventory_pressure
+    template: sweep_reclaim
+    baseline: Opposite side on the same sweep bar.
+    split_book: fx_m5
+    signature: 522d57eac160
+    family: lab_20261006T0651
+    frozen: '2026-10-06'
+    source: groq_inventory_pressure
+    params:
+      symbols:
+      - NZDUSD
+      timeframe: M5
+      swing_lookback: 20
+      min_bars_since: 5
+      mode: fade
+      horizon_bars: 7
+      stop_atr: 1.0
+      target_atr: 1.0

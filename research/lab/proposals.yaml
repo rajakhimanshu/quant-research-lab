@@ -1,0 +1,899 @@
+# Every lab proposal, including rejected ones. Written by `ats lab`.
+proposals:
+- id: P0001
+  created: '2026-10-04'
+  origin: llm
+  source: https://arxiv.org/abs/2410.23294v1
+  status: rejected_by_model
+  errors:
+  - The provided description is a generic AI research summary without a concrete market microstructure
+    mechanism, lacks a forced participant (payer), and does not match any template in the catalogue.
+- id: P0002
+  created: '2026-10-04'
+  origin: llm
+  source: https://arxiv.org/abs/math/0412344v1
+  status: rejected_by_model
+  errors:
+  - The described mechanism is a statistical analysis of the local Hurst exponent and does not identify
+    a forced participant (payer) such as a fix, auction, settlement, or inventory constraint, which is
+    required for a valid spec.
+- id: P0003
+  created: '2026-10-04'
+  origin: llm
+  source: https://arxiv.org/abs/2608.02002v2
+  status: rejected_by_model
+  errors:
+  - The mechanism describes OTC market making with Hawkes-driven RFQ arrivals and does not identify a
+    forced participant (payer) such as a fix, auction, settlement, rebalancing, hedging, inventory limits,
+    or stop orders, nor does it match any available template.
+- id: P0004
+  created: '2026-10-04'
+  origin: llm
+  source: https://arxiv.org/abs/2403.02572v2
+  status: rejected_by_model
+  errors:
+  - The described paper studies generic fill probabilities in a limit order book and does not identify
+    a forced participant (payer) such as a fix, auction, settlement, rebalancing, hedging, inventory limit,
+    or stop order. Therefore it fails rule 2 requiring a named payer.
+- id: P0005
+  created: '2026-10-04'
+  origin: llm
+  source: https://arxiv.org/abs/2004.01499v1
+  status: rejected_by_model
+  errors:
+  - The described mechanism concerns Bitcoin order flow, which is outside the allowed universe of FX and
+    gold pairs, lacks a forced payer, and does not match any template.
+- id: P0006
+  created: '2026-10-04'
+  origin: llm
+  source: https://arxiv.org/abs/1609.04640v3
+  status: rejected_by_model
+  errors:
+  - "The described lead\u2011lag network inference is a statistical analysis, not a documented market\
+    \ mechanism that forces a participant to trade (no payer, no fix/auction/settlement etc.). Therefore\
+    \ it cannot be mapped to any template."
+- id: P0007
+  created: '2026-10-04'
+  origin: llm
+  source: https://arxiv.org/abs/1504.04354v2
+  status: rejected_by_model
+  errors:
+  - The described mechanism studies long memory of order flow without identifying a forced participant
+    (payer) such as a fix, auction, settlement, rebalancing, inventory limit, or stop order. Therefore
+    it does not meet the requirement to name a payer.
+- id: P0008
+  created: '2026-10-04'
+  origin: llm
+  source: https://arxiv.org/abs/2407.16885v1
+  status: rejected_by_model
+  errors:
+  - The described mechanism (Automated Market Making and Decentralized Finance) does not involve a forced
+    participant (payer) such as a fix, auction, settlement, rebalancing, hedging, inventory limits, or
+    stop orders, and it falls outside the allowed universe of FX and gold instruments. Therefore it can
+- id: P0009
+  created: '2026-10-04'
+  origin: llm
+  source: https://arxiv.org/abs/2010.15403v2
+  status: rejected_by_model
+  errors:
+  - The documented mechanism concerns cryptocurrencies, which are outside the allowed universe of FX pairs
+    and XAUUSD. Additionally, it does not identify a forced payer (e.g., fix, auction, settlement) required
+    by the rules.
+- id: P0010
+  created: '2026-10-04'
+  origin: llm
+  source: https://arxiv.org/abs/2004.10560v2
+  status: invalid
+  errors:
+  - payer must name who is forced to trade and why
+  spec:
+    name: INTAKE_021
+    why: "The lead\u2011lag relationship describes a situation where price discovery occurs first in a\
+      \ more liquid FX market (the leader) and the dealers in a less liquid, follower market are forced\
+      \ to reprice with a lag, creating a systematic lagged response that can be exploited for trading."
+    payer: dealers
+    causal_category: inventory_pressure
+    template: lead_lag
+    symbols:
+    - GBPUSD
+    timeframe: M5
+    params:
+      leader: EURUSD
+- id: P0011
+  created: '2026-10-04'
+  origin: llm
+  source: MECH_001
+  status: invalid
+  errors:
+  - payer must name who is forced to trade and why
+  - symbols must be 1-3 distinct instruments
+  spec:
+    name: "Stop-cascade absorption (M5\u2013M15 sweep-reclaim)"
+    why: "Market makers absorb retail stop-hunt orders clustered just beyond recent intraday swing highs/lows;\
+      \ after the cascade clears, MM inventory skews quotes back toward pre-sweep price, driving a reclaim\
+      \ of the swept level within 5\u201315 minutes."
+    payer: dealers
+    causal_category: forced_flow
+    template: sweep_reclaim
+    symbols:
+    - EURUSD
+    - GBPUSD
+    - USDJPY
+    - AUDUSD
+    - USDCAD
+    - USDCHF
+    - NZDUSD
+    - XAUUSD
+    timeframe: M5
+    params:
+      mode: fade
+- id: P0012
+  created: '2026-10-06'
+  origin: llm
+  source: https://arxiv.org/abs/1906.10388v3
+  status: rejected_by_model
+  errors:
+  - "The provided lead describes a generic research concept of lead\u2011lag relationships without specifying\
+    \ a concrete market mechanism that forces a participant to trade (e.g., fix, auction, settlement,\
+    \ rebalancing, inventory limits, or stop\u2011order driven flow). No payer is identified, so it cannot\
+    \ be mappe"
+- id: P0013
+  created: '2026-10-06'
+  origin: llm
+  source: https://arxiv.org/abs/1903.00472v1
+  status: rejected_by_model
+  errors:
+  - The described mechanism concerns cryptocurrency markets, which are outside the allowed universe of
+    FX pairs and XAUUSD, and it does not identify a forced trader (payer). Therefore it cannot be mapped
+    to any permitted template.
+- id: P0014
+  created: '2026-10-06'
+  origin: llm
+  source: https://arxiv.org/abs/1901.00834v3
+  status: rejected_by_model
+  errors:
+  - "The described mechanism is an academic lead\u2011lag network analysis without a concrete forced participant\
+    \ (fix, auction, settlement, rebalancing, hedging, inventory limits, stop orders). No payer is identified,\
+    \ and the mechanism does not map to any template requiring a forced flow."
+- id: P0015
+  created: '2026-10-06'
+  origin: llm
+  source: https://www.bis.org/publications/working-paper-1374-verifiable-official-statistics-blockchain-based-approach
+  status: rejected_by_model
+  errors:
+  - The described mechanism concerns blockchain verification of official statistics and does not involve
+    a forced trade participant, a clock, auction, settlement, inventory limit, or any FX/gold market microstructure
+    element within the allowed universe. Therefore it cannot be mapped to any template.
+- id: P0016
+  created: '2026-10-06'
+  origin: llm
+  source: https://www.bis.org/publications/working-paper-1373-settlement-liquidity-colombian-large-value-payment-system-role-reserve-requirements
+  status: rejected_by_model
+  errors:
+  - "The described mechanism concerns settlement liquidity in Colombia's large-value payment system and\
+    \ reserve requirements, which does not involve any of the allowed instruments (EURUSD, GBPUSD, USDJPY,\
+    \ AUDUSD, USDCAD, USDCHF, NZDUSD, XAUUSD) and lacks a specific forced\u2011trade participant within\
+    \ the def"
+- id: P0017
+  created: '2026-10-06'
+  origin: llm
+  source: https://www.bis.org/publications/working-paper-1372-hard-shift-easy-reshape-central-bank-reserve-demand-and-frictions
+  status: rejected_by_model
+  errors:
+  - "The mechanism describes central bank reserve demand and balance\u2011sheet shrinkage, which does\
+    \ not involve a forced\u2011trade participant (no fix, auction, settlement, rebalancing, hedging,\
+    \ inventory limits, or stop orders) and does not map to any available template."
+- id: P0018
+  created: '2026-10-06'
+  origin: llm
+  source: https://www.bis.org/publications/working-paper-1371-what-drives-exchange-rate-pass-throughs-evidence-non-parametric-method
+  status: rejected_by_model
+  errors:
+  - "The provided mechanism describes macroeconomic research on exchange\u2011rate pass\u2011through,\
+    \ not a forced\u2011trade market\u2011microstructure event with a payer, nor does it map to any template\
+    \ in the catalogue."
+- id: P0019
+  created: '2026-10-06'
+  origin: llm
+  source: https://www.bis.org/publications/dollarisation-and-monetary-control-what-lessons-rise-stablecoins
+  status: rejected_by_model
+  errors:
+  - "The provided document describes macro\u2011economic observations about dollarisation and stablecoins\
+    \ and does not specify a market\u2011microstructure mechanism that forces a participant to trade (e.g.,\
+    \ a fix, auction, settlement, inventory rebalance). No payer is identified, and no applicable template\
+    \ can be"
+- id: P0020
+  created: '2026-10-06'
+  origin: llm
+  source: https://www.bis.org/publications/working-paper-1358-asset-price-bubbles-and-systemic-risk-money-market-funds
+  status: rejected_by_model
+  errors:
+  - "The documented mechanism concerns money\u2011market\u2011fund asset price bubbles and systemic risk,\
+    \ which does not involve a forced\u2011trade participant (fix, auction, settlement, inventory limits,\
+    \ etc.), does not reference any of the allowed FX or XAUUSD instruments, and provides no clock\u2011\
+    based or session\u2011base"
+- id: P0021
+  created: '2026-10-06'
+  origin: llm
+  source: https://www.federalreserve.gov/econres/feds/files/2026051pap.pdf
+  status: rejected_by_model
+  errors:
+  - "The described mechanism (banks providing liquidity to meet LCR buffers) does not correspond to any\
+    \ of the available templates, which are limited to clock\u2011based fixes, session boxes, sweep reclaims,\
+    \ lead\u2011lag, weekend gaps, or month\u2011end rebalancing. No suitable template can capture this\
+    \ regulatory\u2011dri"
+- id: P0022
+  created: '2026-10-06'
+  origin: llm
+  source: MECH_002
+  status: rejected_by_model
+  errors:
+  - "The mechanism description does not name any specific instrument(s); the spec requires a symbols list\
+    \ of 1\u20113 instruments that the mechanism explicitly mentions, which is missing."
+- id: P0023
+  created: '2026-10-06'
+  origin: llm
+  source: MECH_003
+  status: invalid
+  errors:
+  - leader must differ from the traded symbols
+  spec:
+    name: "Cross-pair lead\u2011lag on minute bars (EURUSD \u2192 GBPUSD)"
+    why: "EURUSD, as the highest\u2011volume FX pair, discovers price first and moves on M5 bars. GBPUSD\
+      \ dealers, facing inventory pressure, reprice their mid\u2011price with a processing lag of about\
+      \ 1\u20133 M5 bars, creating a brief arbitrage window that can be captured by following the EURUSD\
+      \ close and exiting within a few bars."
+    payer: GBPUSD dealers rebalancing inventory after EURUSD moves, forced to adjust positions to maintain
+      target inventory levels
+    causal_category: inventory_pressure
+    template: lead_lag
+    symbols:
+    - EURUSD
+    - GBPUSD
+    timeframe: M5
+    params:
+      leader: EURUSD
+      delay_bars: 2
+      horizon_bars: 3
+      mode: follow
+- id: P0024
+  created: '2026-10-06'
+  origin: llm
+  source: MECH_004
+  status: rejected_by_model
+  errors:
+  - "The mechanism describes a post\u2011news secondary drift driven by institutional repositioning over\
+    \ 5\u201130 minutes, which does not match any of the available templates (clock_run, session_box,\
+    \ sweep_reclaim, lead_lag, weekend_gap, month_end). No template captures a news\u2011driven forced\
+    \ flow without a named c"
+- id: P0025
+  created: '2026-10-06'
+  origin: llm
+  source: MECH_005
+  status: frozen
+  signature: 877d7687d3ca
+  spec:
+    name: Micro-session liquidity vacuum at London-NY overlap open
+    why: "At 13:00 London (18:30 IST) European market\u2011makers who have accumulated net long or short\
+      \ inventory through the London morning reduce their risk before end\u2011of\u2011day limits activate;\
+      \ the book briefly thins as they lift offers or hit bids to flatten, before full NY liquidity arrives\
+      \ and restores depth, creating a directional move into the vacuum."
+    payer: "European market\u2011makers rebalancing inventory before end\u2011of\u2011day limits at the\
+      \ 13:00 London overlap"
+    causal_category: inventory_pressure
+    template: clock_run
+    baseline: Same rule at a control clock on the same days.
+    symbols:
+    - EURUSD
+    - GBPUSD
+    - USDCHF
+    timeframe: M5
+    params:
+      tz: Europe/London
+      treat_hour: 13
+      treat_minute: 0
+      base_hour: 12
+      base_minute: 0
+      mode: follow
+      min_prior_atr: 0.25
+      skip_weekend: true
+      horizon_bars: 8
+      stop_atr: 1.0
+      target_atr: 1.0
+    source: MECH_005
+  frozen_as: H256_micro_session_liquidity_vacuum_a
+- id: P0026
+  created: '2026-10-06'
+  origin: llm
+  source: MECH_006
+  status: rejected_by_model
+  errors:
+  - "The described mechanism relies on a tick-volume imbalance trigger and subsequent inventory\u2011\
+    pressure mean reversion over 3\u20138 bars. None of the available templates (clock_run, session_box,\
+    \ sweep_reclaim, lead_lag, weekend_gap, month_end) capture a tick\u2011volume streak or inventory\u2011\
+    skew trigger, so no te"
+- id: P0027
+  created: '2026-10-06'
+  origin: llm
+  source: MECH_007
+  status: invalid
+  errors:
+  - leader must differ from the traded symbols
+  spec:
+    name: "Cross-asset lead-lag gold \u2192 AUD at M5"
+    why: "Gold price moves lead AUDUSD by 1\u20132 M5 bars because AUD is a commodity currency and AUD/USD\
+      \ dealers adjust their mid with a systematic lag relative to gold dealers, creating a brief exploitable\
+      \ window before the correlation reasserts."
+    payer: AUD dealers rebalancing inventory after gold price moves to maintain commodity exposure and
+      meet inventory limits
+    causal_category: inventory_pressure
+    template: lead_lag
+    symbols:
+    - XAUUSD
+    - AUDUSD
+    timeframe: M5
+    params:
+      leader: XAUUSD
+- id: P0028
+  created: '2026-10-06'
+  origin: llm
+  source: MECH_008
+  status: frozen
+  signature: 63e4c186df36
+  spec:
+    name: Post-auction price discovery drift after LBMA AM (10:30 London)
+    why: "The LBMA AM Gold price is set at 10:30 London via an electronic auction; market participants\
+      \ who could not participate in the auction (smaller dealers, hedgers with delayed systems) are forced\
+      \ to trade at spot shortly after the auction to adjust their positions relative to the new benchmark,\
+      \ creating a 5\u201115 minute directional drift in the direction of the auction settlement price\
+      \ versus the prior close."
+    payer: Smaller gold dealers and hedgers forced to trade spot after the 10:30 London LBMA AM auction
+      to rebalance against the new benchmark price
+    causal_category: forced_flow
+    template: clock_run
+    baseline: Same rule at a control clock on the same days.
+    symbols:
+    - XAUUSD
+    timeframe: M5
+    params:
+      tz: Europe/London
+      treat_hour: 10
+      treat_minute: 30
+      base_hour: 9
+      base_minute: 0
+      mode: follow
+      min_prior_atr: 0.25
+      skip_weekend: true
+      horizon_bars: 8
+      stop_atr: 1.0
+      target_atr: 1.0
+    source: MECH_008
+  frozen_as: H257_post_auction_price_discovery_dri
+- id: P0029
+  created: '2026-10-06'
+  origin: llm
+  source: MECH_009
+  status: rejected_by_model
+  errors:
+  - The mechanism specifies a Tokyo fix at 9:55 JST, but the only suitable template (clock_run) only allows
+    treat_minute values of 0, 15, 30, or 45. Since the required minute (55) cannot be represented, no
+    template fits the mechanism.
+- id: P0030
+  created: '2026-10-06'
+  origin: llm
+  source: MECH_012
+  status: frozen
+  signature: c1f023a42c42
+  spec:
+    name: FX option expiry clustering at NY 10:00 (daily)
+    why: "Large FX options expire at the NY 10:00 cut daily; dealers who are net short gamma must delta\u2011\
+      hedge up to the cut, generating directional flow toward the most\u2011traded open\u2011interest\
+      \ strike levels (barrier and round\u2011number strikes) in the 30 minutes preceding the expiry.\
+      \ This forced hedging creates a predictable flow pattern that can be tested by comparing the price\
+      \ action at the 10:00 NY clock to a neutral control clock on the same days."
+    payer: "FX dealers delta\u2011hedging net short gamma positions before the 10:00 NY options cut"
+    causal_category: forced_flow
+    template: clock_run
+    baseline: Same rule at a control clock on the same days.
+    symbols:
+    - EURUSD
+    - GBPUSD
+    - USDJPY
+    timeframe: M5
+    params:
+      tz: America/New_York
+      treat_hour: 10
+      treat_minute: 0
+      base_hour: 14
+      base_minute: 0
+      mode: follow
+      min_prior_atr: 0.25
+      skip_weekend: true
+      horizon_bars: 8
+      stop_atr: 1.0
+      target_atr: 1.0
+    source: MECH_012
+  frozen_as: H258_fx_option_expiry_clustering_at_n
+- id: P0031
+  created: '2026-10-06'
+  origin: llm
+  source: MECH_013
+  status: rejected_by_model
+  errors:
+  - The described mechanism (multi-currency inventory risk skew) does not match any of the available templates
+    (clock_run, session_box, sweep_reclaim, lead_lag, weekend_gap, month_end). No suitable template can
+    be applied.
+- id: P0032
+  created: '2026-10-06'
+  origin: llm
+  source: MECH_014
+  status: rejected_by_model
+  errors:
+  - The described mechanism (FX Dealer Pricing Ladders and Hedging) does not match any of the available
+    templates (clock_run, session_box, sweep_reclaim, lead_lag, weekend_gap, month_end). It lacks a named
+    clock, session opening range, swing stop sweep, leader-follower dynamics, weekend gap, or month-en
+- id: P0033
+  created: '2026-10-06'
+  origin: llm
+  source: groq_forced_flow
+  status: error
+  errors:
+  - 'Error code: 429 - {''error'': {''message'': ''Rate limit reached for model `openai/gpt-oss-120b`
+    in organization `org_01kktktjv1ewfrwcgh9g55zc09` service tier `on_demand` on tokens per minute (TPM):
+    Limit '
+- id: P0034
+  created: '2026-10-06'
+  origin: llm
+  source: groq_forced_flow
+  status: frozen
+  signature: cf063e3c3b07
+  spec:
+    name: "UK Retail Sales Carry\u2011Trade Unwind"
+    why: "Large UK pension fund managers must unwind short\u2011GBP carry\u2011trades exactly after the\
+      \ 10:00 UK Retail Sales print to stay within mandated risk limits, creating a forced flow of buying\
+      \ GBP against USD."
+    payer: "UK pension fund managers forced to unwind short\u2011GBP carry\u2011trades after the 10:00\
+      \ UK Retail Sales print to meet risk limits"
+    causal_category: forced_flow
+    template: clock_run
+    baseline: Same rule at a control clock on the same days.
+    symbols:
+    - GBPUSD
+    timeframe: M15
+    params:
+      tz: Europe/London
+      treat_hour: 10
+      treat_minute: 0
+      base_hour: 9
+      base_minute: 0
+      mode: follow
+      min_prior_atr: 0.25
+      skip_weekend: true
+      horizon_bars: 8
+      stop_atr: 1.0
+      target_atr: 1.0
+    source: groq_forced_flow
+  frozen_as: H259_uk_retail_sales_carry_trade_unwi
+- id: P0035
+  created: '2026-10-06'
+  origin: llm
+  source: groq_forced_flow
+  status: frozen
+  signature: bc46443b6691
+  spec:
+    name: "BOJ Policy Decision Yen Carry\u2011Trade Settlement"
+    why: "Hedge funds with yen\u2011funded carry positions must close or roll their USDJPY exposure at\
+      \ the 08:30 BOJ policy announcement because their financing contracts expire at that moment, creating\
+      \ a forced flow of sell\u2011side pressure on USDJPY."
+    payer: "Hedge funds forced to close or roll yen\u2011funded carry USDJPY positions at the 08:30 BOJ\
+      \ policy announcement"
+    causal_category: forced_flow
+    template: clock_run
+    baseline: Same rule at a control clock on the same days.
+    symbols:
+    - USDJPY
+    timeframe: M5
+    params:
+      tz: Asia/Tokyo
+      treat_hour: 8
+      treat_minute: 30
+      base_hour: 12
+      base_minute: 0
+      mode: follow
+      min_prior_atr: 0.25
+      skip_weekend: true
+      horizon_bars: 8
+      stop_atr: 1.0
+      target_atr: 1.0
+    source: groq_forced_flow
+  frozen_as: H260_boj_policy_decision_yen_carry_tr
+- id: P0036
+  created: '2026-10-06'
+  origin: llm
+  source: groq_forced_flow
+  status: invalid
+  errors:
+  - missing required param base_hour
+  spec:
+    name: "RBA Minutes Commodity\u2011Fund Rebalance"
+    why: "Commodity\u2011linked Australian fund managers are required to rebalance their AUD exposure\
+      \ immediately after the 02:00 RBA minutes release, creating a forced flow of buy or sell orders\
+      \ in AUDUSD to meet benchmark allocation rules."
+    payer: "Australian commodity\u2011linked fund managers rebalancing AUD exposure after the 02:00 RBA\
+      \ minutes release"
+    causal_category: forced_flow
+    template: clock_run
+    symbols:
+    - AUDUSD
+    timeframe: M15
+    params:
+      tz: Australia/Sydney
+      treat_hour: 2
+      treat_minute: 0
+      mode: follow
+- id: P0037
+  created: '2026-10-06'
+  origin: llm
+  source: groq_forced_flow
+  status: rejected_by_model
+  errors:
+  - The provided timeframe M30 is not within the allowed set (M5, M15, H1).
+- id: P0038
+  created: '2026-10-06'
+  origin: llm
+  source: groq_forced_flow
+  status: frozen
+  signature: 3fe5238afac0
+  spec:
+    name: INTAKE_046
+    why: Swiss insurance companies must reallocate CHF exposure immediately after the 07:00 SNB rate decision
+      to comply with regulatory capital requirements, creating a forced flow that pushes USDCHF as insurers
+      sell CHF and buy USD.
+    payer: Swiss insurance companies forced to rebalance CHF exposure after the 07:00 SNB rate decision
+    causal_category: forced_flow
+    template: clock_run
+    baseline: Same rule at a control clock on the same days.
+    symbols:
+    - USDCHF
+    timeframe: M5
+    params:
+      tz: Europe/Berlin
+      treat_hour: 7
+      treat_minute: 0
+      base_hour: 12
+      base_minute: 0
+      mode: follow
+      min_prior_atr: 0.25
+      skip_weekend: true
+      horizon_bars: 8
+      stop_atr: 1.0
+      target_atr: 1.0
+    source: groq_forced_flow
+  frozen_as: H261_intake_046
+- id: P0039
+  created: '2026-10-06'
+  origin: llm
+  source: groq_forced_flow
+  status: rejected_by_model
+  errors:
+  - "The mechanism describes a CPI data release forcing NZDUSD trades at 06:45 NZ time, but no template\
+    \ matches a non\u2011fix data\u2011release clock and the required timezone (New Zealand) is not among\
+    \ the allowed choices for the clock_run template. Therefore it cannot be expressed with the available\
+    \ catalogue."
+- id: P0040
+  created: '2026-10-06'
+  origin: llm
+  source: groq_forced_flow
+  status: frozen
+  signature: 706bdb585a77
+  spec:
+    name: London Gold Fix ETF Execution
+    why: "Gold\u2011backed exchange\u2011traded funds are required to execute their rebalancing trades\
+      \ precisely at the 10:30 London Gold Fix, matching benchmark weightings without discretion, which\
+      \ forces a burst of buying or selling pressure at that clock time."
+    payer: "Gold\u2011backed ETFs forced to trade at the 10:30 London Gold Fix to meet benchmark weightings"
+    causal_category: forced_flow
+    template: clock_run
+    baseline: Same rule at a control clock on the same days.
+    symbols:
+    - XAUUSD
+    timeframe: M5
+    params:
+      tz: Europe/London
+      treat_hour: 10
+      treat_minute: 30
+      base_hour: 11
+      base_minute: 0
+      mode: follow
+      min_prior_atr: 0.25
+      skip_weekend: true
+      horizon_bars: 8
+      stop_atr: 1.0
+      target_atr: 1.0
+    source: groq_forced_flow
+  frozen_as: H262_london_gold_fix_etf_execution
+- id: P0041
+  created: '2026-10-06'
+  origin: llm
+  source: groq_forced_flow
+  status: frozen
+  signature: 15f0d19603a4
+  spec:
+    name: Eurozone Sovereign Bond Auction Allocation
+    why: Eurozone central banks are forced to purchase EURUSD at the 13:00 sovereign bond auction because
+      the auction rules require them to meet a minimum allocation quota, generating a predictable flow
+      event.
+    payer: Eurozone central banks forced to purchase EURUSD at the 13:00 sovereign bond auction to meet
+      allocation quotas
+    causal_category: forced_flow
+    template: clock_run
+    baseline: Same rule at a control clock on the same days.
+    symbols:
+    - EURUSD
+    timeframe: M15
+    params:
+      tz: Europe/Berlin
+      treat_hour: 13
+      treat_minute: 0
+      base_hour: 12
+      base_minute: 0
+      mode: follow
+      min_prior_atr: 0.25
+      skip_weekend: true
+      horizon_bars: 8
+      stop_atr: 1.0
+      target_atr: 1.0
+    source: groq_forced_flow
+  frozen_as: H263_eurozone_sovereign_bond_auction
+- id: P0042
+  created: '2026-10-06'
+  origin: llm
+  source: groq_forced_flow
+  status: rejected_by_model
+  errors:
+  - The mechanism describes a forced GBPUSD sell at the 13:00 UK gilt auction (a clock event). The only
+    matching template is 'clock_run', which requires both treat_hour/minute and a base_hour/minute for
+    the control clock. The mechanism does not specify a baseline clock time, and base_hour has no default
+- id: P0043
+  created: '2026-10-06'
+  origin: llm
+  source: groq_inventory_pressure
+  status: frozen
+  signature: 3d26d604fbec
+  spec:
+    name: USDJPY sweep reclaim unwind
+    why: "USDJPY dealers build a short inventory during a stop\u2011cascade sweep and normalize it by\
+      \ buying back in the next three M15 bars, illustrating a forced stop\u2011order sweep followed by\
+      \ inventory unwinding."
+    payer: USDJPY dealers forced to absorb stop orders during the sweep, creating short inventory they
+      must unwind
+    causal_category: inventory_pressure
+    template: sweep_reclaim
+    baseline: Opposite side on the same sweep bar.
+    symbols:
+    - USDJPY
+    timeframe: M15
+    params:
+      swing_lookback: 20
+      min_bars_since: 5
+      mode: fade
+      horizon_bars: 3
+      stop_atr: 1.0
+      target_atr: 1.0
+    source: groq_inventory_pressure
+  frozen_as: H264_usdjpy_sweep_reclaim_unwind
+- id: P0044
+  created: '2026-10-06'
+  origin: llm
+  source: groq_inventory_pressure
+  status: error
+  errors:
+  - 'Error code: 429 - {''error'': {''message'': ''Rate limit reached for model `openai/gpt-oss-120b`
+    in organization `org_01kktktjv1ewfrwcgh9g55zc09` service tier `on_demand` on tokens per minute (TPM):
+    Limit '
+- id: P0045
+  created: '2026-10-06'
+  origin: llm
+  source: groq_inventory_pressure
+  status: invalid
+  errors:
+  - leader must differ from the traded symbols
+  spec:
+    name: "Gold\u2011USDCHF cross\u2011asset lag"
+    why: "XAUUSD dealers accumulate long positions in gold when gold price rises, then six M5 bars later\
+      \ they off\u2011load a short USDCHF inventory as the franc weakens, creating a lagged inventory\u2011\
+      pressure flow from gold to USDCHF."
+    payer: XAUUSD dealers rebalancing inventory after a gold price move, forced to sell short USDCHF six
+      M5 bars later
+    causal_category: inventory_pressure
+    template: lead_lag
+    symbols:
+    - XAUUSD
+    - USDCHF
+    timeframe: M5
+    params:
+      leader: XAUUSD
+      delay_bars: 6
+- id: P0046
+  created: '2026-10-06'
+  origin: llm
+  source: groq_inventory_pressure
+  status: frozen
+  signature: b1f39a07fd60
+  spec:
+    name: "London\u2011close EURUSD unwind"
+    why: EURUSD market makers holding net longs trim inventory by selling in the final two M15 bars before
+      the London session ends, generating a forced price move at the session close.
+    payer: "EURUSD market makers forced to trim net\u2011long inventory by selling in the final two M15\
+      \ bars before the London session ends"
+    causal_category: inventory_pressure
+    template: clock_run
+    baseline: Same rule at a control clock on the same days.
+    symbols:
+    - EURUSD
+    timeframe: M15
+    params:
+      tz: Europe/London
+      treat_hour: 17
+      treat_minute: 0
+      base_hour: 12
+      base_minute: 0
+      mode: follow
+      min_prior_atr: 0.25
+      skip_weekend: true
+      horizon_bars: 8
+      stop_atr: 1.0
+      target_atr: 1.0
+    source: groq_inventory_pressure
+  frozen_as: H265_london_close_eurusd_unwind
+- id: P0047
+  created: '2026-10-06'
+  origin: llm
+  source: groq_inventory_pressure
+  status: invalid
+  errors:
+  - leader must differ from the traded symbols
+  spec:
+    name: USDJPY leads USDCAD
+    why: "USDJPY dealers accumulate a long USDJPY bias during the M15 bar and, to manage their inventory\
+      \ pressure, they are forced to off\u2011load that bias by buying USDCAD one bar later, creating\
+      \ a lagged price discovery effect where USDCAD follows USDJPY moves with a one\u2011bar delay."
+    payer: USDJPY dealers buying USDCAD to rebalance inventory after building a long USDJPY bias
+    causal_category: inventory_pressure
+    template: lead_lag
+    symbols:
+    - USDJPY
+    - USDCAD
+    timeframe: M15
+    params:
+      leader: USDJPY
+- id: P0048
+  created: '2026-10-06'
+  origin: llm
+  source: groq_inventory_pressure
+  status: frozen
+  signature: b9e4d95757d9
+  spec:
+    name: GBPUSD_stop_cascade_reversal
+    why: "After a rapid GBPUSD stop cascade, dealers with short positions are forced to unwind inventory\
+      \ by buying back over the next four M5 bars, creating a short\u2011term reversal driven by inventory\
+      \ pressure."
+    payer: GBPUSD dealers forced to buy to unwind short inventory after a rapid stop cascade
+    causal_category: inventory_pressure
+    template: sweep_reclaim
+    baseline: Opposite side on the same sweep bar.
+    symbols:
+    - GBPUSD
+    timeframe: M5
+    params:
+      swing_lookback: 20
+      min_bars_since: 5
+      mode: fade
+      horizon_bars: 4
+      stop_atr: 1.0
+      target_atr: 1.0
+    source: groq_inventory_pressure
+  frozen_as: H266_gbpusd_stop_cascade_reversal
+- id: P0049
+  created: '2026-10-06'
+  origin: llm
+  source: groq_inventory_pressure
+  status: frozen
+  signature: 522d57eac160
+  spec:
+    name: INTAKE_058_sweep_reclaim
+    why: "Consecutive high\u2011volume sell ticks on NZDUSD push dealers to accumulate a short inventory,\
+      \ which they are compelled to unwind after seven consecutive M5 bars, creating a short\u2011side\
+      \ liquidation pressure."
+    payer: NZDUSD dealers forced to unwind short inventory after seven M5 bars due to inventory limits
+    causal_category: inventory_pressure
+    template: sweep_reclaim
+    baseline: Opposite side on the same sweep bar.
+    symbols:
+    - NZDUSD
+    timeframe: M5
+    params:
+      swing_lookback: 20
+      min_bars_since: 5
+      mode: fade
+      horizon_bars: 7
+      stop_atr: 1.0
+      target_atr: 1.0
+    source: groq_inventory_pressure
+  frozen_as: H267_intake_058_sweep_reclaim
+- id: P0050
+  created: '2026-10-06'
+  origin: llm
+  source: groq_inventory_pressure
+  status: invalid
+  errors:
+  - leader must differ from the traded symbols
+  spec:
+    name: XAUUSD_to_EURUSD_inventory_pressure
+    why: "XAUUSD dealers short gold and, within three M5 bars, offload a short EURUSD inventory as the\
+      \ metal\u2019s fall pressures the euro, creating inventory pressure on EURUSD dealers."
+    payer: XAUUSD dealers rebalancing inventory after gold price drop, forcing EURUSD short offload
+    causal_category: inventory_pressure
+    template: lead_lag
+    symbols:
+    - XAUUSD
+    - EURUSD
+    timeframe: M5
+    params:
+      leader: XAUUSD
+      leader_move_bars: 3
+      delay_bars: 0
+      mode: follow
+- id: P0051
+  created: '2026-10-06'
+  origin: llm
+  source: groq_inventory_pressure
+  status: rejected_by_model
+  errors:
+  - The mechanism describes trimming in the last three M15 bars before the NY session ends but does not
+    specify the exact clock time (hour/minute) required by the 'clock_run' template, whose treat_hour
+    and base_hour are mandatory. Without a concrete clock time we cannot populate the required parameters,
+- id: P0052
+  created: '2026-10-06'
+  origin: llm
+  source: groq_structural_liquidity
+  status: rejected_by_model
+  errors:
+  - The mechanism describes a thin order book due to liquidity providers pausing before the Tokyo open,
+    but it does not identify a participant who is forced to trade (e.g., fix, auction, settlement, rebalancing,
+    hedging, inventory limits, stop orders). Without a forced payer, the spec cannot be generate
+- id: P0053
+  created: '2026-10-06'
+  origin: llm
+  source: groq_structural_liquidity
+  status: error
+  errors:
+  - 'Error code: 429 - {''error'': {''message'': ''Rate limit reached for model `openai/gpt-oss-120b`
+    in organization `org_01kktktjv1ewfrwcgh9g55zc09` service tier `on_demand` on tokens per day (TPD):
+    Limit 200'
+- id: P0054
+  created: '2026-10-06'
+  origin: llm
+  source: groq_structural_liquidity
+  status: error
+  errors:
+  - 'Error code: 429 - {''error'': {''message'': ''Rate limit reached for model `openai/gpt-oss-120b`
+    in organization `org_01kktktjv1ewfrwcgh9g55zc09` service tier `on_demand` on tokens per day (TPD):
+    Limit 200'
+- id: P0055
+  created: '2026-10-06'
+  origin: llm
+  source: groq_forced_flow:INTAKE_072
+  status: rejected_by_model
+  errors:
+  - The mechanism specifies a 9:55 Tokyo auction, but the only suitable template (clock_run) restricts
+    treat_minute to 0,15,30,45, so the required minute cannot be represented.
+- id: P0056
+  created: '2026-10-06'
+  origin: llm
+  source: https://www.bis.org/publications/working-paper-1380-chasing-el-dorado-gold-under-shifting-geopolitical-and-financial-condition
+  status: rejected_by_model
+  errors:
+  - "The provided description is an academic analysis of gold's safe\u2011haven role under geopolitical\
+    \ risk, lacking a concrete forced\u2011trade mechanism (e.g., fix, auction, settlement) and no identified\
+    \ payer forced to trade. Therefore it cannot be mapped to any template."

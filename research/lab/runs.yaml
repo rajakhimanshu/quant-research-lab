@@ -1,0 +1,35 @@
+# One row per `ats lab run` test batch (one Bonferroni family).
+runs:
+- batch: lab_20261006T0632
+  date: '2026-10-06'
+  n_tests: 3
+  alpha: 0.016667
+  ids:
+  - H256_micro_session_liquidity_vacuum_a
+  - H257_post_auction_price_discovery_dri
+  - H258_fx_option_expiry_clustering_at_n
+  decisions:
+    REJECT: 3
+- batch: lab_20261006T0646
+  date: '2026-10-06'
+  n_tests: 5
+  alpha: 0.01
+  ids:
+  - H259_uk_retail_sales_carry_trade_unwi
+  - H260_boj_policy_decision_yen_carry_tr
+  - H261_intake_046
+  - H262_london_gold_fix_etf_execution
+  - H263_eurozone_sovereign_bond_auction
+  decisions:
+    REJECT: 5
+- batch: lab_20261006T0651
+  date: '2026-10-06'
+  n_tests: 4
+  alpha: 0.0125
+  ids:
+  - H264_usdjpy_sweep_reclaim_unwind
+  - H265_london_close_eurusd_unwind
+  - H266_gbpusd_stop_cascade_reversal
+  - H267_intake_058_sweep_reclaim
+  decisions:
+    REJECT: 4
