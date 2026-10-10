@@ -21,7 +21,7 @@ from ats.lab.templates import TEMPLATES, TIMEFRAMES, UNIVERSE
 HYPOTHESES_PATH = CONFIG_DIR / "hypotheses.yaml"
 
 CATEGORIES = ("forced_flow", "inventory_pressure", "structural_liquidity")
-RISK_KEYS = {"horizon_bars", "stop_atr", "target_atr"}
+RISK_KEYS = {"horizon_bars", "stop_atr", "target_atr", "flat_by_ny_close"}
 MIN_WHY_CHARS = 80
 MIN_PAYER_CHARS = 15
 

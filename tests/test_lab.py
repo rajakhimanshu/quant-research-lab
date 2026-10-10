@@ -135,6 +135,15 @@ def test_budget_allows_one_family_per_window():
     assert budget_block(runs, 7, today=date(2026, 10, 9)) is None
 
 
+def test_flat_by_ny_close_drops_overnight_trades():
+    from ats.lab.templates import flat_by_ny_close
+
+    ev = pd.DataFrame({"time": pd.to_datetime(
+        ["2026-10-06 14:00", "2026-10-06 20:00", "2026-10-06 22:00"], utc=True)})
+    kept = flat_by_ny_close(ev, "H1", 2)
+    assert list(kept["time"].dt.hour) == [14, 22]
+
+
 def test_brainstorm_leads_need_human_review(monkeypatch):
     from ats.ideas import intake_store
     from ats.lab.loop import _intake_leads

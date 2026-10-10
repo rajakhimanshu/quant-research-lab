@@ -64,6 +64,7 @@ def _risk() -> dict[str, Param]:
         "horizon_bars": Param(int, 2, 48, default=8),
         "stop_atr": Param(float, 0.5, 3.0, default=1.0),
         "target_atr": Param(float, 0.5, 4.0, default=1.0),
+        "flat_by_ny_close": Param(bool, default=True),
     }
 
 
@@ -319,6 +320,21 @@ def catalogue() -> list[dict]:
     return [t.catalogue_entry() for t in TEMPLATES.values()]
 
 
+def flat_by_ny_close(ev: pd.DataFrame, timeframe: str, horizon: int) -> pd.DataFrame:
+    """Drop trades whose last possible bar ends after the 17:00 New York close (intraday only)."""
+    from ats.timeutil import TIMEFRAME_MINUTES
+
+    if ev is None or ev.empty:
+        return ev
+    entry = pd.to_datetime(ev["time"], utc=True)
+    last = entry + pd.Timedelta(minutes=TIMEFRAME_MINUTES[timeframe] * horizon) - pd.Timedelta(seconds=1)
+    day = lambda t: (t.dt.tz_convert("America/New_York") + pd.Timedelta(hours=7)).dt.date  # noqa: E731
+    return ev[(day(entry) == day(last)).to_numpy()].reset_index(drop=True)
+
+
 def template_events(name: str, df: pd.DataFrame, symbol: str, params: dict,
                     spread: float, slip: float, ctx: dict) -> pd.DataFrame:
-    return TEMPLATES[name].run(df, symbol, params, spread, slip, ctx)
+    ev = TEMPLATES[name].run(df, symbol, params, spread, slip, ctx)
+    if params.get("flat_by_ny_close") and ctx.get("timeframe"):
+        ev = flat_by_ny_close(ev, ctx["timeframe"], int(params.get("horizon_bars", 8)))
+    return ev
