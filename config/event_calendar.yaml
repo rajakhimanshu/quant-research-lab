@@ -1,0 +1,217 @@
+# Scheduled events the lab accepts as triggers for brainstormed ideas.
+# Times are the official schedule in the event's own time zone. Brainstormed ideas must
+# name one event_id from this list; the clock comes from here, never from the LLM.
+# keywords: lowercase phrases that identify the event in research/ledger.yaml (novelty gate).
+# Not listed on purpose: BoJ policy decisions (no fixed release time).
+
+events:
+  - id: wmr_fix
+    name: WM/Reuters 4pm London fix (window 15:57:30-16:02:30)
+    time: "16:00"
+    tz: Europe/London
+    days: every business day
+    instruments: [EURUSD, GBPUSD, USDJPY, AUDUSD, USDCAD, USDCHF, NZDUSD]
+    keywords: ["wm/r", "wmr", "wm fix", "4pm fix", "london 16:00", "16:00 london", "london fix", "postfix", "pre-fix"]
+  - id: month_end_fix
+    name: Month-end WM/Reuters fix (portfolio hedge rebalancing)
+    time: "16:00"
+    tz: Europe/London
+    days: last business day of the month
+    instruments: [EURUSD, GBPUSD, USDJPY, AUDUSD, USDCAD, USDCHF, NZDUSD]
+    keywords: ["month-end", "month end", "quarter-end", "quarter end"]
+  - id: tokyo_fix
+    name: Tokyo fix (bank TTM rate setting)
+    time: "09:55"
+    tz: Asia/Tokyo
+    days: every Tokyo business day; gotobi days (5th/10th) largest
+    instruments: [USDJPY]
+    keywords: ["tokyo fix", "9:55", "09:55", "gotobi"]
+  - id: ecb_reference_rate
+    name: ECB euro reference rate concertation
+    time: "14:10"
+    tz: Europe/Berlin
+    days: every TARGET business day
+    instruments: [EURUSD]
+    keywords: ["ecb reference", "ecb fix", "14:10"]
+  - id: ny_option_cut
+    name: New York 10:00 FX option expiry cut
+    time: "10:00"
+    tz: America/New_York
+    days: every business day
+    instruments: [EURUSD, GBPUSD, USDJPY, AUDUSD, USDCAD, USDCHF, NZDUSD]
+    keywords: ["option cut", "option expiry", "option expiration", "ny cut", "10:00 ny", "10:00 new york"]
+  - id: tokyo_option_cut
+    name: Tokyo 15:00 FX option expiry cut
+    time: "15:00"
+    tz: Asia/Tokyo
+    days: every Tokyo business day
+    instruments: [USDJPY, AUDUSD, NZDUSD]
+    keywords: ["tokyo cut", "15:00 tokyo"]
+  - id: lbma_gold_am
+    name: LBMA Gold Price AM auction
+    time: "10:30"
+    tz: Europe/London
+    days: every London business day
+    instruments: [XAUUSD]
+    keywords: ["lbma", "gold am", "10:30", "gold fix", "gold price auction"]
+  - id: lbma_gold_pm
+    name: LBMA Gold Price PM auction (ETF NAV benchmark)
+    time: "15:00"
+    tz: Europe/London
+    days: every London business day
+    instruments: [XAUUSD]
+    keywords: ["lbma", "gold pm", "15:00 london", "gold fix", "gold price auction"]
+  - id: comex_gold_settle
+    name: COMEX gold futures daily settlement (13:29-13:30)
+    time: "13:30"
+    tz: America/New_York
+    days: every CME business day
+    instruments: [XAUUSD]
+    keywords: ["comex", "settlement", "13:30"]
+  - id: cme_fx_futures_expiry
+    name: CME FX futures last trading day (two days before IMM Wednesday)
+    time: "09:16"
+    tz: America/Chicago
+    days: Monday before the 3rd Wednesday of Mar/Jun/Sep/Dec
+    instruments: [EURUSD, GBPUSD, USDJPY, AUDUSD, USDCAD, USDCHF, NZDUSD]
+    keywords: ["imm", "futures roll", "futures expiry", "quarterly roll"]
+  - id: ny_rollover
+    name: New York 17:00 close / daily value-date rollover
+    time: "17:00"
+    tz: America/New_York
+    days: every business day; Sunday reopen at the same clock
+    instruments: [EURUSD, GBPUSD, USDJPY, AUDUSD, USDCAD, USDCHF, NZDUSD, XAUUSD]
+    keywords: ["17:00", "rollover", "ny close", "new york close", "sunday", "reopen", "swap"]
+  - id: london_open
+    name: London cash open
+    time: "08:00"
+    tz: Europe/London
+    days: every business day
+    instruments: [EURUSD, GBPUSD, USDJPY, AUDUSD, USDCAD, USDCHF, NZDUSD, XAUUSD]
+    keywords: ["london open", "london 08:00", "08:00 london", "cash open", "london session open"]
+  - id: ny_equity_open
+    name: NYSE cash equity open
+    time: "09:30"
+    tz: America/New_York
+    days: every NYSE business day
+    instruments: [EURUSD, USDJPY, USDCAD, XAUUSD]
+    keywords: ["ny open", "new york open", "09:30 ny", "9:30", "cash equity open"]
+  - id: us_0830_data
+    name: US 08:30 ET releases (NFP, CPI, retail sales, jobless claims)
+    time: "08:30"
+    tz: America/New_York
+    days: scheduled release days (BLS / Census calendar)
+    instruments: [EURUSD, GBPUSD, USDJPY, AUDUSD, USDCAD, USDCHF, NZDUSD, XAUUSD]
+    keywords: ["nfp", "payroll", "non-farm", "us cpi", "8:30", "08:30", "news", "high-impact"]
+  - id: us_1000_data
+    name: US 10:00 ET releases (ISM, consumer sentiment)
+    time: "10:00"
+    tz: America/New_York
+    days: scheduled release days
+    instruments: [EURUSD, USDJPY, XAUUSD]
+    keywords: ["ism", "10:00 et"]
+  - id: fomc_statement
+    name: FOMC statement
+    time: "14:00"
+    tz: America/New_York
+    days: 8 scheduled meetings per year
+    instruments: [EURUSD, GBPUSD, USDJPY, AUDUSD, USDCAD, USDCHF, NZDUSD, XAUUSD]
+    keywords: ["fomc", "fed decision", "fed statement"]
+  - id: us_treasury_auction
+    name: US Treasury coupon auction result
+    time: "13:00"
+    tz: America/New_York
+    days: scheduled auction days
+    instruments: [USDJPY, EURUSD, XAUUSD]
+    keywords: ["treasury auction", "auction result", "refunding"]
+  - id: ecb_decision
+    name: ECB monetary policy decision
+    time: "14:15"
+    tz: Europe/Berlin
+    days: scheduled Governing Council meetings
+    instruments: [EURUSD]
+    keywords: ["ecb decision", "ecb rate", "ecb meeting"]
+  - id: eurostat_flash_hicp
+    name: Eurostat flash HICP
+    time: "11:00"
+    tz: Europe/Berlin
+    days: end of month / first business day
+    instruments: [EURUSD]
+    keywords: ["hicp", "euro cpi", "eurozone cpi", "euro area cpi"]
+  - id: boe_decision
+    name: Bank of England MPC decision
+    time: "12:00"
+    tz: Europe/London
+    days: scheduled MPC meetings
+    instruments: [GBPUSD]
+    keywords: ["boe", "mpc", "bank of england"]
+  - id: uk_0700_data
+    name: UK ONS 07:00 releases (CPI, GDP, retail sales, labour market)
+    time: "07:00"
+    tz: Europe/London
+    days: scheduled ONS release days
+    instruments: [GBPUSD]
+    keywords: ["ons", "uk cpi", "uk retail", "uk gdp", "07:00 london"]
+  - id: snb_decision
+    name: SNB monetary policy assessment
+    time: "09:30"
+    tz: Europe/Zurich
+    days: quarterly (Mar/Jun/Sep/Dec)
+    instruments: [USDCHF]
+    keywords: ["snb"]
+  - id: boc_decision
+    name: Bank of Canada rate decision
+    time: "09:45"
+    tz: America/Toronto
+    days: 8 scheduled dates per year
+    instruments: [USDCAD]
+    keywords: ["boc", "bank of canada"]
+  - id: canada_0830_data
+    name: Statistics Canada 08:30 ET releases (LFS, CPI)
+    time: "08:30"
+    tz: America/Toronto
+    days: scheduled release days
+    instruments: [USDCAD]
+    keywords: ["lfs", "canada cpi", "canadian employment", "statcan"]
+  - id: rba_decision
+    name: RBA cash rate decision
+    time: "14:30"
+    tz: Australia/Sydney
+    days: 8 scheduled meetings per year
+    instruments: [AUDUSD]
+    keywords: ["rba"]
+  - id: abs_1130_data
+    name: ABS 11:30 Sydney releases (CPI, labour force)
+    time: "11:30"
+    tz: Australia/Sydney
+    days: scheduled release days
+    instruments: [AUDUSD]
+    keywords: ["australia cpi", "australian cpi", "abs release", "labour force"]
+  - id: rbnz_decision
+    name: RBNZ OCR decision
+    time: "14:00"
+    tz: Pacific/Auckland
+    days: 7 scheduled dates per year
+    instruments: [NZDUSD]
+    keywords: ["rbnz", "ocr"]
+  - id: nz_cpi
+    name: Stats NZ CPI
+    time: "10:45"
+    tz: Pacific/Auckland
+    days: quarterly
+    instruments: [NZDUSD]
+    keywords: ["nz cpi", "new zealand cpi"]
+  - id: asx_close
+    name: ASX 16:00 Sydney cash close
+    time: "16:00"
+    tz: Australia/Sydney
+    days: every ASX business day
+    instruments: [AUDUSD]
+    keywords: ["asx", "sydney close", "16:00 sydney"]
+  - id: tsx_close
+    name: TSX 16:00 Toronto cash close
+    time: "16:00"
+    tz: America/Toronto
+    days: every TSX business day
+    instruments: [USDCAD]
+    keywords: ["tsx", "toronto close"]

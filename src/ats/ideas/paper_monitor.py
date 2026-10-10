@@ -1,7 +1,8 @@
 """Paper monitor — weekly arXiv + central-bank research sweep for M5–M30 ideas.
 
-Sources: arXiv q-fin queries, and RSS feeds from BIS, the Federal Reserve
-(FEDS, IFDP), ECB and Bank of England working papers. Feed items are kept only
+Sources: arXiv q-fin queries (paced, retried on 429), recent Semantic Scholar
+citations of papers that documented FX/gold forced flows, and RSS feeds from BIS,
+the Federal Reserve (FEDS, IFDP), ECB and Bank of England working papers. Items are kept only
 if the title/abstract mentions FX, gold, or dealer/liquidity terms.
 
 Also supports SSRN manual-drop: paste a URL, tool fetches title/abstract via
@@ -42,7 +43,28 @@ M5_M30_QUERIES: list[str] = [
     'abs:announcement AND abs:drift AND abs:"exchange rate"',
     "abs:microstructure AND abs:gold",
     'abs:"stop loss" AND abs:liquidity',
+    'abs:fixing AND (abs:"exchange rate" OR abs:"foreign exchange" OR abs:gold)',
+    'abs:"hedging demand" AND (abs:currency OR abs:"exchange rate")',
+    'abs:rebalancing AND (abs:currency OR abs:"exchange rate" OR abs:dollar)',
+    '(abs:"option expiry" OR abs:"option expiration") AND (abs:currency OR abs:FX OR abs:gold)',
+    'abs:"month-end" AND (abs:currency OR abs:dollar OR abs:"exchange rate")',
 ]
+
+ARXIV_PAUSE_S = 3.0
+
+# Papers that documented a forced flow in FX or gold. Recent papers citing them are
+# likely to study the same flows (Semantic Scholar, free API, no key).
+S2_SEEDS: tuple[str, ...] = (
+    "Foreign Exchange Fixings and Returns Around the Clock",
+    "Equity hedging and exchange rates at the London 4 p.m. fix",
+    "Stop-loss orders and price cascades in currency markets",
+    "Currency orders and exchange rate dynamics: an explanation for the predictive success of technical analysis",
+    "Segmentation and time-of-day patterns in foreign exchange markets",
+    "Micro effects of macro announcements: real-time price discovery in foreign exchange",
+    "Puzzles in the Tokyo fixing in the forex market: order imbalances and biased pricing",
+)
+S2_API = "https://api.semanticscholar.org/graph/v1"
+S2_RECENT_YEARS = 3
 
 INSTITUTIONAL_FEEDS: dict[str, str] = {
     "BIS working papers": "https://www.bis.org/doclist/wppubls.rss",
@@ -68,6 +90,55 @@ def _get(url: str, accept: str = "*/*", timeout: int = 30) -> bytes:
         return resp.read()
 
 
+def _get_with_backoff(url: str, tries: int = 3, wait_s: float = 10.0) -> bytes | None:
+    """GET with retries on HTTP 429/503 (arXiv and Semantic Scholar rate limits)."""
+    import time
+    import urllib.error
+
+    for attempt in range(tries):
+        try:
+            return _get(url)
+        except urllib.error.HTTPError as exc:
+            if exc.code not in {429, 503} or attempt == tries - 1:
+                return None
+            time.sleep(wait_s * (attempt + 1))
+        except Exception:
+            return None
+    return None
+
+
+def _fetch_s2_citations(seed_title: str, limit: int = 50) -> list[dict]:
+    """Recent papers citing one seed paper, via the Semantic Scholar graph API."""
+    import time
+
+    match = _get_with_backoff(f"{S2_API}/paper/search/match?" + urllib.parse.urlencode(
+        {"query": seed_title, "fields": "paperId,title"}))
+    data = json.loads(match).get("data") if match else None
+    if not data:
+        print(f"  [WARN] Semantic Scholar: seed not found: {seed_title[:50]}")
+        return []
+    time.sleep(1.5)
+    raw = _get_with_backoff(f"{S2_API}/paper/{data[0]['paperId']}/citations?" + urllib.parse.urlencode(
+        {"fields": "title,abstract,year,url,externalIds", "limit": limit}))
+    if not raw:
+        return []
+    min_year = datetime.now(timezone.utc).year - S2_RECENT_YEARS
+    rows = []
+    for item in json.loads(raw).get("data") or []:
+        p = item.get("citingPaper") or {}
+        if not p.get("title") or (p.get("year") or 0) < min_year:
+            continue
+        doi = (p.get("externalIds") or {}).get("DOI")
+        rows.append({
+            "title": " ".join(p["title"].split()),
+            "summary": " ".join((p.get("abstract") or "").split())[:500],
+            "link": f"https://doi.org/{doi}" if doi else (p.get("url") or ""),
+            "published": str(p.get("year") or ""),
+            "feed": "Semantic Scholar citations",
+        })
+    return rows
+
+
 def is_relevant(title: str, summary: str) -> bool:
     text = f" {title} {summary} ".lower()
     return any(term in text for term in RELEVANCE_TERMS)
@@ -85,10 +156,9 @@ def _fetch_arxiv(query: str, max_results: int = 6) -> list[dict]:
         "sortOrder": "descending",
     }
     url = "https://export.arxiv.org/api/query?" + urllib.parse.urlencode(params)
-    try:
-        xml_bytes = _get(url)
-    except Exception as exc:
-        print(f"  [WARN] arXiv fetch failed for query '{query[:50]}': {exc}")
+    xml_bytes = _get_with_backoff(url)
+    if xml_bytes is None:
+        print(f"  [WARN] arXiv fetch failed for query '{query[:50]}'")
         return []
 
     root = ET.fromstring(xml_bytes)
@@ -220,12 +290,21 @@ def run_paper_monitor(
         papers = [paper] if paper else []
         print(f"SSRN drop: {'found' if paper else 'failed'} — {ssrn_url}")
     else:
+        import time
+
         print(f"Paper monitor: running {len(M5_M30_QUERIES)} arXiv queries...")
         papers: list[dict] = []
         for q in M5_M30_QUERIES:
             batch = _fetch_arxiv(q, max_results=max_per_query)
             papers.extend(batch)
             print(f"  query: {q[:60]!r} -> {len(batch)} papers")
+            time.sleep(ARXIV_PAUSE_S)
+        print(f"Semantic Scholar: recent citations of {len(S2_SEEDS)} forced-flow papers...")
+        for seed in S2_SEEDS:
+            batch = _fetch_s2_citations(seed)
+            papers.extend(batch)
+            print(f"  cites {seed[:55]!r} -> {len(batch)} recent")
+            time.sleep(1.5)
         print(f"Institutional feeds: {len(INSTITUTIONAL_FEEDS)} sources...")
         for name, url in INSTITUTIONAL_FEEDS.items():
             batch = _fetch_feed(name, url)

@@ -9,7 +9,9 @@ Usage:
 
 The brainstorm prompt explicitly lists ~80 already-rejected mechanisms to avoid
 generating duplicates. Ideas with an empty causal_actor are discarded automatically.
-All others land in intake.yaml with status=raw for human review before promotion.
+Ideas that fail the fact-check or novelty gate (ats.ideas.gates) are stored as
+rejected_at_intake with the reason. The rest land in intake.yaml with status=raw
+for human review before promotion.
 
 Model: llama-3.3-70b-versatile (verify current model at console.groq.com/docs/models)
 Free tier: ~14,400 requests/day — far more than weekly use requires.
@@ -20,6 +22,7 @@ import json
 import os
 
 from ats.ideas.dedup import check_dedup
+from ats.ideas.gates import calendar_prompt, fact_check, load_calendar, novelty_check
 from ats.ideas.intake_store import add_idea
 from ats.ideas.prompts import CATEGORIES, _PROMPTS
 
@@ -75,7 +78,11 @@ def run_groq_brainstorm(category: str, n: int = 5) -> int:
 
     client = _get_client()
 
-    prompt = _PROMPTS[category].format(n=n)
+    prompt = _PROMPTS[category].format(n=n) + (
+        "\n\nEvent calendar (official schedule). Every idea MUST be triggered by exactly one of these "
+        "events and add the field \"event_id\". Do not state any other clock time. If a mechanism "
+        "needs an event that is not listed, leave it out.\n" + calendar_prompt()
+    )
     system_msg = (
         "You are a precise market microstructure researcher. "
         "Respond ONLY with a valid JSON array. No markdown, no preamble, no explanation. "
@@ -125,10 +132,15 @@ def run_groq_brainstorm(category: str, n: int = 5) -> int:
             continue
 
         dedup = check_dedup(actor, idea.get("name", ""))
+        gate = fact_check(idea) or novelty_check(idea)
+        event = load_calendar().get(str(idea.get("event_id") or ""))
         iid = add_idea({
             "source": "llm_brainstorm",
             "source_ref": f"groq_{category}",
             "name": (idea.get("name") or "")[:80],
+            "event_id": idea.get("event_id") or "",
+            "summary_excerpt": (f"Trigger: {event['name']}, {event['time']} {event['tz']} ({event['days']})"
+                                if event else ""),
             "causal_category": category,
             "causal_actor": actor,
             "timeframe_tier": "",           # owner assigns at review
@@ -138,14 +150,19 @@ def run_groq_brainstorm(category: str, n: int = 5) -> int:
             "expected_trades_month": idea.get("expected_trades_month"),
             "dedup_check": dedup,
             "notes": (idea.get("notes") or "")[:300],
-            "status": "raw",
+            "status": "rejected_at_intake" if gate else "raw",
+            **({"rejection_reason": gate} if gate else {}),
         })
-        dedup_note = f" [dedup: {dedup[:2]}]" if dedup else ""
         safe_name = idea.get("name", "")[:60].encode("ascii", errors="replace").decode("ascii")
+        if gate:
+            print(f"  [GATE] {iid}: {safe_name} -- {gate}")
+            discarded += 1
+            continue
+        dedup_note = f" [dedup: {dedup[:2]}]" if dedup else ""
         print(f"  Saved {iid}{dedup_note}: {safe_name}")
         saved += 1
 
-    print(f"\n[{category}] Saved: {saved}  Discarded (no causal_actor): {discarded}")
+    print(f"\n[{category}] Awaiting approval: {saved}  Discarded (no actor / failed gates): {discarded}")
     return saved
 
 
